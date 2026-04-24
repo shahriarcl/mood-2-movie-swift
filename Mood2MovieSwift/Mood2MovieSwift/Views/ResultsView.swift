@@ -201,70 +201,70 @@ private struct MovieCardView: View {
 
     var body: some View {
         GlassCard {
-            HStack(alignment: .top, spacing: 14) {
-                Button(action: onOpenDetail) {
-                    PosterBadge(genre: movie.genre, title: movie.title, year: movie.year, size: .large)
-                }
-                .buttonStyle(.plain)
+            VStack(alignment: .leading, spacing: 14) {
+                HStack(alignment: .top, spacing: 12) {
+                    Button(action: onOpenDetail) {
+                        PosterBadge(genre: movie.genre, title: movie.title, year: movie.year, size: .large)
+                    }
+                    .buttonStyle(.plain)
 
-                VStack(alignment: .leading, spacing: 10) {
-                    HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 8) {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(movie.title)
-                                .font(.headline)
+                                .font(.headline.weight(.semibold))
                                 .foregroundStyle(.primary)
+                                .fixedSize(horizontal: false, vertical: true)
                             Text("\(movie.year) • \(movie.primaryAvailability.platformName)")
                                 .font(.footnote)
                                 .foregroundStyle(.secondary)
                         }
-                        Spacer()
+
                         AvailabilityPill(availability: movie.primaryAvailability)
+
+                        Text(movie.reason)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
+                }
 
-                    Text(movie.reason)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
+                if !movie.availability.isEmpty {
+                    FlowLayout(spacing: 8) {
+                        ForEach(movie.availability) { availability in
+                            AvailabilityPill(availability: availability)
+                        }
+                    }
+                }
 
+                HStack(spacing: 10) {
                     Button {
                         onOpenDetail()
                     } label: {
-                        Text("View details")
-                            .font(.footnote.weight(.semibold))
+                        Label("Details", systemImage: "info.circle")
                     }
                     .buttonStyle(InlineActionButtonStyle(isActive: false))
 
-                    if !movie.availability.isEmpty {
-                        FlowLayout(spacing: 8) {
-                            ForEach(movie.availability) { availability in
-                                AvailabilityPill(availability: availability)
-                            }
-                        }
+                    Button {
+                        onSave(.watchlist)
+                    } label: {
+                        Label("Watchlist", systemImage: "bookmark")
                     }
+                    .buttonStyle(InlineActionButtonStyle(isActive: status == .watchlist))
 
-                    HStack(spacing: 10) {
-                        Button {
-                            onSave(.watchlist)
+                    Button {
+                        onSave(.watched)
+                    } label: {
+                        Label("Watched", systemImage: "checkmark.circle")
+                    }
+                    .buttonStyle(InlineActionButtonStyle(isActive: status == .watched))
+
+                    if status != nil {
+                        Button(role: .destructive) {
+                            onRemove()
                         } label: {
-                            Label("Watchlist", systemImage: "bookmark")
+                            Label("Remove", systemImage: "trash")
                         }
-                        .buttonStyle(InlineActionButtonStyle(isActive: status == .watchlist))
-
-                        Button {
-                            onSave(.watched)
-                        } label: {
-                            Label("Watched", systemImage: "checkmark.circle")
-                        }
-                        .buttonStyle(InlineActionButtonStyle(isActive: status == .watched))
-
-                        if status != nil {
-                            Button(role: .destructive) {
-                                onRemove()
-                            } label: {
-                                Label("Remove", systemImage: "trash")
-                            }
-                            .buttonStyle(InlineActionButtonStyle(isActive: false))
-                        }
+                        .buttonStyle(InlineActionButtonStyle(isActive: false))
                     }
                 }
             }

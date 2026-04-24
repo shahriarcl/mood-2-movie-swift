@@ -79,32 +79,42 @@ private struct PhoneTabBar: View {
     let onSelect: (ShellTab) -> Void
 
     var body: some View {
-        GlassCard {
-            HStack(spacing: 10) {
-                ForEach(ShellTab.allCases, id: \.self) { tab in
-                    Button {
-                        onSelect(tab)
-                    } label: {
-                        VStack(spacing: 4) {
-                            Image(systemName: tab.symbol)
-                                .font(.system(size: 15, weight: .semibold))
-                            Text(tab.title)
-                                .font(.caption2.weight(.semibold))
-                        }
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
-                        .background(
-                            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                .fill(activeTab == tab ? Color(hex: "F5A623").opacity(0.95) : Color.white.opacity(0.04))
-                        )
-                        .foregroundStyle(activeTab == tab ? Color(hex: "0D0D0F") : Color.secondary)
+        HStack(spacing: 10) {
+            ForEach(ShellTab.allCases, id: \.self) { tab in
+                Button {
+                    onSelect(tab)
+                } label: {
+                    let isActive = activeTab == tab
+                    VStack(spacing: 4) {
+                        Image(systemName: tab.symbol)
+                            .font(.system(size: isActive ? 16 : 15, weight: .semibold))
+                        Text(tab.title)
+                            .font(.caption2.weight(isActive ? .bold : .semibold))
                     }
-                    .buttonStyle(.plain)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 11)
+                    .background(
+                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            .fill(isActive ? Color(hex: "F5A623").opacity(0.96) : Color.clear)
+                    )
+                    .foregroundStyle(isActive ? Color(hex: "0D0D0F") : Color.secondary)
+                    .scaleEffect(isActive ? 1.01 : 1.0)
                 }
+                .buttonStyle(.plain)
             }
         }
-        .padding(.horizontal, 14)
+        .padding(8)
+        .background(
+            RoundedRectangle(cornerRadius: 30, style: .continuous)
+                .fill(.ultraThinMaterial)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 30, style: .continuous)
+                        .stroke(Color.white.opacity(0.18), lineWidth: 1)
+                )
+        )
+        .shadow(color: .black.opacity(0.26), radius: 22, x: 0, y: 12)
+        .padding(.horizontal, 16)
         .padding(.top, 10)
-        .background(.clear)
+        .padding(.bottom, 8)
     }
 }

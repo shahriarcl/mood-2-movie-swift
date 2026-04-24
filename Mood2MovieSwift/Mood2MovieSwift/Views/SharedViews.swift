@@ -48,14 +48,14 @@ struct GlassCard<Content: View>: View {
         content
             .padding(18)
             .background(
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .fill(Color.white.opacity(0.06))
+                RoundedRectangle(cornerRadius: 26, style: .continuous)
+                    .fill(.ultraThinMaterial)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 20, style: .continuous)
-                            .stroke(Color.white.opacity(0.11), lineWidth: 1)
+                        RoundedRectangle(cornerRadius: 26, style: .continuous)
+                            .stroke(Color.white.opacity(0.14), lineWidth: 1)
                     )
             )
-            .shadow(color: .black.opacity(0.28), radius: 24, x: 0, y: 12)
+            .shadow(color: .black.opacity(0.24), radius: 22, x: 0, y: 10)
     }
 }
 
