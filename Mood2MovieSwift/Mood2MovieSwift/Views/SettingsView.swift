@@ -29,7 +29,7 @@ struct SettingsView: View {
             }
             .padding(.vertical, 24)
             .padding(.horizontal, 16)
-            .frame(maxWidth: 430, alignment: .leading)
+            .frame(maxWidth: 400, alignment: .leading)
             .opacity(didAppear ? 1 : 0)
             .offset(y: didAppear ? 0 : 12)
         }
@@ -67,6 +67,7 @@ struct SettingsView: View {
                 Text("Tune the platforms and country used by the recommendation engine.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
 
             Divider()
@@ -82,7 +83,7 @@ struct SettingsView: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
 
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), spacing: 12)], spacing: 12) {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), spacing: 12)], spacing: 12) {
                     ForEach(MoodCatalog.platforms) { platform in
                         PlatformTile(platform: platform, isSelected: selectedPlatforms.contains(platform.key)) {
                             if selectedPlatforms.contains(platform.key) {
@@ -214,7 +215,7 @@ struct SettingsView: View {
 
     private var heroSummary: some View {
         GlassCard {
-            HStack(alignment: .top, spacing: 16) {
+            VStack(alignment: .leading, spacing: 16) {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Tune the engine")
                         .font(.caption2.weight(.bold))
@@ -229,9 +230,7 @@ struct SettingsView: View {
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
-                Spacer()
-
-                VStack(alignment: .trailing, spacing: 8) {
+                HStack(spacing: 12) {
                     SettingsStat(label: "Platforms", value: "\(selectedPlatforms.count)")
                     SettingsStat(label: "Keys", value: "\(configuredKeyCount)")
                 }

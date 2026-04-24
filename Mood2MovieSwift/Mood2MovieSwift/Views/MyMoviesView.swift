@@ -45,7 +45,7 @@ struct MyMoviesView: View {
             }
             .padding(.vertical, 24)
             .padding(.horizontal, 16)
-            .frame(maxWidth: 430, alignment: .leading)
+            .frame(maxWidth: 400, alignment: .leading)
             .opacity(didAppear ? 1 : 0)
             .offset(y: didAppear ? 0 : 12)
         }
@@ -77,6 +77,7 @@ struct MyMoviesView: View {
                 Text("Watchlist and watched titles live here, and cloud sync keeps them with you.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
 
             Divider()
@@ -87,7 +88,7 @@ struct MyMoviesView: View {
     private var authSection: some View {
         GlassCard {
             VStack(alignment: .leading, spacing: 14) {
-                HStack {
+                HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 4) {
                         SectionHeader(title: cloud.isSignedIn ? "Cloud Sync" : "Sign In")
                         Text(cloud.isSignedIn ? "Your library can follow you across devices." : "Sign in to keep watchlists and watched titles in sync.")
@@ -106,7 +107,7 @@ struct MyMoviesView: View {
                 }
 
                 if cloud.isSignedIn {
-                    HStack(spacing: 10) {
+                    VStack(spacing: 10) {
                         Button {
                             Task {
                                 syncMessage = "Syncing..."
@@ -143,7 +144,7 @@ struct MyMoviesView: View {
                         SecureField("Password", text: $password)
                             .textFieldStyle(.roundedBorder)
 
-                        HStack(spacing: 10) {
+                        VStack(spacing: 10) {
                             Button {
                                 Task { await signIn() }
                             } label: {
@@ -238,7 +239,7 @@ struct MyMoviesView: View {
 
     private var heroSummary: some View {
         GlassCard {
-            HStack(alignment: .top, spacing: 16) {
+            VStack(alignment: .leading, spacing: 16) {
                 VStack(alignment: .leading, spacing: 10) {
                     Text("Saved titles")
                         .font(.caption2.weight(.bold))
@@ -251,9 +252,7 @@ struct MyMoviesView: View {
                         .foregroundStyle(.secondary)
                 }
 
-                Spacer()
-
-                VStack(alignment: .trailing, spacing: 8) {
+                HStack(spacing: 12) {
                     LibraryStat(label: "Watchlist", value: "\(store.watchlist.count)")
                     LibraryStat(label: "Watched", value: "\(store.watched.count)")
                 }
