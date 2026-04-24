@@ -79,31 +79,38 @@ private struct PhoneTabBar: View {
     let onSelect: (ShellTab) -> Void
 
     var body: some View {
-        HStack(spacing: 10) {
-            ForEach(ShellTab.allCases, id: \.self) { tab in
-                Button {
-                    onSelect(tab)
-                } label: {
-                    let isActive = activeTab == tab
-                    VStack(spacing: 4) {
-                        Capsule(style: .continuous)
-                            .fill(isActive ? Color(hex: "F5A623") : Color.clear)
-                            .frame(width: 18, height: 4)
-                        Image(systemName: tab.symbol)
-                            .font(.system(size: isActive ? 16 : 15, weight: .semibold))
-                        Text(tab.title)
-                            .font(.caption2.weight(isActive ? .bold : .semibold))
+        VStack(spacing: 8) {
+            Capsule(style: .continuous)
+                .fill(Color.white.opacity(0.35))
+                .frame(width: 122, height: 4)
+                .padding(.top, 2)
+
+            HStack(spacing: 10) {
+                ForEach(ShellTab.allCases, id: \.self) { tab in
+                    Button {
+                        onSelect(tab)
+                    } label: {
+                        let isActive = activeTab == tab
+                        VStack(spacing: 4) {
+                            Capsule(style: .continuous)
+                                .fill(isActive ? Color(hex: "F5A623") : Color.clear)
+                                .frame(width: 18, height: 4)
+                            Image(systemName: tab.symbol)
+                                .font(.system(size: isActive ? 16 : 15, weight: .semibold))
+                            Text(tab.title)
+                                .font(.caption2.weight(isActive ? .bold : .semibold))
+                        }
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 9)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                .fill(isActive ? Color(hex: "F5A623").opacity(0.92) : Color.clear)
+                        )
+                        .foregroundStyle(isActive ? Color(hex: "0D0D0F") : Color.secondary)
+                        .scaleEffect(isActive ? 1.01 : 1.0)
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 9)
-                    .background(
-                        RoundedRectangle(cornerRadius: 20, style: .continuous)
-                            .fill(isActive ? Color(hex: "F5A623").opacity(0.92) : Color.clear)
-                    )
-                    .foregroundStyle(isActive ? Color(hex: "0D0D0F") : Color.secondary)
-                    .scaleEffect(isActive ? 1.01 : 1.0)
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
             }
         }
         .padding(8)
