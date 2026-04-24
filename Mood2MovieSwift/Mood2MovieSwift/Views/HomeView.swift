@@ -20,7 +20,6 @@ struct HomeView: View {
                 motion(forYouSection, delay: 0.18)
                 motion(moodSection, delay: 0.24)
                 motion(actionSection, delay: 0.30)
-                motion(footerSection, delay: 0.36)
             }
             .padding(.vertical, 24)
             .padding(.horizontal, 16)
@@ -425,29 +424,6 @@ struct HomeView: View {
                 Text("Pick a mood, then let the app do the sorting.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
-            }
-        }
-    }
-
-    private var footerSection: some View {
-        GlassCard {
-            HStack(spacing: 12) {
-                Button {
-                    path.append(.settings)
-                } label: {
-                    let count = store.preferences.platforms.count
-                    Text(count > 0 ? "\(count) platform\(count == 1 ? "" : "s") selected" : "Set up streaming platforms")
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(FooterLinkButtonStyle())
-
-                Button {
-                    path.append(.myMovies)
-                } label: {
-                    Text("My Movies")
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(FooterLinkButtonStyle())
             }
         }
     }
