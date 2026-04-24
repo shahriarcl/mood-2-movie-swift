@@ -118,25 +118,36 @@ struct MovieDetailView: View {
             }
             .buttonStyle(PlainBackButtonStyle())
 
-            Text("MOVIE DETAILS")
-                .font(.caption2.weight(.bold))
-                .tracking(3.0)
-                .foregroundStyle(Color(hex: "F5A623"))
-            Text(movie.title)
-                .font(.system(size: 34, weight: .black, design: .rounded))
-                .fixedSize(horizontal: false, vertical: true)
-            Text("A closer look at the pick, the synopsis, and where to watch.")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-            Divider().overlay(Color(hex: "F5A623").opacity(0.7))
+            ScreenHeader(
+                eyebrow: "Movie details",
+                title: movie.title,
+                subtitle: "A closer look at the pick, the synopsis, and where to watch.",
+                badge: "\(movie.genre.label) • \(movie.year)"
+            )
         }
     }
 
     private var heroCard: some View {
         GlassCard {
-            ViewThatFits(in: .horizontal) {
-                heroCardWide
-                heroCardStacked
+            VStack(alignment: .leading, spacing: 18) {
+                ViewThatFits(in: .horizontal) {
+                    heroCardWide
+                    heroCardStacked
+                }
+
+                if let detail {
+                    HStack(spacing: 8) {
+                        DetailChip(text: "\(detail.runtime ?? movie.year) min")
+                        DetailChip(text: String(format: "%.1f / 10", detail.voteAverage))
+                        DetailChip(text: movie.primaryAvailability.platformName)
+                    }
+                } else {
+                    HStack(spacing: 8) {
+                        DetailChip(text: movie.genre.label)
+                        DetailChip(text: movie.primaryAvailability.platformName)
+                        DetailChip(text: movie.primaryAvailability.type.label)
+                    }
+                }
             }
         }
     }
@@ -166,18 +177,8 @@ struct MovieDetailView: View {
 
             HStack(spacing: 8) {
                 DetailChip(text: movie.genre.label)
-                DetailChip(text: movie.primaryAvailability.platformName)
-                DetailChip(text: movie.year.description)
-            }
-
-            HStack(spacing: 8) {
                 DetailChip(text: movie.primaryAvailability.type.label)
-                if let runtime = detail?.runtime {
-                    DetailChip(text: "\(runtime) min")
-                }
-                if let rating = detail?.voteAverage {
-                    DetailChip(text: String(format: "%.1f / 10", rating))
-                }
+                DetailChip(text: movie.year.description)
             }
 
             Text(movie.reason)

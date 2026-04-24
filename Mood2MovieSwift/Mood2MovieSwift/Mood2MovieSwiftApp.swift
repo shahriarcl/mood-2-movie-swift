@@ -6,21 +6,36 @@ struct Mood2MovieSwiftApp: App {
     @State private var store = AppStore()
     @State private var configuration = AppConfigurationStore.shared
     @State private var cloud = CloudSyncService()
+    @State private var showSplash = true
 
     var body: some Scene {
         WindowGroup {
-            RootView()
-                .environment(store)
-                .environment(configuration)
-                .environment(cloud)
-                .task {
-                    await cloud.restoreSessionIfNeeded()
-                    if cloud.isSignedIn {
-                        let remote = await cloud.fetchRemoteLibrary()
-                        store.mergeLibrary(with: remote)
-                        await cloud.syncLocalLibrary(store.movies)
+            ZStack {
+                RootView()
+                    .environment(store)
+                    .environment(configuration)
+                    .environment(cloud)
+                    .opacity(showSplash ? 0 : 1)
+                    .task {
+                        await cloud.restoreSessionIfNeeded()
+                        if cloud.isSignedIn {
+                            let remote = await cloud.fetchRemoteLibrary()
+                            store.mergeLibrary(with: remote)
+                            await cloud.syncLocalLibrary(store.movies)
+                        }
                     }
+
+                if showSplash {
+                    LaunchSplashView()
+                        .transition(.opacity.combined(with: .scale(scale: 1.02)))
                 }
+            }
+            .task {
+                try? await Task.sleep(for: .milliseconds(900))
+                withAnimation(.easeOut(duration: 0.28)) {
+                    showSplash = false
+                }
+            }
         }
     }
 }

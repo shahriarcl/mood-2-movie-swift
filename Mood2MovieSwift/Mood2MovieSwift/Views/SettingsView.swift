@@ -261,26 +261,6 @@ private struct SettingsStat: View {
     }
 }
 
-private struct SummaryPill: View {
-    let text: String
-
-    var body: some View {
-        Text(text)
-            .font(.caption.weight(.semibold))
-            .padding(.horizontal, 10)
-            .padding(.vertical, 6)
-            .background(
-                Capsule(style: .continuous)
-                    .fill(Color.white.opacity(0.06))
-                    .overlay(
-                        Capsule(style: .continuous)
-                            .stroke(Color.white.opacity(0.09), lineWidth: 1)
-                    )
-            )
-            .foregroundStyle(.secondary)
-    }
-}
-
 private struct PlatformTile: View {
     let platform: Platform
     let isSelected: Bool

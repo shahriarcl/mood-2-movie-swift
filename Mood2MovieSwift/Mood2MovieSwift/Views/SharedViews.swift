@@ -179,26 +179,51 @@ struct EmptyStateView: View {
     let message: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            HStack(spacing: 10) {
-                Image(systemName: "sparkles")
-                    .foregroundStyle(Color(hex: "F5A623"))
-                Text("Nothing to show yet")
-                    .font(.headline.weight(.semibold))
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .top, spacing: 14) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .fill(
+                            LinearGradient(
+                                colors: [Color(hex: "FFB84D"), Color(hex: "F5A623")],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                    Image(systemName: "sparkles")
+                        .font(.headline.weight(.bold))
+                        .foregroundStyle(Color(hex: "0D0D0F"))
+                }
+                .frame(width: 42, height: 42)
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Nothing to show yet")
+                        .font(.headline.weight(.semibold))
+                    Text("The app will fill in as you search, save, and sync movies.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
             }
+
             Text(message)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
+
+            HStack(spacing: 8) {
+                SummaryPill(text: "Search a title")
+                SummaryPill(text: "Pick a mood")
+                SummaryPill(text: "Save it")
+            }
         }
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(Color.white.opacity(0.045))
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .fill(Color.white.opacity(0.05))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 22, style: .continuous)
+                        .stroke(Color.white.opacity(0.10), lineWidth: 1)
                 )
         )
     }
@@ -208,23 +233,102 @@ struct LoadingStateView: View {
     let text: String
 
     var body: some View {
-        HStack(spacing: 12) {
-            ProgressView()
-                .controlSize(.small)
-            Text(text)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
+        HStack(spacing: 14) {
+            ZStack {
+                Circle()
+                    .fill(Color(hex: "F5A623").opacity(0.14))
+                    .frame(width: 36, height: 36)
+                ProgressView()
+                    .tint(Color(hex: "F5A623"))
+                    .controlSize(.small)
+            }
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(text)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.primary)
+                Text("This usually takes only a few moments.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(18)
         .background(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(Color.white.opacity(0.045))
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                .fill(Color.white.opacity(0.05))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 22, style: .continuous)
+                        .stroke(Color.white.opacity(0.10), lineWidth: 1)
                 )
         )
+    }
+}
+
+struct SummaryPill: View {
+    let text: String
+
+    var body: some View {
+        Text(text)
+            .font(.caption.weight(.semibold))
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(
+                Capsule(style: .continuous)
+                    .fill(Color.white.opacity(0.06))
+                    .overlay(
+                        Capsule(style: .continuous)
+                            .stroke(Color.white.opacity(0.09), lineWidth: 1)
+                    )
+            )
+            .foregroundStyle(.secondary)
+    }
+}
+
+struct LaunchSplashView: View {
+    @State private var animate = false
+
+    var body: some View {
+        ZStack {
+            AppScreenBackground()
+
+            VStack(spacing: 18) {
+                BrandMark()
+                    .scaleEffect(animate ? 1 : 0.84)
+                    .opacity(animate ? 1 : 0)
+
+                VStack(spacing: 8) {
+                    Text("Mood2Movie")
+                        .font(.system(size: 30, weight: .black, design: .rounded))
+                        .foregroundStyle(.white)
+                    Text("Pick a movie by how you feel")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+
+                HStack(spacing: 8) {
+                    SummaryPill(text: "Mood-driven")
+                    SummaryPill(text: "iPhone-first")
+                }
+            }
+            .padding(28)
+            .background(
+                RoundedRectangle(cornerRadius: 34, style: .continuous)
+                    .fill(.ultraThinMaterial)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 34, style: .continuous)
+                            .stroke(Color.white.opacity(0.12), lineWidth: 1)
+                    )
+            )
+            .shadow(color: .black.opacity(0.32), radius: 26, x: 0, y: 16)
+            .padding(.horizontal, 28)
+            .scaleEffect(animate ? 1 : 0.95)
+        }
+        .onAppear {
+            withAnimation(.spring(response: 0.55, dampingFraction: 0.88)) {
+                animate = true
+            }
+        }
     }
 }
 
