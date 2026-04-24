@@ -122,9 +122,9 @@ struct CinematicHeroArt: View {
                 .fill(
                     LinearGradient(
                         colors: [
-                            Color(hex: "060607"),
-                            Color(hex: "111114"),
-                            Color(hex: "24170F")
+                            Color(hex: "050506"),
+                            Color(hex: "09090B"),
+                            Color(hex: "23130C")
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -132,81 +132,148 @@ struct CinematicHeroArt: View {
                 )
                 .overlay(
                     RoundedRectangle(cornerRadius: 28, style: .continuous)
-                        .stroke(Color.white.opacity(0.10), lineWidth: 1)
+                        .stroke(Color.white.opacity(0.09), lineWidth: 1)
+                )
+
+            Circle()
+                .fill(Color(hex: "F5A623").opacity(0.18))
+                .frame(width: 92, height: 92)
+                .blur(radius: 26)
+                .offset(x: 52, y: 18)
+
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(Color.black.opacity(0.84))
+                .frame(width: 118, height: 78)
+                .offset(x: 48, y: -18)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(Color.white.opacity(0.06), lineWidth: 1)
+                )
+
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color(hex: "F08A24"),
+                            Color(hex: "5A3A20"),
+                            Color(hex: "101113")
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .frame(width: 110, height: 68)
+                .offset(x: 48, y: -18)
+                .mask(
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .frame(width: 110, height: 68)
+                        .offset(x: 48, y: -18)
                 )
 
             VStack(spacing: 0) {
                 Spacer(minLength: 0)
 
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color(hex: "F5A623").opacity(0.98),
-                                Color(hex: "8A4A16").opacity(0.85),
-                                Color(hex: "1B1B1D").opacity(0.55)
-                            ],
-                            startPoint: .top,
-                            endPoint: .bottom
+                HStack(alignment: .bottom, spacing: 0) {
+                    Spacer(minLength: 0)
+                    Circle()
+                        .fill(Color(hex: "0D0D0F").opacity(0.98))
+                        .frame(width: 84, height: 84)
+                        .overlay(
+                            Circle()
+                                .stroke(Color.white.opacity(0.05), lineWidth: 1)
                         )
-                    )
-                    .frame(height: 118)
-                    .overlay(
-                        HStack(alignment: .bottom, spacing: 0) {
-                            Spacer()
-                            Circle()
-                                .fill(Color(hex: "0D0D0F").opacity(0.92))
-                                .frame(width: 72, height: 72)
-                                .offset(y: 18)
-                            Spacer(minLength: 0)
-                        }
-                    )
-                    .padding(.horizontal, 18)
-                    .overlay(alignment: .topTrailing) {
-                        VStack(alignment: .trailing, spacing: 5) {
-                            Circle()
-                                .fill(Color(hex: "F5A623").opacity(0.9))
-                                .frame(width: 14, height: 14)
-                            RoundedRectangle(cornerRadius: 99, style: .continuous)
-                                .fill(Color.white.opacity(0.12))
-                                .frame(width: 46, height: 8)
-                        }
-                        .padding(.trailing, 28)
-                        .padding(.top, 18)
-                    }
+                        .offset(x: 12, y: 6)
+                    Spacer(minLength: 0)
+                }
+                .padding(.trailing, 22)
 
                 HStack {
-                    Spacer()
-                    RoundedRectangle(cornerRadius: 999, style: .continuous)
-                        .fill(Color(hex: "F5A623").opacity(0.88))
-                        .frame(width: 58, height: 12)
+                    Spacer(minLength: 0)
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    Color(hex: "F5A623").opacity(0.92),
+                                    Color(hex: "B5661B").opacity(0.82)
+                                ],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        )
+                        .frame(width: 86, height: 16)
                         .blur(radius: 2)
-                        .offset(y: -12)
-                    Spacer()
+                        .offset(x: 20, y: -10)
                 }
-
-                Spacer(minLength: 0)
+                .padding(.trailing, 18)
+                .padding(.bottom, 24)
             }
 
             VStack {
-                Spacer()
+                Spacer(minLength: 0)
                 HStack {
-                    Spacer()
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .fill(Color.black.opacity(0.70))
-                        .frame(width: 88, height: 34)
+                    Spacer(minLength: 0)
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .fill(Color.black.opacity(0.74))
+                        .frame(width: 90, height: 34)
                         .overlay(
                             Text("Movie night")
                                 .font(.caption2.weight(.bold))
-                                .foregroundStyle(.white.opacity(0.88))
+                                .foregroundStyle(.white.opacity(0.90))
                         )
-                        .padding(.trailing, 18)
-                        .padding(.bottom, 16)
+                        .padding(.trailing, 14)
+                        .padding(.bottom, 14)
                 }
+            }
+
+            VStack(spacing: 0) {
+                Spacer(minLength: 0)
+
+                RoundedRectangle(cornerRadius: 26, style: .continuous)
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                Color(hex: "FF9A3A").opacity(0.95),
+                                Color(hex: "B45D1D").opacity(0.72),
+                                Color(hex: "151517").opacity(0.62)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .frame(height: 122)
+                    .overlay(
+                        VStack(spacing: 0) {
+                            Spacer(minLength: 0)
+                            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                .fill(Color.black.opacity(0.88))
+                                .frame(width: 138, height: 58)
+                                .overlay(
+                                    Text("TV")
+                                        .font(.caption2.weight(.bold))
+                                        .tracking(4)
+                                        .foregroundStyle(Color.white.opacity(0.72))
+                                )
+                                .offset(y: -18)
+                            Spacer(minLength: 0)
+                        }
+                    )
+                    .padding(.horizontal, 16)
+
+                HStack {
+                    Spacer()
+                    Circle()
+                        .fill(Color.black.opacity(0.92))
+                        .frame(width: 16, height: 16)
+                        .overlay(Circle().stroke(Color.white.opacity(0.06), lineWidth: 1))
+                    Spacer(minLength: 0)
+                }
+                .offset(y: -18)
+
+                Spacer(minLength: 0)
             }
         }
         .frame(height: 220)
-        .shadow(color: Color(hex: "F5A623").opacity(0.12), radius: 24, x: 0, y: 12)
+        .shadow(color: Color(hex: "F5A623").opacity(0.10), radius: 22, x: 0, y: 10)
     }
 }
 
