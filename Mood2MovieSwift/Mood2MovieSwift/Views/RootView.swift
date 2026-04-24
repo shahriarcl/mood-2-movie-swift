@@ -85,7 +85,7 @@ private struct PhoneTabBar: View {
     var body: some View {
         VStack(spacing: 7) {
             Capsule(style: .continuous)
-                .fill(Color.white.opacity(0.34))
+                .fill(Color.white.opacity(0.28))
                 .frame(width: 108, height: 4)
                 .padding(.top, 1)
 
@@ -98,16 +98,16 @@ private struct PhoneTabBar: View {
                         VStack(spacing: 4) {
                             Capsule(style: .continuous)
                                 .fill(isActive ? Color(hex: "F5A623") : Color.clear)
-                                .frame(width: isActive ? 22 : 12, height: 4)
+                                .frame(width: isActive ? 20 : 12, height: 4)
                             Image(systemName: tab.symbol)
                                 .font(.system(size: isActive ? 16 : 15, weight: .semibold))
                             Text(tab.title)
                                 .font(.caption2.weight(isActive ? .bold : .semibold))
                         }
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
+                        .padding(.vertical, 9)
                         .background(
-                            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            RoundedRectangle(cornerRadius: 18, style: .continuous)
                                 .fill(
                                     isActive
                                     ? LinearGradient(
@@ -122,7 +122,7 @@ private struct PhoneTabBar: View {
                                     )
                                 )
                                 .overlay(
-                                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                    RoundedRectangle(cornerRadius: 18, style: .continuous)
                                         .stroke(isActive ? Color.white.opacity(0.14) : Color.white.opacity(0.05), lineWidth: 1)
                                 )
                         )
@@ -135,14 +135,14 @@ private struct PhoneTabBar: View {
         }
         .padding(7)
         .background(
-            RoundedRectangle(cornerRadius: 30, style: .continuous)
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
                 .fill(.ultraThinMaterial)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 30, style: .continuous)
+                    RoundedRectangle(cornerRadius: 28, style: .continuous)
                         .stroke(Color.white.opacity(0.14), lineWidth: 1)
                 )
         )
-        .shadow(color: .black.opacity(0.22), radius: 18, x: 0, y: 9)
+        .shadow(color: .black.opacity(0.20), radius: 16, x: 0, y: 8)
         .padding(.horizontal, 14)
         .padding(.top, 6)
         .padding(.bottom, 8)
@@ -163,19 +163,19 @@ private struct TabContextStrip: View {
                     .font(.caption.weight(.bold))
                     .tracking(1.4)
                     .foregroundStyle(Color.white)
-                Text(contextCopy)
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
+            Text(contextCopy)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
             }
             Spacer()
         }
         .padding(.horizontal, 18)
-        .padding(.vertical, 10)
+        .padding(.vertical, 9)
         .background(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .fill(Color.white.opacity(0.04))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
                         .stroke(Color.white.opacity(0.09), lineWidth: 1)
                 )
         )
@@ -186,7 +186,7 @@ private struct TabContextStrip: View {
         switch tab {
         case .home: return "Curating your next watch"
         case .library: return "Saved picks and watchlist"
-        case .settings: return "App, API, and sync preferences"
+        case .settings: return "App, API, sync"
         }
     }
 }
