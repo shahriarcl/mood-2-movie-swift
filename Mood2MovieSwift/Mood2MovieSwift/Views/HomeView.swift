@@ -39,38 +39,65 @@ struct HomeView: View {
     }
 
     private var topBar: some View {
-        HStack(spacing: 14) {
-            HStack(spacing: 10) {
-                BrandMark()
-
-                VStack(alignment: .leading, spacing: 2) {
-                    Text("Mood2Movie")
-                        .font(.title3.weight(.black))
-                        .foregroundStyle(Color.white)
-                    Text("Pick a movie by how you feel")
-                        .font(.caption.weight(.medium))
-                        .foregroundStyle(.secondary)
-                }
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 14) {
+                brandHeader
+                Spacer(minLength: 12)
+                topBarActions
             }
 
-            Spacer(minLength: 12)
-
-            HStack(spacing: 10) {
-                Button {
-                    path.append(.settings)
-                } label: {
-                    Label("Settings", systemImage: "slider.horizontal.3")
-                }
-                .buttonStyle(FooterLinkButtonStyle())
-
-                Button {
-                    path.append(.myMovies)
-                } label: {
-                    Label("Library", systemImage: "rectangle.stack.badge.person.crop")
-                }
-                .buttonStyle(FooterLinkButtonStyle())
+            VStack(alignment: .leading, spacing: 14) {
+                brandHeader
+                topBarActions
             }
         }
+    }
+
+    private var brandHeader: some View {
+        HStack(spacing: 10) {
+            BrandMark()
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text("Mood2Movie")
+                    .font(.title3.weight(.black))
+                    .foregroundStyle(Color.white)
+                Text("Pick a movie by how you feel")
+                    .font(.caption.weight(.medium))
+                    .foregroundStyle(.secondary)
+            }
+        }
+    }
+
+    private var topBarActions: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(spacing: 10) {
+                settingsButton
+                libraryButton
+            }
+
+            VStack(alignment: .leading, spacing: 10) {
+                settingsButton
+                libraryButton
+            }
+        }
+    }
+
+    private var settingsButton: some View {
+        Button {
+            path.append(.settings)
+        } label: {
+            Label("Settings", systemImage: "slider.horizontal.3")
+        }
+        .buttonStyle(FooterLinkButtonStyle())
+    }
+
+    private var libraryButton: some View {
+        Button {
+            path.append(.myMovies)
+        } label: {
+            Label("Library", systemImage: "rectangle.stack.badge.person.crop")
+        }
+        .buttonStyle(FooterLinkButtonStyle())
     }
 
     private func motion<Content: View>(_ content: Content, delay: Double) -> some View {
@@ -82,82 +109,162 @@ struct HomeView: View {
 
     private var heroShowcase: some View {
         GlassCard {
-            HStack(alignment: .top, spacing: 22) {
-                VStack(alignment: .leading, spacing: 16) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("◆ MOOD-DRIVEN RECOMMENDATIONS")
-                            .font(.caption2.weight(.bold))
-                            .tracking(3.2)
-                            .foregroundStyle(Color(hex: "F5A623"))
-                            .textCase(.uppercase)
-
-                        Text("Mood picks for\nwhatever you feel like tonight.")
-                            .font(.system(size: 42, weight: .black, design: .rounded))
-                            .lineLimit(2)
-                            .minimumScaleFactor(0.75)
-                            .fixedSize(horizontal: false, vertical: true)
-
-                        Text("Search a title, or let the mood cards steer you toward a better match.")
-                            .font(.body)
-                            .foregroundStyle(.secondary)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-
-                    HStack(spacing: 8) {
-                        HeroTag(text: "\(store.movies.count) saved")
-                        HeroTag(text: "\(store.favoriteGenres.count) favorite genres")
-                        HeroTag(text: "\(store.preferences.platforms.count) platforms")
-                    }
-
-                    HStack(spacing: 12) {
-                        Button {
-                            guard let selection = draft.resolved else { return }
-                            path.append(.results(selection))
-                        } label: {
-                            Label("Start the vibe", systemImage: "sparkles")
-                                .frame(maxWidth: .infinity)
-                        }
-                        .buttonStyle(PrimaryActionButtonStyle(isEnabled: draft.isComplete))
-                        .disabled(!draft.isComplete)
-
-                        Button {
-                            path.append(.settings)
-                        } label: {
-                            Label("Tune app", systemImage: "slider.horizontal.3")
-                                .frame(maxWidth: .infinity)
-                        }
-                        .buttonStyle(SecondaryActionButtonStyle())
-                    }
-
-                    HStack(spacing: 14) {
-                        MiniStat(label: "Saved", value: "\(store.movies.count)")
-                        MiniStat(label: "For you", value: "\(forYouMovies.count)")
-                        MiniStat(label: "Platforms", value: "\(store.preferences.platforms.count)")
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-                VStack(alignment: .leading, spacing: 14) {
-                    if let spotlight = forYouMovies.first {
-                        SpotlightCard(movie: spotlight)
-                    } else {
-                        EmptySpotlightCard()
-                    }
-
-                    HStack(spacing: 10) {
-                        Label(store.movies.isEmpty ? "Build your taste" : "Taste is active", systemImage: "heart.fill")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Color(hex: "F5A623"))
-                        Spacer()
-                        Text(store.movies.isEmpty ? "Start saving movies to power better picks." : "Your library is already feeding the engine.")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                            .lineLimit(2)
-                    }
-                }
-                .frame(width: 320, alignment: .leading)
+            ViewThatFits(in: .horizontal) {
+                heroShowcaseWide
+                heroShowcaseStacked
             }
         }
+    }
+
+    private var heroShowcaseWide: some View {
+        HStack(alignment: .top, spacing: 22) {
+            VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("◆ MOOD-DRIVEN RECOMMENDATIONS")
+                        .font(.caption2.weight(.bold))
+                        .tracking(3.2)
+                        .foregroundStyle(Color(hex: "F5A623"))
+                        .textCase(.uppercase)
+
+                    Text("Mood picks for\nwhatever you feel like tonight.")
+                        .font(.system(size: 42, weight: .black, design: .rounded))
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.75)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    Text("Search a title, or let the mood cards steer you toward a better match.")
+                        .font(.body)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                HStack(spacing: 8) {
+                    HeroTag(text: "\(store.movies.count) saved")
+                    HeroTag(text: "\(store.favoriteGenres.count) favorite genres")
+                    HeroTag(text: "\(store.preferences.platforms.count) platforms")
+                }
+
+                HStack(spacing: 12) {
+                    Button {
+                        guard let selection = draft.resolved else { return }
+                        path.append(.results(selection))
+                    } label: {
+                        Label("Start the vibe", systemImage: "sparkles")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(PrimaryActionButtonStyle(isEnabled: draft.isComplete))
+                    .disabled(!draft.isComplete)
+
+                    Button {
+                        path.append(.settings)
+                    } label: {
+                        Label("Tune app", systemImage: "slider.horizontal.3")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(SecondaryActionButtonStyle())
+                }
+
+                HStack(spacing: 14) {
+                    MiniStat(label: "Saved", value: "\(store.movies.count)")
+                    MiniStat(label: "For you", value: "\(forYouMovies.count)")
+                    MiniStat(label: "Platforms", value: "\(store.preferences.platforms.count)")
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+
+            VStack(alignment: .leading, spacing: 14) {
+                if let spotlight = forYouMovies.first {
+                    SpotlightCard(movie: spotlight)
+                } else {
+                    EmptySpotlightCard()
+                }
+
+                HStack(spacing: 10) {
+                    Label(store.movies.isEmpty ? "Build your taste" : "Taste is active", systemImage: "heart.fill")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(Color(hex: "F5A623"))
+                    Spacer()
+                    Text(store.movies.isEmpty ? "Start saving movies to power better picks." : "Your library is already feeding the engine.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(2)
+                }
+            }
+            .frame(width: 320, alignment: .leading)
+        }
+    }
+
+    private var heroShowcaseStacked: some View {
+        VStack(alignment: .leading, spacing: 18) {
+            VStack(alignment: .leading, spacing: 8) {
+                Text("◆ MOOD-DRIVEN RECOMMENDATIONS")
+                    .font(.caption2.weight(.bold))
+                    .tracking(3.2)
+                    .foregroundStyle(Color(hex: "F5A623"))
+                    .textCase(.uppercase)
+
+                Text("Mood picks for\nwhatever you feel like tonight.")
+                    .font(.system(size: 42, weight: .black, design: .rounded))
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.75)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                Text("Search a title, or let the mood cards steer you toward a better match.")
+                    .font(.body)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            HStack(spacing: 8) {
+                HeroTag(text: "\(store.movies.count) saved")
+                HeroTag(text: "\(store.favoriteGenres.count) favorite genres")
+                HeroTag(text: "\(store.preferences.platforms.count) platforms")
+            }
+
+            VStack(spacing: 12) {
+                Button {
+                    guard let selection = draft.resolved else { return }
+                    path.append(.results(selection))
+                } label: {
+                    Label("Start the vibe", systemImage: "sparkles")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(PrimaryActionButtonStyle(isEnabled: draft.isComplete))
+                .disabled(!draft.isComplete)
+
+                Button {
+                    path.append(.settings)
+                } label: {
+                    Label("Tune app", systemImage: "slider.horizontal.3")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(SecondaryActionButtonStyle())
+            }
+
+            HStack(spacing: 14) {
+                MiniStat(label: "Saved", value: "\(store.movies.count)")
+                MiniStat(label: "For you", value: "\(forYouMovies.count)")
+                MiniStat(label: "Platforms", value: "\(store.preferences.platforms.count)")
+            }
+
+            if let spotlight = forYouMovies.first {
+                SpotlightCard(movie: spotlight)
+            } else {
+                EmptySpotlightCard()
+            }
+
+            HStack(spacing: 10) {
+                Label(store.movies.isEmpty ? "Build your taste" : "Taste is active", systemImage: "heart.fill")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(Color(hex: "F5A623"))
+                Spacer()
+                Text(store.movies.isEmpty ? "Start saving movies to power better picks." : "Your library is already feeding the engine.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(2)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
 
     private var searchSection: some View {

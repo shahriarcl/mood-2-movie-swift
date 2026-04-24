@@ -120,36 +120,54 @@ struct MovieDetailView: View {
 
     private var heroCard: some View {
         GlassCard {
-            HStack(alignment: .top, spacing: 18) {
-                poster
-                VStack(alignment: .leading, spacing: 14) {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(movie.title)
-                            .font(.system(size: 34, weight: .black, design: .rounded))
-                            .foregroundStyle(.primary)
-                        Text(summaryLine)
-                            .font(.footnote.weight(.medium))
-                            .foregroundStyle(.secondary)
-                    }
-
-                    HStack(spacing: 8) {
-                        DetailChip(text: movie.genre.label)
-                        DetailChip(text: movie.primaryAvailability.platformName)
-                        DetailChip(text: movie.year.description)
-                    }
-
-                    Text(movie.reason)
-                        .font(.callout)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-
-                    Text(detail?.overview ?? "Fetching the full synopsis...")
-                        .font(.body)
-                        .foregroundStyle(.primary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-                Spacer(minLength: 0)
+            ViewThatFits(in: .horizontal) {
+                heroCardWide
+                heroCardStacked
             }
+        }
+    }
+
+    private var heroCardWide: some View {
+        HStack(alignment: .top, spacing: 18) {
+            poster
+            detailCopy
+            Spacer(minLength: 0)
+        }
+    }
+
+    private var heroCardStacked: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            poster
+            detailCopy
+        }
+    }
+
+    private var detailCopy: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(movie.title)
+                    .font(.system(size: 34, weight: .black, design: .rounded))
+                    .foregroundStyle(.primary)
+                Text(summaryLine)
+                    .font(.footnote.weight(.medium))
+                    .foregroundStyle(.secondary)
+            }
+
+            HStack(spacing: 8) {
+                DetailChip(text: movie.genre.label)
+                DetailChip(text: movie.primaryAvailability.platformName)
+                DetailChip(text: movie.year.description)
+            }
+
+            Text(movie.reason)
+                .font(.callout)
+                .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            Text(detail?.overview ?? "Fetching the full synopsis...")
+                .font(.body)
+                .foregroundStyle(.primary)
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 
