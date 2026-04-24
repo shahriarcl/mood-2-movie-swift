@@ -231,22 +231,35 @@ struct MyMoviesView: View {
     private var heroSummary: some View {
         GlassCard {
             VStack(alignment: .leading, spacing: 16) {
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Saved titles")
-                        .font(.caption2.weight(.bold))
-                        .tracking(3)
-                        .foregroundStyle(Color(hex: "F5A623"))
-                    Text("\(store.movies.count)")
-                        .font(.system(size: 40, weight: .black, design: .rounded))
-                    Text("movies in the library")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                HStack(alignment: .top, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("YOUR ARCHIVE")
+                            .font(.caption2.weight(.bold))
+                            .tracking(3.2)
+                            .foregroundStyle(Color(hex: "F5A623"))
+                        Text("\(store.movies.count) saved titles")
+                            .font(.system(size: 32, weight: .black, design: .rounded))
+                            .fixedSize(horizontal: false, vertical: true)
+                        Text("Watchlist and watched titles live here, and cloud sync keeps them with you.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+
+                    Spacer(minLength: 10)
+
+                    VStack(spacing: 8) {
+                        LibraryStat(label: "Watchlist", value: "\(store.watchlist.count)")
+                        LibraryStat(label: "Watched", value: "\(store.watched.count)")
+                        LibraryStat(label: "Sync", value: cloud.isSignedIn ? "On" : "Off")
+                    }
+                    .frame(width: 124)
                 }
 
-                HStack(spacing: 12) {
-                    LibraryStat(label: "Watchlist", value: "\(store.watchlist.count)")
-                    LibraryStat(label: "Watched", value: "\(store.watched.count)")
-                    LibraryStat(label: "Sync", value: cloud.isSignedIn ? "On" : "Off")
+                HStack(spacing: 8) {
+                    SummaryPill(text: cloud.isSignedIn ? "Cloud active" : "Offline")
+                    SummaryPill(text: "\(store.favoriteGenres.count) favorite genres")
+                    SummaryPill(text: "\(store.preferences.platforms.count) platforms")
                 }
 
                 Text(cloud.isSignedIn ? "Cloud sync is active." : "Sign in to move your library between devices.")
@@ -259,11 +272,42 @@ struct MyMoviesView: View {
     private var emptyLibraryState: some View {
         GlassCard {
             VStack(alignment: .leading, spacing: 14) {
-                SectionHeader(title: "Nothing saved yet")
+                HStack(alignment: .top, spacing: 12) {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                            .fill(
+                                LinearGradient(
+                                    colors: [Color(hex: "FFB84D"), Color(hex: "F5A623")],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
+                            )
+                        Image(systemName: "bookmark.fill")
+                            .font(.headline.weight(.bold))
+                            .foregroundStyle(Color(hex: "0D0D0F"))
+                    }
+                    .frame(width: 42, height: 42)
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        SectionHeader(title: "Nothing saved yet")
+                        Text("Your first saved movie will land here, ready to revisit later.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+
                 Text("Start from the Home screen, pick a mood, and save a title here to build your own watchlist.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
+
+                HStack(spacing: 8) {
+                    SummaryPill(text: "Pick a mood")
+                    SummaryPill(text: "Save a title")
+                    SummaryPill(text: "Track your taste")
+                }
+
                 Button {
                     path.removeAll()
                 } label: {
@@ -287,10 +331,17 @@ private struct MoviesSection: View {
     var body: some View {
         GlassCard {
             VStack(alignment: .leading, spacing: 12) {
-                HStack(spacing: 8) {
+                HStack(alignment: .top, spacing: 10) {
                     Image(systemName: icon)
-                    Text(title)
-                        .font(.headline.weight(.semibold))
+                        .foregroundStyle(Color(hex: "F5A623"))
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(title)
+                            .font(.headline.weight(.semibold))
+                        Text(title == "Watchlist" ? "Ready for your next session." : "Titles you’ve already watched.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer()
                     Text("\(movies.count)")
                         .font(.caption.weight(.semibold))
                         .padding(.horizontal, 8)
@@ -299,12 +350,7 @@ private struct MoviesSection: View {
                             Capsule(style: .continuous)
                                 .fill(Color.white.opacity(0.08))
                         )
-                    Spacer()
                 }
-
-                Text(title == "Watchlist" ? "Ready for your next session." : "Titles you’ve already watched.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
 
                 if movies.isEmpty {
                     Text("Nothing here yet.")
@@ -357,38 +403,48 @@ private struct MovieListRow: View {
     let remove: () -> Void
 
     var body: some View {
-        HStack(spacing: 12) {
-            Button(action: onOpenDetail) {
-                PosterBadge(genre: movie.genre, title: movie.title, year: movie.year, size: .small)
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .top, spacing: 12) {
+                Button(action: onOpenDetail) {
+                    PosterBadge(genre: movie.genre, title: movie.title, year: movie.year, size: .small)
+                }
+                .buttonStyle(.plain)
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(movie.title)
+                        .font(.subheadline.weight(.semibold))
+                        .lineLimit(2)
+                    Text("\(movie.year) • \(movie.status.label)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    Text(movie.genre.label)
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(Color(hex: "F5A623"))
+                }
+                Spacer()
             }
-            .buttonStyle(.plain)
-            VStack(alignment: .leading, spacing: 3) {
-                Text(movie.title)
-                    .font(.subheadline.weight(.semibold))
-                    .lineLimit(1)
-                Text("\(movie.year) • \(movie.status.label)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Text(movie.genre.label)
-                    .font(.caption2.weight(.semibold))
-                    .foregroundStyle(Color(hex: "F5A623"))
-            }
-            Spacer()
-            VStack(spacing: 8) {
+
+            HStack(spacing: 8) {
                 Button(movie.status == .watchlist ? "Watched" : "Watchlist", action: swapStatus)
                     .buttonStyle(InlineActionButtonStyle(isActive: false))
                 Button(role: .destructive, action: remove) {
                     Label("Remove", systemImage: "trash")
                 }
                 .buttonStyle(InlineActionButtonStyle(isActive: false))
+                Spacer()
             }
         }
         .padding(12)
         .background(
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(Color.white.opacity(0.05))
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(
+                    LinearGradient(
+                        colors: [Color.white.opacity(0.07), Color.white.opacity(0.035)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
                 .overlay(
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
                         .stroke(Color.white.opacity(0.08), lineWidth: 1)
                 )
         )
