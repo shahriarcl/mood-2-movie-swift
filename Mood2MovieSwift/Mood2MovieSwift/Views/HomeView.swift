@@ -9,24 +9,28 @@ struct HomeView: View {
     @State private var searchResults: [MovieResult] = []
     @State private var searching = false
     @State private var forYouMovies: [MovieResult] = []
+    @State private var didAppear = false
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                topBar
-                heroHeader
-                heroMetrics
-                searchSection
-                forYouSection
-                moodSection
-                actionSection
-                footerSection
+                motion(topBar, delay: 0.0)
+                motion(heroHeader, delay: 0.05)
+                motion(heroMetrics, delay: 0.10)
+                motion(searchSection, delay: 0.15)
+                motion(forYouSection, delay: 0.20)
+                motion(moodSection, delay: 0.25)
+                motion(actionSection, delay: 0.30)
+                motion(footerSection, delay: 0.35)
             }
             .padding(.vertical, 24)
             .padding(.horizontal, 20)
             .frame(maxWidth: 980, alignment: .leading)
         }
         .background(AppScreenBackground())
+        .onAppear {
+            didAppear = true
+        }
         .task(id: store.favoriteGenres) {
             await loadForYou()
         }
@@ -68,6 +72,13 @@ struct HomeView: View {
                 .buttonStyle(FooterLinkButtonStyle())
             }
         }
+    }
+
+    private func motion<Content: View>(_ content: Content, delay: Double) -> some View {
+        content
+            .opacity(didAppear ? 1 : 0)
+            .offset(y: didAppear ? 0 : 14)
+            .animation(.spring(response: 0.55, dampingFraction: 0.82).delay(delay), value: didAppear)
     }
 
     private var heroHeader: some View {

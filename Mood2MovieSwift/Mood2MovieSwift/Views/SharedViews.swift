@@ -252,7 +252,9 @@ struct MoodSelectorView: View {
                 ForEach(Array(values.enumerated()), id: \.offset) { _, value in
                     let selected = selection == value
                     Button {
-                        onSelect(value)
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) {
+                            onSelect(value)
+                        }
                     } label: {
                         Text(label(value))
                             .font(.footnote.weight(.semibold))
