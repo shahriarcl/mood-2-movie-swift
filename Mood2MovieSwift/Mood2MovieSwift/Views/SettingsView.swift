@@ -28,8 +28,8 @@ struct SettingsView: View {
                 saveButton
             }
             .padding(.vertical, 24)
-            .padding(.horizontal, 20)
-            .frame(maxWidth: 980, alignment: .leading)
+            .padding(.horizontal, 16)
+            .frame(maxWidth: 430, alignment: .leading)
             .opacity(didAppear ? 1 : 0)
             .offset(y: didAppear ? 0 : 12)
         }

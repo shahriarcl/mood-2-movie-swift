@@ -23,8 +23,8 @@ struct HomeView: View {
                 motion(footerSection, delay: 0.36)
             }
             .padding(.vertical, 24)
-            .padding(.horizontal, 20)
-            .frame(maxWidth: 980, alignment: .leading)
+            .padding(.horizontal, 16)
+            .frame(maxWidth: 430, alignment: .leading)
         }
         .background(AppScreenBackground())
         .onAppear {
