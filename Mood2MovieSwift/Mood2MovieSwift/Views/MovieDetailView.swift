@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct MovieDetailView: View {
+    @Environment(\.dismiss) private var dismiss
     let movie: MovieResult
 
     @State private var detail: TMDBMovieDetail?
@@ -63,8 +64,8 @@ struct MovieDetailView: View {
                 }
             }
             .padding(.vertical, 24)
-            .padding(.horizontal, 20)
-            .frame(maxWidth: 980, alignment: .leading)
+            .padding(.horizontal, 16)
+            .frame(maxWidth: 430, alignment: .leading)
         }
         .background(AppScreenBackground())
         .task(id: movie.tmdbId) {
@@ -110,10 +111,23 @@ struct MovieDetailView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 12) {
+            Button {
+                dismiss()
+            } label: {
+                Label("Back", systemImage: "chevron.left")
+            }
+            .buttonStyle(PlainBackButtonStyle())
+
             Text("MOVIE DETAILS")
                 .font(.caption2.weight(.bold))
                 .tracking(3.0)
                 .foregroundStyle(Color(hex: "F5A623"))
+            Text(movie.title)
+                .font(.system(size: 34, weight: .black, design: .rounded))
+                .fixedSize(horizontal: false, vertical: true)
+            Text("A closer look at the pick, the synopsis, and where to watch.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
             Divider().overlay(Color(hex: "F5A623").opacity(0.7))
         }
     }
@@ -128,10 +142,9 @@ struct MovieDetailView: View {
     }
 
     private var heroCardWide: some View {
-        HStack(alignment: .top, spacing: 18) {
+        VStack(alignment: .leading, spacing: 16) {
             poster
             detailCopy
-            Spacer(minLength: 0)
         }
     }
 
@@ -145,9 +158,6 @@ struct MovieDetailView: View {
     private var detailCopy: some View {
         VStack(alignment: .leading, spacing: 14) {
             VStack(alignment: .leading, spacing: 6) {
-                Text(movie.title)
-                    .font(.system(size: 34, weight: .black, design: .rounded))
-                    .foregroundStyle(.primary)
                 Text(summaryLine)
                     .font(.footnote.weight(.medium))
                     .foregroundStyle(.secondary)
@@ -172,14 +182,7 @@ struct MovieDetailView: View {
     }
 
     private var statsRow: some View {
-        LazyVGrid(
-            columns: [
-                GridItem(.flexible(), spacing: 12),
-                GridItem(.flexible(), spacing: 12),
-                GridItem(.flexible(), spacing: 12)
-            ],
-            spacing: 12
-        ) {
+        VStack(spacing: 12) {
             StatCard(title: "Year", value: "\(movie.year)", note: movie.genre.label)
             StatCard(title: "Primary", value: movie.primaryAvailability.platformName, note: movie.primaryAvailability.type.label)
             StatCard(title: "Providers", value: "\(providers.count)", note: "available matches")
@@ -187,7 +190,7 @@ struct MovieDetailView: View {
     }
 
     private var providerGrid: some View {
-        LazyVGrid(columns: [GridItem(.adaptive(minimum: 180), spacing: 12)], spacing: 12) {
+        VStack(spacing: 12) {
             ForEach(providers) { availability in
                 ProviderCard(availability: availability)
             }
