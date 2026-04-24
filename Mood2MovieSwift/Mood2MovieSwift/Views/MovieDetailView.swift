@@ -9,62 +9,54 @@ struct MovieDetailView: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading, spacing: 22) {
                 header
-                heroCard
-
                 if loading && detail == nil {
                     LoadingStateView(text: "Loading movie details...")
                 } else {
-                    GlassCard {
-                        HStack(alignment: .top, spacing: 18) {
-                            poster
-                            VStack(alignment: .leading, spacing: 12) {
-                                Text(movie.title)
-                                    .font(.system(size: 32, weight: .black, design: .rounded))
-                                Text(summaryLine)
-                                    .font(.footnote)
-                                    .foregroundStyle(.secondary)
-                                Text(detail?.overview ?? movie.reason)
-                                    .font(.body)
-                                    .foregroundStyle(.primary)
-                                    .fixedSize(horizontal: false, vertical: true)
-
-                                HStack(spacing: 8) {
-                                    if let runtime = detail?.runtime {
-                                        DetailChip(text: "Runtime \(runtime) min")
-                                    }
-
-                                    if let rating = detail?.voteAverage {
-                                        DetailChip(text: String(format: "TMDB %.1f", rating))
-                                    }
-                                }
-                            }
-                        }
-                    }
+                    heroCard
+                    statsRow
 
                     if !providers.isEmpty {
                         section(title: "Where to watch") {
+                            providerGrid
+                        }
+                    }
+
+                    if let detail, !detail.genres.isEmpty {
+                        section(title: "Genres") {
                             FlowLayout(spacing: 8) {
-                                ForEach(providers) { availability in
-                                    AvailabilityPill(availability: availability)
+                                ForEach(detail.genres, id: \.id) { genre in
+                                    Text(genreLabel(genre.id))
+                                        .font(.footnote.weight(.semibold))
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 8)
+                                        .background(
+                                            Capsule(style: .continuous)
+                                                .fill(Color.white.opacity(0.07))
+                                                .overlay(
+                                                    Capsule(style: .continuous)
+                                                        .stroke(Color.white.opacity(0.09), lineWidth: 1)
+                                                )
+                                        )
                                 }
                             }
                         }
                     }
 
-                    if let detail {
-                        if !detail.genres.isEmpty {
-                            section(title: "Genres") {
-                                FlowLayout(spacing: 8) {
-                                    ForEach(detail.genres, id: \.id) { genre in
-                                        Text(genreLabel(genre.id))
-                                            .font(.footnote.weight(.semibold))
-                                            .padding(.horizontal, 12)
-                                            .padding(.vertical, 8)
-                                            .background(Capsule().fill(Color.white.opacity(0.06)))
-                                    }
-                                }
+                    section(title: "About this pick") {
+                        VStack(alignment: .leading, spacing: 10) {
+                            Text(detail?.overview ?? movie.reason)
+                                .font(.body)
+                                .foregroundStyle(.primary)
+                                .fixedSize(horizontal: false, vertical: true)
+
+                            if let runtime = detail?.runtime {
+                                DetailRow(label: "Runtime", value: "\(runtime) minutes")
+                            }
+
+                            if let rating = detail?.voteAverage {
+                                DetailRow(label: "TMDB rating", value: String(format: "%.1f / 10", rating))
                             }
                         }
                     }
@@ -105,6 +97,10 @@ struct MovieDetailView: View {
         }
         .frame(width: 160, height: 240)
         .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .stroke(Color.white.opacity(0.10), lineWidth: 1)
+        )
     }
 
     private var posterURL: URL? {
@@ -114,9 +110,9 @@ struct MovieDetailView: View {
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Movie Details")
-                .font(.caption2.weight(.semibold))
-                .tracking(2.2)
+            Text("MOVIE DETAILS")
+                .font(.caption2.weight(.bold))
+                .tracking(3.0)
                 .foregroundStyle(Color(hex: "F5A623"))
             Divider().overlay(Color(hex: "F5A623").opacity(0.7))
         }
@@ -127,11 +123,12 @@ struct MovieDetailView: View {
             HStack(alignment: .top, spacing: 18) {
                 poster
                 VStack(alignment: .leading, spacing: 14) {
-                    VStack(alignment: .leading, spacing: 4) {
+                    VStack(alignment: .leading, spacing: 6) {
                         Text(movie.title)
                             .font(.system(size: 34, weight: .black, design: .rounded))
+                            .foregroundStyle(.primary)
                         Text(summaryLine)
-                            .font(.footnote)
+                            .font(.footnote.weight(.medium))
                             .foregroundStyle(.secondary)
                     }
 
@@ -141,12 +138,40 @@ struct MovieDetailView: View {
                         DetailChip(text: movie.year.description)
                     }
 
-                    Text(detail?.overview ?? movie.reason)
+                    Text(movie.reason)
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    Text(detail?.overview ?? "Fetching the full synopsis...")
                         .font(.body)
                         .foregroundStyle(.primary)
                         .fixedSize(horizontal: false, vertical: true)
                 }
                 Spacer(minLength: 0)
+            }
+        }
+    }
+
+    private var statsRow: some View {
+        LazyVGrid(
+            columns: [
+                GridItem(.flexible(), spacing: 12),
+                GridItem(.flexible(), spacing: 12),
+                GridItem(.flexible(), spacing: 12)
+            ],
+            spacing: 12
+        ) {
+            StatCard(title: "Year", value: "\(movie.year)", note: movie.genre.label)
+            StatCard(title: "Primary", value: movie.primaryAvailability.platformName, note: movie.primaryAvailability.type.label)
+            StatCard(title: "Providers", value: "\(providers.count)", note: "available matches")
+        }
+    }
+
+    private var providerGrid: some View {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 180), spacing: 12)], spacing: 12) {
+            ForEach(providers) { availability in
+                ProviderCard(availability: availability)
             }
         }
     }
@@ -178,6 +203,102 @@ private struct DetailChip: View {
                     )
             )
             .foregroundStyle(.secondary)
+    }
+}
+
+private struct DetailRow: View {
+    let label: String
+    let value: String
+
+    var body: some View {
+        HStack(spacing: 10) {
+            Text(label)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+                .frame(width: 96, alignment: .leading)
+            Text(value)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.primary)
+            Spacer()
+        }
+        .padding(.top, 4)
+    }
+}
+
+private struct StatCard: View {
+    let title: String
+    let value: String
+    let note: String
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title.uppercased())
+                .font(.caption2.weight(.bold))
+                .tracking(2)
+                .foregroundStyle(.secondary)
+            Text(value)
+                .font(.system(size: 22, weight: .black, design: .rounded))
+                .foregroundStyle(.primary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.75)
+            Text(note)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(Color.white.opacity(0.05))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(Color.white.opacity(0.09), lineWidth: 1)
+                )
+        )
+    }
+}
+
+private struct ProviderCard: View {
+    let availability: Availability
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                Image(systemName: iconName)
+                    .foregroundStyle(Color(hex: "F5A623"))
+                Spacer()
+                Text(availability.type.label.uppercased())
+                    .font(.caption2.weight(.bold))
+                    .tracking(1.8)
+                    .foregroundStyle(.secondary)
+            }
+
+            Text(availability.platformName)
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(.primary)
+
+            Text(availability.type == .subscription ? "Stream instantly" : "Alternative purchase option")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+        }
+        .frame(maxWidth: .infinity, minHeight: 92, alignment: .leading)
+        .padding(14)
+        .background(
+            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                .fill(Color.white.opacity(0.05))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 18, style: .continuous)
+                        .stroke(Color.white.opacity(0.09), lineWidth: 1)
+                )
+        )
+    }
+
+    private var iconName: String {
+        switch availability.type {
+        case .subscription: return "play.fill"
+        case .rent: return "clock.arrow.circlepath"
+        case .buy: return "cart.fill"
+        }
     }
 }
 

@@ -19,7 +19,7 @@ public enum MoodCatalog {
         Platform(key: "hulu", name: "Hulu", tmdbId: 15, symbolName: "film.stack.fill"),
         Platform(key: "max", name: "Max", tmdbId: 1899, symbolName: "h.circle.fill"),
         Platform(key: "apple-tv", name: "Apple TV+", tmdbId: 350, symbolName: "apple.logo"),
-        Platform(key: "peacock", name: "Peacock", tmdbId: 386, symbolName: "feather.fill"),
+        Platform(key: "peacock", name: "Peacock", tmdbId: 386, symbolName: "feather"),
         Platform(key: "paramount", name: "Paramount+", tmdbId: 531, symbolName: "mountain.2.fill")
     ]
 
