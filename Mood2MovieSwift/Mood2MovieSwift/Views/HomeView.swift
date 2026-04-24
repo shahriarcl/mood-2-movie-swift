@@ -156,6 +156,35 @@ struct HomeView: View {
             }
 
             VStack(alignment: .leading, spacing: 12) {
+                HStack(alignment: .top, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("NOW CURATING")
+                            .font(.caption2.weight(.bold))
+                            .tracking(3.2)
+                            .foregroundStyle(Color(hex: "F5A623"))
+                        Text("Your taste is the headline.")
+                            .font(.system(size: 30, weight: .black, design: .rounded))
+                            .lineLimit(2)
+                            .minimumScaleFactor(0.84)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+
+                    Spacer(minLength: 8)
+
+                    VStack(spacing: 8) {
+                        MiniStat(label: "Saved", value: "\(store.movies.count)")
+                        MiniStat(label: "Picks", value: "\(forYouMovies.count)")
+                    }
+                    .frame(width: 120)
+                }
+
+                HStack(spacing: 8) {
+                    SummaryPill(text: "\(store.favoriteGenres.count) favorite genres")
+                    SummaryPill(text: "\(store.preferences.platforms.count) platforms")
+                }
+            }
+
+            VStack(alignment: .leading, spacing: 12) {
                 VStack(alignment: .leading, spacing: 6) {
                     Text("◆ MOOD-DRIVEN RECOMMENDATIONS")
                         .font(.caption2.weight(.bold))
@@ -174,6 +203,12 @@ struct HomeView: View {
                     .font(.body)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
+
+                HStack(spacing: 10) {
+                    FeatureChip(icon: "wand.and.stars", text: "Mood tuned")
+                    FeatureChip(icon: "film.stack", text: "Fresh picks")
+                    FeatureChip(icon: "heart.circle.fill", text: "Saved taste")
+                }
             }
 
             HStack(spacing: 8) {
@@ -509,30 +544,62 @@ private struct MiniStat: View {
     }
 }
 
+private struct FeatureChip: View {
+    let icon: String
+    let text: String
+
+    var body: some View {
+        HStack(spacing: 6) {
+            Image(systemName: icon)
+                .font(.caption.weight(.bold))
+            Text(text)
+                .font(.caption.weight(.semibold))
+        }
+        .padding(.horizontal, 10)
+        .padding(.vertical, 7)
+        .background(
+            Capsule(style: .continuous)
+                .fill(Color.white.opacity(0.06))
+                .overlay(
+                    Capsule(style: .continuous)
+                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                )
+        )
+        .foregroundStyle(.secondary)
+    }
+}
+
 private struct SpotlightCard: View {
     let movie: MovieResult
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack {
-                Text("Top for you")
-                    .font(.caption2.weight(.bold))
-                    .tracking(3)
-                    .foregroundStyle(Color(hex: "F5A623"))
-                Spacer()
-                AvailabilityPill(availability: movie.primaryAvailability)
-            }
-
+        HStack(alignment: .top, spacing: 12) {
             PosterBadge(genre: movie.genre, title: movie.title, year: movie.year, size: .large)
-                .frame(width: 92, height: 132, alignment: .leading)
 
-            Text(movie.title)
-                .font(.headline.weight(.semibold))
-            Text(movie.reason)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-                .lineLimit(3)
-                .fixedSize(horizontal: false, vertical: true)
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text("Top for you")
+                        .font(.caption2.weight(.bold))
+                        .tracking(3)
+                        .foregroundStyle(Color(hex: "F5A623"))
+                    Spacer()
+                    AvailabilityPill(availability: movie.primaryAvailability)
+                }
+
+                Text(movie.title)
+                    .font(.headline.weight(.semibold))
+                    .lineLimit(2)
+                Text(movie.reason)
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(3)
+                    .fixedSize(horizontal: false, vertical: true)
+
+                HStack(spacing: 8) {
+                    SummaryPill(text: movie.genre.label)
+                    SummaryPill(text: "\(movie.year)")
+                }
+            }
         }
         .padding(16)
         .background(
@@ -601,28 +668,44 @@ private struct FeaturedMovieCard: View {
 
     var body: some View {
         Button(action: action) {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 12) {
                 PosterBadge(genre: movie.genre, title: movie.title, year: movie.year, size: .large)
-                    .frame(maxWidth: .infinity, alignment: .leading)
                     .frame(height: 138, alignment: .leading)
 
-                Text(movie.title)
-                    .font(.subheadline.weight(.semibold))
-                    .lineLimit(1)
+                VStack(alignment: .leading, spacing: 5) {
+                    Text(movie.title)
+                        .font(.subheadline.weight(.semibold))
+                        .lineLimit(1)
+                    Text("\(movie.year) • \(movie.genre.label)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
                 Text(movie.reason)
                     .font(.caption)
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
                     .fixedSize(horizontal: false, vertical: true)
+
+                HStack(spacing: 8) {
+                    SummaryPill(text: movie.primaryAvailability.platformName)
+                    SummaryPill(text: movie.primaryAvailability.type.label)
+                }
             }
             .padding(14)
-            .frame(maxWidth: .infinity, minHeight: 220, alignment: .leading)
+            .frame(maxWidth: .infinity, alignment: .leading)
             .background(
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .fill(Color.white.opacity(0.045))
+                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                    .fill(
+                        LinearGradient(
+                            colors: [Color.white.opacity(0.08), Color.white.opacity(0.035)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
                     .overlay(
-                        RoundedRectangle(cornerRadius: 20, style: .continuous)
-                            .stroke(Color.white.opacity(0.09), lineWidth: 1)
+                        RoundedRectangle(cornerRadius: 22, style: .continuous)
+                            .stroke(Color.white.opacity(0.10), lineWidth: 1)
                     )
             )
         }

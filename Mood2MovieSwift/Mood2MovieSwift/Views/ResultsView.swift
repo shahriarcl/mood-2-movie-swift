@@ -219,13 +219,16 @@ private struct MovieCardView: View {
                     }
                     .buttonStyle(.plain)
 
-                    VStack(alignment: .leading, spacing: 8) {
+                    VStack(alignment: .leading, spacing: 10) {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text(movie.title)
-                                .font(.headline.weight(.semibold))
-                                .foregroundStyle(.primary)
-                                .fixedSize(horizontal: false, vertical: true)
-                            Text("\(movie.year) • \(movie.primaryAvailability.platformName)")
+                            HStack {
+                                Text(movie.title)
+                                    .font(.headline.weight(.semibold))
+                                    .foregroundStyle(.primary)
+                                    .fixedSize(horizontal: false, vertical: true)
+                                Spacer(minLength: 8)
+                            }
+                            Text("\(movie.year) • \(movie.genre.label)")
                                 .font(.footnote)
                                 .foregroundStyle(.secondary)
                         }
@@ -236,6 +239,11 @@ private struct MovieCardView: View {
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                             .fixedSize(horizontal: false, vertical: true)
+
+                        HStack(spacing: 8) {
+                            SummaryChip(text: movie.primaryAvailability.platformName)
+                            SummaryChip(text: movie.primaryAvailability.type.label)
+                        }
                     }
                 }
 
@@ -252,9 +260,9 @@ private struct MovieCardView: View {
                         Button {
                             onOpenDetail()
                         } label: {
-                            Label("Details", systemImage: "info.circle")
+                            Label("Open", systemImage: "play.circle.fill")
                         }
-                        .buttonStyle(InlineActionButtonStyle(isActive: false))
+                        .buttonStyle(InlineActionButtonStyle(isActive: true))
 
                         Button {
                             onSave(.watchlist)
