@@ -103,30 +103,26 @@ struct ResultsView: View {
     private var heroSummary: some View {
         GlassCard {
             VStack(alignment: .leading, spacing: 14) {
-                HStack(alignment: .top, spacing: 12) {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("RESULTS")
-                            .font(.caption2.weight(.bold))
-                            .tracking(3)
-                            .foregroundStyle(Color(hex: "F5A623"))
-                        Text("One stack of movies tuned to this mood.")
-                            .font(.system(size: 28, weight: .black, design: .rounded))
-                            .fixedSize(horizontal: false, vertical: true)
-                        Text(selectionSummary)
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                            .lineLimit(3)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("RESULTS")
+                        .font(.caption2.weight(.bold))
+                        .tracking(3)
+                        .foregroundStyle(Color(hex: "F5A623"))
+                    Text("One stack of movies tuned to this mood.")
+                        .font(.system(size: 28, weight: .black, design: .rounded))
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text(selectionSummary)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(3)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
 
-                    Spacer(minLength: 8)
-
-                    VStack(spacing: 8) {
-                        SelectionStat(label: "Matches", value: "\(movies.count)")
-                        SelectionStat(label: "Page", value: "\(page)")
-                        SelectionStat(label: "Genre", value: selection.genre.label)
-                    }
-                    .frame(width: 116)
+                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+                    SelectionStat(label: "Matches", value: "\(movies.count)")
+                    SelectionStat(label: "Page", value: "\(page)")
+                    SelectionStat(label: "Genre", value: selection.genre.label)
+                    SelectionStat(label: "Mood", value: selection.vibe?.label ?? "Mixed")
                 }
 
                 HStack(spacing: 8) {
@@ -203,40 +199,47 @@ private struct MovieCardView: View {
 
     var body: some View {
         GlassCard {
-            VStack(alignment: .leading, spacing: 14) {
-                HStack(alignment: .top, spacing: 12) {
-                    Button(action: onOpenDetail) {
-                        PosterBadge(genre: movie.genre, title: movie.title, year: movie.year, size: .large)
-                    }
-                    .buttonStyle(.plain)
+        VStack(alignment: .leading, spacing: 14) {
+            HStack {
+                Text(status == .watched ? "Already watched" : "Top match")
+                    .font(.caption2.weight(.bold))
+                    .tracking(3)
+                    .foregroundStyle(Color(hex: "F5A623"))
+                Spacer()
+                AvailabilityPill(availability: movie.primaryAvailability)
+            }
 
-                    VStack(alignment: .leading, spacing: 10) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(movie.title)
-                                .font(.headline.weight(.semibold))
-                                .foregroundStyle(.primary)
-                                .fixedSize(horizontal: false, vertical: true)
-                            Text("\(movie.year) • \(movie.genre.label)")
-                                .font(.footnote)
-                                .foregroundStyle(.secondary)
-                        }
+            HStack(alignment: .top, spacing: 12) {
+                Button(action: onOpenDetail) {
+                    PosterBadge(genre: movie.genre, title: movie.title, year: movie.year, size: .large)
+                }
+                .buttonStyle(.plain)
 
-                        AvailabilityPill(availability: movie.primaryAvailability)
-
-                        Text(movie.reason)
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
+                VStack(alignment: .leading, spacing: 10) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(movie.title)
+                            .font(.headline.weight(.semibold))
+                            .foregroundStyle(.primary)
                             .fixedSize(horizontal: false, vertical: true)
+                        Text("\(movie.year) • \(movie.genre.label)")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
 
-                        HStack(spacing: 8) {
-                            SummaryChip(text: movie.primaryAvailability.platformName)
-                            SummaryChip(text: movie.primaryAvailability.type.label)
-                            if status == .watched {
-                                SummaryChip(text: "Watched")
-                            }
+                    Text(movie.reason)
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    HStack(spacing: 8) {
+                        SummaryChip(text: movie.primaryAvailability.platformName)
+                        SummaryChip(text: movie.primaryAvailability.type.label)
+                        if status == .watched {
+                            SummaryChip(text: "Watched")
                         }
                     }
                 }
+            }
 
                 if !movie.availability.isEmpty {
                     FlowLayout(spacing: 8) {
