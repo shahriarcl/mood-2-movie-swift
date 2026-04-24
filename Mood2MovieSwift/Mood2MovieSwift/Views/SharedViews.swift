@@ -1,5 +1,63 @@
 import SwiftUI
 
+struct AppScreenBackground: View {
+    var body: some View {
+        ZStack {
+            LinearGradient(
+                colors: [
+                    Color(hex: "060608"),
+                    Color(hex: "0B0B0E"),
+                    Color(hex: "121219")
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+
+            RadialGradient(
+                colors: [Color(hex: "F5A623").opacity(0.18), .clear],
+                center: .topTrailing,
+                startRadius: 24,
+                endRadius: 420
+            )
+
+            RadialGradient(
+                colors: [Color(hex: "6AA8FF").opacity(0.12), .clear],
+                center: .bottomLeading,
+                startRadius: 32,
+                endRadius: 380
+            )
+
+            Circle()
+                .fill(Color.white.opacity(0.06))
+                .frame(width: 420, height: 420)
+                .blur(radius: 120)
+                .offset(x: 320, y: -280)
+        }
+        .ignoresSafeArea()
+    }
+}
+
+struct GlassCard<Content: View>: View {
+    private let content: Content
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
+    var body: some View {
+        content
+            .padding(18)
+            .background(
+                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                    .fill(Color.white.opacity(0.05))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 22, style: .continuous)
+                            .stroke(Color.white.opacity(0.10), lineWidth: 1)
+                    )
+            )
+    }
+}
+
 struct SectionHeader: View {
     let title: String
 
@@ -274,7 +332,11 @@ struct FooterLinkButtonStyle: ButtonStyle {
             .padding(.horizontal, 14)
             .background(
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .fill(Color.white.opacity(0.04))
+                    .fill(Color.white.opacity(0.06))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                            .stroke(Color.white.opacity(0.10), lineWidth: 1)
+                    )
             )
             .foregroundStyle(.secondary)
             .opacity(configuration.isPressed ? 0.85 : 1)

@@ -11,33 +11,34 @@ struct MovieDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 20) {
                 header
+                heroCard
 
                 if loading && detail == nil {
                     LoadingStateView(text: "Loading movie details...")
                 } else {
-                    HStack(alignment: .top, spacing: 16) {
-                        poster
-                        VStack(alignment: .leading, spacing: 10) {
-                            Text(movie.title)
-                                .font(.system(size: 32, weight: .black, design: .rounded))
-                            Text(summaryLine)
-                                .font(.footnote)
-                                .foregroundStyle(.secondary)
-                            Text(detail?.overview ?? movie.reason)
-                                .font(.body)
-                                .foregroundStyle(.primary)
-                                .fixedSize(horizontal: false, vertical: true)
-
-                            if let runtime = detail?.runtime {
-                                Text("Runtime: \(runtime) min")
+                    GlassCard {
+                        HStack(alignment: .top, spacing: 18) {
+                            poster
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text(movie.title)
+                                    .font(.system(size: 32, weight: .black, design: .rounded))
+                                Text(summaryLine)
                                     .font(.footnote)
                                     .foregroundStyle(.secondary)
-                            }
+                                Text(detail?.overview ?? movie.reason)
+                                    .font(.body)
+                                    .foregroundStyle(.primary)
+                                    .fixedSize(horizontal: false, vertical: true)
 
-                            if let rating = detail?.voteAverage {
-                                Text(String(format: "TMDB rating: %.1f", rating))
-                                    .font(.footnote)
-                                    .foregroundStyle(.secondary)
+                                HStack(spacing: 8) {
+                                    if let runtime = detail?.runtime {
+                                        DetailChip(text: "Runtime \(runtime) min")
+                                    }
+
+                                    if let rating = detail?.voteAverage {
+                                        DetailChip(text: String(format: "TMDB %.1f", rating))
+                                    }
+                                }
                             }
                         }
                     }
@@ -71,9 +72,9 @@ struct MovieDetailView: View {
             }
             .padding(.vertical, 24)
             .padding(.horizontal, 20)
-            .frame(maxWidth: 820, alignment: .leading)
+            .frame(maxWidth: 980, alignment: .leading)
         }
-        .background(backgroundView)
+        .background(AppScreenBackground())
         .task(id: movie.tmdbId) {
             await load()
         }
@@ -121,22 +122,66 @@ struct MovieDetailView: View {
         }
     }
 
-    private func section<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
-            SectionHeader(title: title)
-            content()
+    private var heroCard: some View {
+        GlassCard {
+            HStack(alignment: .top, spacing: 18) {
+                poster
+                VStack(alignment: .leading, spacing: 14) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(movie.title)
+                            .font(.system(size: 34, weight: .black, design: .rounded))
+                        Text(summaryLine)
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    HStack(spacing: 8) {
+                        DetailChip(text: movie.genre.label)
+                        DetailChip(text: movie.primaryAvailability.platformName)
+                        DetailChip(text: movie.year.description)
+                    }
+
+                    Text(detail?.overview ?? movie.reason)
+                        .font(.body)
+                        .foregroundStyle(.primary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer(minLength: 0)
+            }
         }
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
-                .fill(Color.white.opacity(0.045))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
-                )
-        )
     }
 
+    private func section<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {
+        GlassCard {
+            VStack(alignment: .leading, spacing: 10) {
+                SectionHeader(title: title)
+                content()
+            }
+        }
+    }
+}
+
+private struct DetailChip: View {
+    let text: String
+
+    var body: some View {
+        Text(text)
+            .font(.caption.weight(.semibold))
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(
+                Capsule(style: .continuous)
+                    .fill(Color.white.opacity(0.06))
+                    .overlay(
+                        Capsule(style: .continuous)
+                            .stroke(Color.white.opacity(0.09), lineWidth: 1)
+                    )
+            )
+            .foregroundStyle(.secondary)
+    }
+}
+
+extension MovieDetailView {
     private func load() async {
         loading = true
         defer { loading = false }
@@ -177,14 +222,5 @@ struct MovieDetailView: View {
         case 99: return "Documentary"
         default: return "Genre \(id)"
         }
-    }
-
-    private var backgroundView: some View {
-        LinearGradient(
-            colors: [Color(hex: "09090B"), Color(hex: "111114"), Color(hex: "0D0D10")],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-        .ignoresSafeArea()
     }
 }

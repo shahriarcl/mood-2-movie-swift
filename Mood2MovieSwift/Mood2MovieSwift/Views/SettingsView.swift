@@ -18,6 +18,7 @@ struct SettingsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 28) {
                 header
+                heroSummary
                 platformSection
                 countrySection
                 contentSection
@@ -27,9 +28,9 @@ struct SettingsView: View {
             }
             .padding(.vertical, 24)
             .padding(.horizontal, 20)
-            .frame(maxWidth: 820, alignment: .leading)
+            .frame(maxWidth: 980, alignment: .leading)
         }
-        .background(backgroundView)
+        .background(AppScreenBackground())
         .navigationBarBackButtonHidden(true)
         .task {
             selectedPlatforms = Set(store.preferences.platforms)
@@ -62,101 +63,113 @@ struct SettingsView: View {
     }
 
     private var platformSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            SectionHeader(title: "Streaming Platforms")
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), spacing: 12)], spacing: 12) {
-                ForEach(MoodCatalog.platforms) { platform in
-                    PlatformTile(platform: platform, isSelected: selectedPlatforms.contains(platform.key)) {
-                        if selectedPlatforms.contains(platform.key) {
-                            selectedPlatforms.remove(platform.key)
-                        } else {
-                            selectedPlatforms.insert(platform.key)
+        GlassCard {
+            VStack(alignment: .leading, spacing: 12) {
+                SectionHeader(title: "Streaming Platforms")
+                Text("Pick the services you actually use so recommendations stay relevant.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), spacing: 12)], spacing: 12) {
+                    ForEach(MoodCatalog.platforms) { platform in
+                        PlatformTile(platform: platform, isSelected: selectedPlatforms.contains(platform.key)) {
+                            if selectedPlatforms.contains(platform.key) {
+                                selectedPlatforms.remove(platform.key)
+                            } else {
+                                selectedPlatforms.insert(platform.key)
+                            }
                         }
                     }
                 }
             }
         }
-        .padding(16)
-        .background(cardBackground)
     }
 
     private var countrySection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            SectionHeader(title: "Country")
-            Picker("Country", selection: $selectedCountry) {
-                ForEach(MoodCatalog.countries) { country in
-                    Text(country.name).tag(country.code)
+        GlassCard {
+            VStack(alignment: .leading, spacing: 12) {
+                SectionHeader(title: "Country")
+                Picker("Country", selection: $selectedCountry) {
+                    ForEach(MoodCatalog.countries) { country in
+                        Text(country.name).tag(country.code)
+                    }
                 }
+                .pickerStyle(.menu)
+
+                Text("Country affects availability results and provider matching.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
             }
-            .pickerStyle(.menu)
         }
-        .padding(16)
-        .background(cardBackground)
     }
 
     private var contentSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            SectionHeader(title: "Content")
+        GlassCard {
+            VStack(alignment: .leading, spacing: 12) {
+                SectionHeader(title: "Content")
 
-            Toggle(isOn: $familySafe) {
-                VStack(alignment: .leading, spacing: 3) {
-                    Text("Family-safe mode")
-                    Text("PG-13 and below - always on for Family audience")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                Toggle(isOn: $familySafe) {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text("Family-safe mode")
+                        Text("PG-13 and below - always on for Family audience")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
                 }
+                .toggleStyle(.switch)
+
+                Text("When this is on, the discovery engine leans away from harder-rated titles.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
             }
-            .toggleStyle(.switch)
         }
-        .padding(16)
-        .background(cardBackground)
     }
 
     private var apiSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            SectionHeader(title: "Movie Intelligence")
-            Text("These values are stored locally on this Mac and used by the recommendation engine.")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
+        GlassCard {
+            VStack(alignment: .leading, spacing: 12) {
+                SectionHeader(title: "Movie Intelligence")
+                Text("These values are stored locally on this Mac and used by the recommendation engine.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
 
-            VStack(alignment: .leading, spacing: 10) {
-                SecureField("TMDB API Key", text: $tmdbAPIKey)
-                    .textFieldStyle(.roundedBorder)
-                SecureField("Anthropic API Key", text: $anthropicAPIKey)
-                    .textFieldStyle(.roundedBorder)
-                TextField("Anthropic Model", text: $anthropicModel)
-                    .textFieldStyle(.roundedBorder)
+                VStack(alignment: .leading, spacing: 10) {
+                    SecureField("TMDB API Key", text: $tmdbAPIKey)
+                        .textFieldStyle(.roundedBorder)
+                    SecureField("Anthropic API Key", text: $anthropicAPIKey)
+                        .textFieldStyle(.roundedBorder)
+                    TextField("Anthropic Model", text: $anthropicModel)
+                        .textFieldStyle(.roundedBorder)
+                }
             }
         }
-        .padding(16)
-        .background(cardBackground)
     }
 
     private var cloudSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            SectionHeader(title: "Cloud Sync")
-            Text("Supabase powers sign-in and cross-device library sync.")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
+        GlassCard {
+            VStack(alignment: .leading, spacing: 12) {
+                SectionHeader(title: "Cloud Sync")
+                Text("Supabase powers sign-in and cross-device library sync.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
 
-            VStack(alignment: .leading, spacing: 10) {
-                TextField("Supabase URL", text: $supabaseURL)
-                    .textFieldStyle(.roundedBorder)
-                SecureField("Supabase Anon Key", text: $supabaseAnonKey)
-                    .textFieldStyle(.roundedBorder)
-            }
-
-            HStack {
-                Button("Reset to environment defaults") {
-                    configuration.resetToEnvironmentDefaults()
-                    loadConfiguration()
+                VStack(alignment: .leading, spacing: 10) {
+                    TextField("Supabase URL", text: $supabaseURL)
+                        .textFieldStyle(.roundedBorder)
+                    SecureField("Supabase Anon Key", text: $supabaseAnonKey)
+                        .textFieldStyle(.roundedBorder)
                 }
-                .buttonStyle(SecondaryActionButtonStyle())
-                Spacer()
+
+                HStack {
+                    Button("Reset to environment defaults") {
+                        configuration.resetToEnvironmentDefaults()
+                        loadConfiguration()
+                    }
+                    .buttonStyle(SecondaryActionButtonStyle())
+                    Spacer()
+                }
             }
         }
-        .padding(16)
-        .background(cardBackground)
     }
 
     private var saveButton: some View {
@@ -187,22 +200,30 @@ struct SettingsView: View {
         supabaseAnonKey = configuration.values.supabaseAnonKey
     }
 
-    private var backgroundView: some View {
-        LinearGradient(
-            colors: [Color(hex: "09090B"), Color(hex: "111114"), Color(hex: "0D0D10")],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-        .ignoresSafeArea()
-    }
+    private var heroSummary: some View {
+        GlassCard {
+            HStack(alignment: .top, spacing: 16) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Tune the engine")
+                        .font(.system(size: 28, weight: .black, design: .rounded))
+                    Text("Set up platforms, country, content filters, and your API keys in one place.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
 
-    private var cardBackground: some View {
-        RoundedRectangle(cornerRadius: 20, style: .continuous)
-            .fill(Color.white.opacity(0.045))
-            .overlay(
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .stroke(Color.white.opacity(0.08), lineWidth: 1)
-            )
+                Spacer()
+
+                VStack(alignment: .trailing, spacing: 6) {
+                    Text("\(selectedPlatforms.count)")
+                        .font(.system(size: 30, weight: .black, design: .rounded))
+                    Text("platforms selected")
+                        .font(.caption2.weight(.semibold))
+                        .tracking(2)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
     }
 }
 

@@ -14,6 +14,7 @@ struct MyMoviesView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 28) {
                 header
+                heroSummary
                 authSection
                 if store.movies.isEmpty {
                     EmptyStateView(message: "Sign in support and remote sync can come next. For now, this local library is ready once you save a movie.")
@@ -43,9 +44,9 @@ struct MyMoviesView: View {
             }
             .padding(.vertical, 24)
             .padding(.horizontal, 20)
-            .frame(maxWidth: 860, alignment: .leading)
+            .frame(maxWidth: 980, alignment: .leading)
         }
-        .background(backgroundView)
+        .background(AppScreenBackground())
         .navigationBarBackButtonHidden(true)
     }
 
@@ -72,77 +73,93 @@ struct MyMoviesView: View {
     }
 
     private var authSection: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            SectionHeader(title: cloud.isSignedIn ? "Cloud Sync" : "Sign In")
-
-            if cloud.isSignedIn {
-                HStack(spacing: 10) {
-                    Button {
-                        Task {
-                            syncMessage = "Syncing..."
-                            await cloud.syncLocalLibrary(store.movies)
-                            syncMessage = "Cloud sync complete."
-                        }
-                    } label: {
-                        Text("Sync now")
-                            .frame(maxWidth: .infinity)
+        GlassCard {
+            VStack(alignment: .leading, spacing: 14) {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        SectionHeader(title: cloud.isSignedIn ? "Cloud Sync" : "Sign In")
+                        Text(cloud.isSignedIn ? "Your library can follow you across devices." : "Sign in to keep watchlists and watched titles in sync.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
                     }
-                    .buttonStyle(PrimaryActionButtonStyle(isEnabled: true))
-
-                    Button(role: .destructive) {
-                        Task {
-                            await cloud.signOut()
-                            syncMessage = nil
-                        }
-                    } label: {
-                        Text("Sign out")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(SecondaryActionButtonStyle())
+                    Spacer()
+                    Text(cloud.isSignedIn ? "Connected" : "Offline")
+                        .font(.caption.weight(.semibold))
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(
+                            Capsule(style: .continuous)
+                                .fill(cloud.isSignedIn ? Color(hex: "F5A623").opacity(0.18) : Color.white.opacity(0.06))
+                        )
                 }
 
-                if let syncMessage {
-                    Text(syncMessage)
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                }
-            } else {
-                VStack(alignment: .leading, spacing: 10) {
-                    TextField("Email", text: $email)
-                        .textFieldStyle(.roundedBorder)
-                    SecureField("Password", text: $password)
-                        .textFieldStyle(.roundedBorder)
-
+                if cloud.isSignedIn {
                     HStack(spacing: 10) {
                         Button {
-                            Task { await signIn() }
+                            Task {
+                                syncMessage = "Syncing..."
+                                await cloud.syncLocalLibrary(store.movies)
+                                syncMessage = "Cloud sync complete."
+                            }
                         } label: {
-                            Text(authBusy ? "Working..." : "Sign in")
+                            Text("Sync now")
                                 .frame(maxWidth: .infinity)
                         }
                         .buttonStyle(PrimaryActionButtonStyle(isEnabled: true))
-                        .disabled(authBusy)
 
-                        Button {
-                            Task { await signUp() }
+                        Button(role: .destructive) {
+                            Task {
+                                await cloud.signOut()
+                                syncMessage = nil
+                            }
                         } label: {
-                            Text("Create account")
+                            Text("Sign out")
                                 .frame(maxWidth: .infinity)
                         }
                         .buttonStyle(SecondaryActionButtonStyle())
-                        .disabled(authBusy)
                     }
 
-                    if let authMessage {
-                        Text(authMessage)
+                    if let syncMessage {
+                        Text(syncMessage)
                             .font(.footnote)
                             .foregroundStyle(.secondary)
+                    }
+                } else {
+                    VStack(alignment: .leading, spacing: 10) {
+                        TextField("Email", text: $email)
+                            .textFieldStyle(.roundedBorder)
+                        SecureField("Password", text: $password)
+                            .textFieldStyle(.roundedBorder)
+
+                        HStack(spacing: 10) {
+                            Button {
+                                Task { await signIn() }
+                            } label: {
+                                Text(authBusy ? "Working..." : "Sign in")
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(PrimaryActionButtonStyle(isEnabled: true))
+                            .disabled(authBusy)
+
+                            Button {
+                                Task { await signUp() }
+                            } label: {
+                                Text("Create account")
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(SecondaryActionButtonStyle())
+                            .disabled(authBusy)
+                        }
+
+                        if let authMessage {
+                            Text(authMessage)
+                                .font(.footnote)
+                                .foregroundStyle(.secondary)
+                        }
                     }
                 }
             }
         }
-        .padding(16)
-        .background(cardBackground)
     }
 
     private func save(_ movie: UserMovie, status: MovieStatus) {
@@ -207,22 +224,27 @@ struct MyMoviesView: View {
         }
     }
 
-    private var backgroundView: some View {
-        LinearGradient(
-            colors: [Color(hex: "09090B"), Color(hex: "111114"), Color(hex: "0D0D10")],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-        .ignoresSafeArea()
-    }
-
-    private var cardBackground: some View {
-        RoundedRectangle(cornerRadius: 20, style: .continuous)
-            .fill(Color.white.opacity(0.045))
-            .overlay(
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .stroke(Color.white.opacity(0.08), lineWidth: 1)
-            )
+    private var heroSummary: some View {
+        GlassCard {
+            HStack(alignment: .top, spacing: 16) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Your library")
+                        .font(.system(size: 28, weight: .black, design: .rounded))
+                    Text("Watchlist and watched titles live here, and cloud sync keeps them with you.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+                Spacer()
+                VStack(alignment: .trailing, spacing: 6) {
+                    Text("\(store.movies.count)")
+                        .font(.system(size: 30, weight: .black, design: .rounded))
+                    Text("saved titles")
+                        .font(.caption2.weight(.semibold))
+                        .tracking(2)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        }
     }
 }
 
@@ -235,25 +257,26 @@ private struct MoviesSection: View {
     let remove: (UserMovie) -> Void
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            HStack(spacing: 8) {
-                Image(systemName: icon)
-                Text(title)
-                    .font(.headline.weight(.semibold))
-                Text("\(movies.count)")
-                    .font(.caption.weight(.semibold))
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 3)
-                    .background(Capsule().fill(Color.white.opacity(0.08)))
-                Spacer()
-            }
+        GlassCard {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 8) {
+                    Image(systemName: icon)
+                    Text(title)
+                        .font(.headline.weight(.semibold))
+                    Text("\(movies.count)")
+                        .font(.caption.weight(.semibold))
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 3)
+                        .background(Capsule().fill(Color.white.opacity(0.08)))
+                    Spacer()
+                }
 
-            if movies.isEmpty {
-                Text("Nothing here yet.")
-                    .foregroundStyle(.secondary)
-                    .font(.footnote)
-                    .italic()
-            } else {
+                if movies.isEmpty {
+                    Text("Nothing here yet.")
+                        .foregroundStyle(.secondary)
+                        .font(.footnote)
+                        .italic()
+                } else {
                     VStack(spacing: 10) {
                         ForEach(movies) { movie in
                             MovieListRow(
@@ -271,18 +294,8 @@ private struct MoviesSection: View {
                         }
                     }
                 }
+            }
         }
-        .padding(16)
-        .background(cardBackground)
-    }
-
-    private var cardBackground: some View {
-        RoundedRectangle(cornerRadius: 20, style: .continuous)
-            .fill(Color.white.opacity(0.045))
-            .overlay(
-                RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .stroke(Color.white.opacity(0.08), lineWidth: 1)
-            )
     }
 }
 
@@ -317,7 +330,11 @@ private struct MovieListRow: View {
         .padding(12)
         .background(
             RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(Color.white.opacity(0.04))
+                .fill(Color.white.opacity(0.05))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                )
         )
     }
 }
