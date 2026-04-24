@@ -167,6 +167,10 @@ struct HomeView: View {
                             .lineLimit(2)
                             .minimumScaleFactor(0.84)
                             .fixedSize(horizontal: false, vertical: true)
+                        Text("Save a few titles and the app starts shaping the next recommendation stack around you.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
                     }
 
                     Spacer(minLength: 8)
@@ -181,6 +185,7 @@ struct HomeView: View {
                 HStack(spacing: 8) {
                     SummaryPill(text: "\(store.favoriteGenres.count) favorite genres")
                     SummaryPill(text: "\(store.preferences.platforms.count) platforms")
+                    SummaryPill(text: "\(store.movies.count) saved")
                 }
             }
 
@@ -211,15 +216,9 @@ struct HomeView: View {
                 }
             }
 
-            HStack(spacing: 8) {
-                HeroTag(text: "Fast search")
-                HeroTag(text: "Mobile-first")
-                HeroTag(text: "Saved taste")
-            }
-
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
                 HeroTag(text: "\(store.movies.count) saved")
-                HeroTag(text: "\(store.favoriteGenres.count) favorite genres")
+                HeroTag(text: "\(store.favoriteGenres.count) genres")
                 HeroTag(text: "\(store.preferences.platforms.count) platforms")
                 HeroTag(text: "\(forYouMovies.count) picks")
             }
@@ -242,13 +241,6 @@ struct HomeView: View {
                         .frame(maxWidth: .infinity)
                 }
                 .buttonStyle(SecondaryActionButtonStyle())
-            }
-
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                MiniStat(label: "Saved", value: "\(store.movies.count)")
-                MiniStat(label: "For you", value: "\(forYouMovies.count)")
-                MiniStat(label: "Platforms", value: "\(store.preferences.platforms.count)")
-                MiniStat(label: "Genres", value: "\(store.favoriteGenres.count)")
             }
 
             if let spotlight = forYouMovies.first {
