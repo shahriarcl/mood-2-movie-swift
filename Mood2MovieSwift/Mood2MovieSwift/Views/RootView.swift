@@ -27,18 +27,22 @@ struct RootView: View {
                 }
         }
         .safeAreaInset(edge: .bottom, spacing: 0) {
-            PhoneTabBar(activeTab: activeTab) { tab in
-                switch tab {
-                case .home:
-                    withAnimation(.spring(response: 0.45, dampingFraction: 0.86)) {
-                        path.removeAll()
+            VStack(spacing: 8) {
+                TabContextStrip(tab: activeTab)
+                PhoneTabBar(activeTab: activeTab) { tab in
+                    switch tab {
+                    case .home:
+                        withAnimation(.spring(response: 0.45, dampingFraction: 0.86)) {
+                            path.removeAll()
+                        }
+                    case .library:
+                        path = [.myMovies]
+                    case .settings:
+                        path = [.settings]
                     }
-                case .library:
-                    path = [.myMovies]
-                case .settings:
-                    path = [.settings]
                 }
             }
+            .padding(.top, 8)
         }
     }
 
@@ -94,17 +98,29 @@ private struct PhoneTabBar: View {
                         VStack(spacing: 4) {
                             Capsule(style: .continuous)
                                 .fill(isActive ? Color(hex: "F5A623") : Color.clear)
-                                .frame(width: 18, height: 4)
+                                .frame(width: isActive ? 22 : 12, height: 4)
                             Image(systemName: tab.symbol)
                                 .font(.system(size: isActive ? 16 : 15, weight: .semibold))
                             Text(tab.title)
                                 .font(.caption2.weight(isActive ? .bold : .semibold))
                         }
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 9)
+                        .padding(.vertical, 10)
                         .background(
                             RoundedRectangle(cornerRadius: 20, style: .continuous)
-                                .fill(isActive ? Color(hex: "F5A623").opacity(0.92) : Color.clear)
+                                .fill(
+                                    isActive
+                                    ? LinearGradient(
+                                        colors: [Color(hex: "FFB84D"), Color(hex: "F5A623")],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                    : LinearGradient(colors: [.clear], startPoint: .top, endPoint: .bottom)
+                                )
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                        .stroke(isActive ? Color.white.opacity(0.14) : Color.clear, lineWidth: 1)
+                                )
                         )
                         .foregroundStyle(isActive ? Color(hex: "0D0D0F") : Color.secondary)
                         .scaleEffect(isActive ? 1.01 : 1.0)
@@ -126,5 +142,47 @@ private struct PhoneTabBar: View {
         .padding(.horizontal, 16)
         .padding(.top, 10)
         .padding(.bottom, 8)
+    }
+}
+
+private struct TabContextStrip: View {
+    let tab: ShellTab
+
+    var body: some View {
+        HStack(spacing: 10) {
+            Image(systemName: tab.symbol)
+                .font(.caption.weight(.bold))
+                .foregroundStyle(Color(hex: "F5A623"))
+                .frame(width: 18)
+            VStack(alignment: .leading, spacing: 1) {
+                Text(tab.title)
+                    .font(.caption.weight(.bold))
+                    .tracking(1.4)
+                    .foregroundStyle(Color.white)
+                Text(contextCopy)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+        }
+        .padding(.horizontal, 18)
+        .padding(.vertical, 10)
+        .background(
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .fill(Color.white.opacity(0.04))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                )
+        )
+        .padding(.horizontal, 16)
+    }
+
+    private var contextCopy: String {
+        switch tab {
+        case .home: return "Curating your next watch"
+        case .library: return "Saved picks and watchlist"
+        case .settings: return "App, API, and sync preferences"
+        }
     }
 }

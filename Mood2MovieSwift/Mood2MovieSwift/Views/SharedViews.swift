@@ -32,6 +32,13 @@ struct AppScreenBackground: View {
                 .frame(width: 420, height: 420)
                 .blur(radius: 120)
                 .offset(x: 320, y: -280)
+
+            RoundedRectangle(cornerRadius: 40, style: .continuous)
+                .stroke(Color.white.opacity(0.03), lineWidth: 1)
+                .frame(width: 420, height: 420)
+                .rotationEffect(.degrees(-12))
+                .blur(radius: 1.5)
+                .offset(x: -220, y: 420)
         }
         .ignoresSafeArea()
     }
@@ -48,14 +55,26 @@ struct GlassCard<Content: View>: View {
         content
             .padding(18)
             .background(
-                RoundedRectangle(cornerRadius: 26, style: .continuous)
+                RoundedRectangle(cornerRadius: 30, style: .continuous)
                     .fill(.ultraThinMaterial)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 26, style: .continuous)
-                            .stroke(Color.white.opacity(0.14), lineWidth: 1)
+                        LinearGradient(
+                            colors: [
+                                Color.white.opacity(0.09),
+                                Color.white.opacity(0.02),
+                                Color.black.opacity(0.04)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                        .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 30, style: .continuous)
+                            .stroke(Color.white.opacity(0.16), lineWidth: 1)
                     )
             )
-            .shadow(color: .black.opacity(0.24), radius: 22, x: 0, y: 10)
+            .shadow(color: .black.opacity(0.28), radius: 24, x: 0, y: 12)
     }
 }
 
@@ -72,9 +91,9 @@ struct BrandMark: View {
                 )
             VStack(spacing: 0) {
                 Text("M2")
-                    .font(.system(size: 18, weight: .black, design: .rounded))
-                Text("M")
-                    .font(.system(size: 18, weight: .black, design: .rounded))
+                    .font(.system(size: 17, weight: .black, design: .rounded))
+                Text("●")
+                    .font(.system(size: 11, weight: .black, design: .rounded))
             }
             .foregroundStyle(Color(hex: "0D0D0F"))
         }

@@ -142,9 +142,10 @@ struct MovieDetailView: View {
     }
 
     private var heroCardWide: some View {
-        VStack(alignment: .leading, spacing: 16) {
+        HStack(alignment: .top, spacing: 18) {
             poster
             detailCopy
+            Spacer(minLength: 0)
         }
     }
 
@@ -169,6 +170,16 @@ struct MovieDetailView: View {
                 DetailChip(text: movie.year.description)
             }
 
+            HStack(spacing: 8) {
+                DetailChip(text: movie.primaryAvailability.type.label)
+                if let runtime = detail?.runtime {
+                    DetailChip(text: "\(runtime) min")
+                }
+                if let rating = detail?.voteAverage {
+                    DetailChip(text: String(format: "%.1f / 10", rating))
+                }
+            }
+
             Text(movie.reason)
                 .font(.callout)
                 .foregroundStyle(.secondary)
@@ -183,8 +194,10 @@ struct MovieDetailView: View {
 
     private var statsRow: some View {
         VStack(spacing: 12) {
-            StatCard(title: "Year", value: "\(movie.year)", note: movie.genre.label)
-            StatCard(title: "Primary", value: movie.primaryAvailability.platformName, note: movie.primaryAvailability.type.label)
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
+                StatCard(title: "Year", value: "\(movie.year)", note: movie.genre.label)
+                StatCard(title: "Primary", value: movie.primaryAvailability.platformName, note: movie.primaryAvailability.type.label)
+            }
             StatCard(title: "Providers", value: "\(providers.count)", note: "available matches")
         }
     }

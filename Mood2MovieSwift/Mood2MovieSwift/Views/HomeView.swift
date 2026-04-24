@@ -127,23 +127,31 @@ struct HomeView: View {
                     .foregroundStyle(Color(hex: "F5A623"))
             }
 
-            VStack(alignment: .leading, spacing: 8) {
-                Text("◆ MOOD-DRIVEN RECOMMENDATIONS")
-                    .font(.caption2.weight(.bold))
-                    .tracking(3.2)
-                    .foregroundStyle(Color(hex: "F5A623"))
-                    .textCase(.uppercase)
+            VStack(alignment: .leading, spacing: 12) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("◆ MOOD-DRIVEN RECOMMENDATIONS")
+                        .font(.caption2.weight(.bold))
+                        .tracking(3.2)
+                        .foregroundStyle(Color(hex: "F5A623"))
+                        .textCase(.uppercase)
 
-                Text("Mood picks for\nwhatever you feel like tonight.")
-                    .font(.system(size: 36, weight: .black, design: .rounded))
-                    .lineLimit(2)
-                    .minimumScaleFactor(0.82)
-                    .fixedSize(horizontal: false, vertical: true)
+                    Text("Tonight’s movie starts with a feeling.")
+                        .font(.system(size: 33, weight: .black, design: .rounded))
+                        .lineLimit(2)
+                        .minimumScaleFactor(0.82)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
 
                 Text("Search a title, or let the mood cards steer you toward a better match.")
                     .font(.body)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
+            }
+
+            HStack(spacing: 8) {
+                HeroTag(text: "Fast search")
+                HeroTag(text: "Mobile-first")
+                HeroTag(text: "Saved taste")
             }
 
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
