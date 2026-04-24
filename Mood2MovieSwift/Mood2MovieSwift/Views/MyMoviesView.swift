@@ -51,6 +51,7 @@ struct MyMoviesView: View {
         }
         .background(AppScreenBackground())
         .navigationBarBackButtonHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
         .onAppear {
             withAnimation(.spring(response: 0.55, dampingFraction: 0.86)) {
                 didAppear = true
@@ -130,10 +131,8 @@ struct MyMoviesView: View {
                     }
                 } else {
                     VStack(alignment: .leading, spacing: 10) {
-                        TextField("Email", text: $email)
-                            .textFieldStyle(.roundedBorder)
-                        SecureField("Password", text: $password)
-                            .textFieldStyle(.roundedBorder)
+                        AuthField(title: "Email", text: $email, secure: false)
+                        AuthField(title: "Password", text: $password, secure: true)
 
                         VStack(spacing: 10) {
                             Button {
@@ -396,6 +395,48 @@ private struct LibraryStat: View {
     }
 }
 
+private struct AuthField: View {
+    let title: String
+    @Binding var text: String
+    let secure: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+
+            HStack(spacing: 10) {
+                Image(systemName: secure ? "lock.fill" : "envelope.fill")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 18)
+
+                Group {
+                    if secure {
+                        SecureField(title, text: $text)
+                    } else {
+                        TextField(title, text: $text)
+                    }
+                }
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .foregroundStyle(.primary)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(Color.white.opacity(0.06))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .stroke(Color.white.opacity(0.10), lineWidth: 1)
+                    )
+            )
+        }
+    }
+}
+
 private struct MovieListRow: View {
     let movie: UserMovie
     let onOpenDetail: () -> Void
@@ -421,6 +462,9 @@ private struct MovieListRow: View {
                         .foregroundStyle(Color(hex: "F5A623"))
                 }
                 Spacer()
+                Image(systemName: "chevron.right")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
             }
 
             HStack(spacing: 8) {
@@ -438,14 +482,14 @@ private struct MovieListRow: View {
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(
                     LinearGradient(
-                        colors: [Color.white.opacity(0.07), Color.white.opacity(0.035)],
+                        colors: [Color.white.opacity(0.08), Color.white.opacity(0.04)],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
                 )
                 .overlay(
                     RoundedRectangle(cornerRadius: 16, style: .continuous)
-                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                        .stroke(Color.white.opacity(0.10), lineWidth: 1)
                 )
         )
     }

@@ -47,10 +47,21 @@ struct ResultsView: View {
                         LoadingStateView(text: "Loading more...")
                     }
 
-                    Button("Load more") {
+                    Button {
                         page += 1
+                    } label: {
+                        HStack(spacing: 8) {
+                            Image(systemName: "arrow.down.circle.fill")
+                            Text("Load more picks")
+                        }
+                        .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(SecondaryActionButtonStyle())
+
+                    Text("Keep scrolling to pull in the next page of matches without losing the original mood.")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .frame(maxWidth: .infinity, alignment: .leading)
                 }
             }
             .padding(.vertical, 24)
@@ -60,7 +71,7 @@ struct ResultsView: View {
             .offset(y: didAppear ? 0 : 12)
         }
         .background(AppScreenBackground())
-        .navigationTitle("Tonight's Picks")
+        .toolbar(.hidden, for: .navigationBar)
         .task(id: fetchKey) {
             await loadMovies()
         }
@@ -199,47 +210,47 @@ private struct MovieCardView: View {
 
     var body: some View {
         GlassCard {
-        VStack(alignment: .leading, spacing: 14) {
-            HStack {
-                Text(status == .watched ? "Already watched" : "Top match")
-                    .font(.caption2.weight(.bold))
-                    .tracking(3)
-                    .foregroundStyle(Color(hex: "F5A623"))
-                Spacer()
-                AvailabilityPill(availability: movie.primaryAvailability)
-            }
-
-            HStack(alignment: .top, spacing: 12) {
-                Button(action: onOpenDetail) {
-                    PosterBadge(genre: movie.genre, title: movie.title, year: movie.year, size: .large)
+            VStack(alignment: .leading, spacing: 14) {
+                HStack {
+                    Text(status == .watched ? "Already watched" : "Top match")
+                        .font(.caption2.weight(.bold))
+                        .tracking(3)
+                        .foregroundStyle(Color(hex: "F5A623"))
+                    Spacer()
+                    AvailabilityPill(availability: movie.primaryAvailability)
                 }
-                .buttonStyle(.plain)
 
-                VStack(alignment: .leading, spacing: 10) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(movie.title)
-                            .font(.headline.weight(.semibold))
-                            .foregroundStyle(.primary)
-                            .fixedSize(horizontal: false, vertical: true)
-                        Text("\(movie.year) • \(movie.genre.label)")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
+                HStack(alignment: .top, spacing: 12) {
+                    Button(action: onOpenDetail) {
+                        PosterBadge(genre: movie.genre, title: movie.title, year: movie.year, size: .large)
                     }
+                    .buttonStyle(.plain)
 
-                    Text(movie.reason)
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
+                    VStack(alignment: .leading, spacing: 10) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(movie.title)
+                                .font(.headline.weight(.semibold))
+                                .foregroundStyle(.primary)
+                                .fixedSize(horizontal: false, vertical: true)
+                            Text("\(movie.year) • \(movie.genre.label)")
+                                .font(.footnote)
+                                .foregroundStyle(.secondary)
+                        }
 
-                    HStack(spacing: 8) {
-                        SummaryChip(text: movie.primaryAvailability.platformName)
-                        SummaryChip(text: movie.primaryAvailability.type.label)
-                        if status == .watched {
-                            SummaryChip(text: "Watched")
+                        Text(movie.reason)
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+
+                        HStack(spacing: 8) {
+                            SummaryChip(text: movie.primaryAvailability.platformName)
+                            SummaryChip(text: movie.primaryAvailability.type.label)
+                            if status == .watched {
+                                SummaryChip(text: "Watched")
+                            }
                         }
                     }
                 }
-            }
 
                 if !movie.availability.isEmpty {
                     FlowLayout(spacing: 8) {

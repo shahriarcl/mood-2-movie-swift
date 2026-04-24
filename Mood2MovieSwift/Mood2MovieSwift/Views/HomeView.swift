@@ -163,7 +163,7 @@ struct HomeView: View {
                             .tracking(3.2)
                             .foregroundStyle(Color(hex: "F5A623"))
                         Text("Your taste is the headline.")
-                            .font(.system(size: 30, weight: .black, design: .rounded))
+                            .font(.system(size: 28, weight: .black, design: .rounded))
                             .lineLimit(2)
                             .minimumScaleFactor(0.84)
                             .fixedSize(horizontal: false, vertical: true)
@@ -198,7 +198,7 @@ struct HomeView: View {
                         .textCase(.uppercase)
 
                     Text("Tonight’s movie starts with a feeling.")
-                        .font(.system(size: 33, weight: .black, design: .rounded))
+                        .font(.system(size: 31, weight: .black, design: .rounded))
                         .lineLimit(2)
                         .minimumScaleFactor(0.82)
                         .fixedSize(horizontal: false, vertical: true)

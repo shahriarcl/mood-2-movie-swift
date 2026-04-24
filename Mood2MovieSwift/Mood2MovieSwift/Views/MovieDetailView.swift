@@ -68,6 +68,7 @@ struct MovieDetailView: View {
             .frame(maxWidth: 430, alignment: .leading)
         }
         .background(AppScreenBackground())
+        .toolbar(.hidden, for: .navigationBar)
         .task(id: movie.tmdbId) {
             await load()
         }
@@ -129,20 +130,20 @@ struct MovieDetailView: View {
 
     private var heroCard: some View {
         GlassCard {
-            VStack(alignment: .leading, spacing: 18) {
-                HStack(alignment: .top, spacing: 12) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("NOW SHOWING")
-                            .font(.caption2.weight(.bold))
-                            .tracking(3)
-                            .foregroundStyle(Color(hex: "F5A623"))
-                        Text(movie.year.description)
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(.secondary)
-                    }
-                    Spacer()
-                    DetailChip(text: movie.genre.label)
+            VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("NOW SHOWING")
+                        .font(.caption2.weight(.bold))
+                        .tracking(3)
+                        .foregroundStyle(Color(hex: "F5A623"))
+                    Text("\(movie.year) • \(movie.genre.label)")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                }
+
+                HStack(spacing: 8) {
                     DetailChip(text: movie.primaryAvailability.type.label)
+                    DetailChip(text: movie.primaryAvailability.platformName)
                 }
 
                 ViewThatFits(in: .horizontal) {
@@ -168,17 +169,20 @@ struct MovieDetailView: View {
     }
 
     private var heroCardWide: some View {
-        HStack(alignment: .top, spacing: 18) {
-            poster
-            VStack(alignment: .leading, spacing: 12) {
-                detailCopy
-                HStack(spacing: 8) {
-                    DetailChip(text: "Poster-led")
-                    DetailChip(text: "Mobile-first")
-                    DetailChip(text: "Premium view")
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .top, spacing: 16) {
+                poster
+                VStack(alignment: .leading, spacing: 12) {
+                    detailCopy
                 }
+                Spacer(minLength: 0)
             }
-            Spacer(minLength: 0)
+
+            HStack(spacing: 8) {
+                DetailChip(text: "Poster-led")
+                DetailChip(text: "Mobile-first")
+                DetailChip(text: "Premium view")
+            }
         }
     }
 
@@ -196,11 +200,9 @@ struct MovieDetailView: View {
 
     private var detailCopy: some View {
         VStack(alignment: .leading, spacing: 14) {
-            VStack(alignment: .leading, spacing: 6) {
-                Text(summaryLine)
-                    .font(.footnote.weight(.medium))
-                    .foregroundStyle(.secondary)
-            }
+            Text(summaryLine)
+                .font(.footnote.weight(.medium))
+                .foregroundStyle(.secondary)
 
             HStack(spacing: 8) {
                 DetailChip(text: movie.genre.label)
@@ -226,7 +228,7 @@ struct MovieDetailView: View {
                 StatCard(title: "Year", value: "\(movie.year)", note: movie.genre.label)
                 StatCard(title: "Primary", value: movie.primaryAvailability.platformName, note: movie.primaryAvailability.type.label)
             }
-            StatCard(title: "Providers", value: "\(providers.count)", note: "available matches")
+            StatCard(title: "Providers", value: "\(providers.count)", note: providers.isEmpty ? "loading matches" : "available matches")
         }
     }
 
@@ -340,38 +342,54 @@ private struct ProviderCard: View {
     let availability: Availability
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
+        HStack(alignment: .top, spacing: 12) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(
+                        LinearGradient(
+                            colors: [Color(hex: "F5A623").opacity(0.26), Color.white.opacity(0.06)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
                 Image(systemName: iconName)
                     .foregroundStyle(Color(hex: "F5A623"))
-                Spacer()
-                Text(availability.type.label.uppercased())
-                    .font(.caption2.weight(.bold))
-                    .tracking(1.8)
-                    .foregroundStyle(.secondary)
             }
+            .frame(width: 42, height: 42)
 
-            Text(availability.platformName)
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(.primary)
+            VStack(alignment: .leading, spacing: 7) {
+                HStack {
+                    Text(availability.platformName)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(.primary)
+                    Spacer()
+                    Text(availability.type.label.uppercased())
+                        .font(.caption2.weight(.bold))
+                        .tracking(1.8)
+                        .foregroundStyle(.secondary)
+                }
 
-            Text(availability.type == .subscription ? "Stream instantly" : "Alternative purchase option")
-                .font(.footnote)
-                .foregroundStyle(.secondary)
+                Text(availability.type == .subscription ? "Stream instantly" : "Alternative purchase option")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
 
-            HStack(spacing: 8) {
-                DetailChip(text: availability.platformName)
-                DetailChip(text: availability.type.label)
+                HStack(spacing: 8) {
+                    DetailChip(text: availability.platformName)
+                    DetailChip(text: availability.type.label)
+                    Text("Ready to open")
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(Color(hex: "F5A623"))
+                }
             }
         }
         .frame(maxWidth: .infinity, minHeight: 92, alignment: .leading)
         .padding(14)
         .background(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(Color.white.opacity(0.05))
+                .fill(Color.white.opacity(0.06))
                 .overlay(
                     RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .stroke(Color.white.opacity(0.09), lineWidth: 1)
+                        .stroke(Color.white.opacity(0.10), lineWidth: 1)
                 )
         )
     }

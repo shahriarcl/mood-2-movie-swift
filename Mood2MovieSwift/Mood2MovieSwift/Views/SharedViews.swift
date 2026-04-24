@@ -66,9 +66,9 @@ struct GlassCard<Content: View>: View {
 
     var body: some View {
         content
-            .padding(16)
+            .padding(15)
             .background(
-                RoundedRectangle(cornerRadius: 26, style: .continuous)
+                RoundedRectangle(cornerRadius: 24, style: .continuous)
                     .fill(.ultraThinMaterial)
                     .overlay(
                         LinearGradient(
@@ -80,14 +80,14 @@ struct GlassCard<Content: View>: View {
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
-                        .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
+                        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
                     )
                     .overlay(
-                        RoundedRectangle(cornerRadius: 26, style: .continuous)
+                        RoundedRectangle(cornerRadius: 24, style: .continuous)
                             .stroke(Color.white.opacity(0.14), lineWidth: 1)
                     )
             )
-            .shadow(color: .black.opacity(0.24), radius: 20, x: 0, y: 10)
+            .shadow(color: .black.opacity(0.24), radius: 18, x: 0, y: 9)
     }
 }
 
@@ -141,7 +141,7 @@ struct ScreenHeader: View {
                         .tracking(3)
                         .foregroundStyle(Color(hex: "F5A623"))
                     Text(title)
-                        .font(.system(size: 32, weight: .black, design: .rounded))
+                        .font(.system(size: 28, weight: .black, design: .rounded))
                         .foregroundStyle(Color.white)
                         .fixedSize(horizontal: false, vertical: true)
                     Text(subtitle)
@@ -210,10 +210,16 @@ struct EmptyStateView: View {
                 .foregroundStyle(.secondary)
                 .fixedSize(horizontal: false, vertical: true)
 
-            HStack(spacing: 8) {
-                SummaryPill(text: "Search a title")
-                SummaryPill(text: "Pick a mood")
-                SummaryPill(text: "Save it")
+            VStack(alignment: .leading, spacing: 10) {
+                Text("Quick start")
+                    .font(.caption2.weight(.bold))
+                    .tracking(2.5)
+                    .foregroundStyle(Color(hex: "F5A623"))
+                HStack(spacing: 8) {
+                    SummaryPill(text: "Search a title")
+                    SummaryPill(text: "Pick a mood")
+                    SummaryPill(text: "Save it")
+                }
             }
         }
         .padding(18)
@@ -235,9 +241,9 @@ struct LoadingStateView: View {
     var body: some View {
         HStack(spacing: 14) {
             ZStack {
-                Circle()
-                    .fill(Color(hex: "F5A623").opacity(0.14))
-                    .frame(width: 36, height: 36)
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(Color(hex: "F5A623").opacity(0.12))
+                    .frame(width: 42, height: 42)
                 ProgressView()
                     .tint(Color(hex: "F5A623"))
                     .controlSize(.small)
@@ -275,10 +281,10 @@ struct SummaryPill: View {
             .padding(.vertical, 6)
             .background(
                 Capsule(style: .continuous)
-                    .fill(Color.white.opacity(0.06))
+                    .fill(Color.white.opacity(0.07))
                     .overlay(
                         Capsule(style: .continuous)
-                            .stroke(Color.white.opacity(0.09), lineWidth: 1)
+                            .stroke(Color.white.opacity(0.10), lineWidth: 1)
                     )
             )
             .foregroundStyle(.secondary)
@@ -292,37 +298,58 @@ struct LaunchSplashView: View {
         ZStack {
             AppScreenBackground()
 
-            VStack(spacing: 18) {
-                BrandMark()
-                    .scaleEffect(animate ? 1 : 0.84)
-                    .opacity(animate ? 1 : 0)
+            VStack(spacing: 0) {
+                Spacer(minLength: 0)
 
-                VStack(spacing: 8) {
-                    Text("Mood2Movie")
-                        .font(.system(size: 30, weight: .black, design: .rounded))
-                        .foregroundStyle(.white)
-                    Text("Pick a movie by how you feel")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                }
+                VStack(spacing: 18) {
+                    BrandMark()
+                        .scaleEffect(animate ? 1 : 0.84)
+                        .opacity(animate ? 1 : 0)
 
-                HStack(spacing: 8) {
-                    SummaryPill(text: "Mood-driven")
-                    SummaryPill(text: "iPhone-first")
+                    VStack(spacing: 8) {
+                        Text("Mood2Movie")
+                            .font(.system(size: 30, weight: .black, design: .rounded))
+                            .foregroundStyle(.white)
+                        Text("Pick a movie by how you feel")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+
+                    VStack(spacing: 10) {
+                        HStack(spacing: 8) {
+                            SummaryPill(text: "Mood-driven")
+                            SummaryPill(text: "iPhone-first")
+                        }
+
+                        HStack(spacing: 6) {
+                            RoundedRectangle(cornerRadius: 999, style: .continuous)
+                                .fill(Color(hex: "F5A623"))
+                                .frame(width: 48, height: 4)
+                            RoundedRectangle(cornerRadius: 999, style: .continuous)
+                                .fill(Color.white.opacity(0.10))
+                                .frame(width: 22, height: 4)
+                            RoundedRectangle(cornerRadius: 999, style: .continuous)
+                                .fill(Color.white.opacity(0.10))
+                                .frame(width: 22, height: 4)
+                        }
+                    }
                 }
+                .padding(28)
+                .frame(maxWidth: 340)
+                .background(
+                    RoundedRectangle(cornerRadius: 34, style: .continuous)
+                        .fill(.ultraThinMaterial)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 34, style: .continuous)
+                                .stroke(Color.white.opacity(0.12), lineWidth: 1)
+                        )
+                )
+                .shadow(color: .black.opacity(0.32), radius: 26, x: 0, y: 16)
+                .padding(.horizontal, 28)
+                .scaleEffect(animate ? 1 : 0.95)
+
+                Spacer(minLength: 0)
             }
-            .padding(28)
-            .background(
-                RoundedRectangle(cornerRadius: 34, style: .continuous)
-                    .fill(.ultraThinMaterial)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 34, style: .continuous)
-                            .stroke(Color.white.opacity(0.12), lineWidth: 1)
-                    )
-            )
-            .shadow(color: .black.opacity(0.32), radius: 26, x: 0, y: 16)
-            .padding(.horizontal, 28)
-            .scaleEffect(animate ? 1 : 0.95)
         }
         .onAppear {
             withAnimation(.spring(response: 0.55, dampingFraction: 0.88)) {

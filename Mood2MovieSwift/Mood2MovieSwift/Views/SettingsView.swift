@@ -35,6 +35,7 @@ struct SettingsView: View {
         }
         .background(AppScreenBackground())
         .navigationBarBackButtonHidden(true)
+        .toolbar(.hidden, for: .navigationBar)
         .task {
             selectedPlatforms = Set(store.preferences.platforms)
             selectedCountry = store.preferences.country
@@ -293,23 +294,31 @@ private struct SettingsInputField: View {
                 .font(.caption.weight(.semibold))
                 .foregroundStyle(.secondary)
 
-            Group {
-                if secure {
-                    SecureField(title, text: $text)
-                } else {
-                    TextField(title, text: $text)
+            HStack(spacing: 10) {
+                Image(systemName: secure ? "lock.fill" : "rectangle.and.pencil.and.ellipsis")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                    .frame(width: 18)
+
+                Group {
+                    if secure {
+                        SecureField(title, text: $text)
+                    } else {
+                        TextField(title, text: $text)
+                    }
                 }
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+                .foregroundStyle(.primary)
             }
-            .textInputAutocapitalization(.never)
-            .autocorrectionDisabled()
             .padding(.horizontal, 12)
             .padding(.vertical, 12)
             .background(
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(Color.white.opacity(0.05))
+                    .fill(Color.white.opacity(0.06))
                     .overlay(
                         RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .stroke(Color.white.opacity(0.09), lineWidth: 1)
+                            .stroke(Color.white.opacity(0.10), lineWidth: 1)
                     )
             )
         }
