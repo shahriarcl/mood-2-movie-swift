@@ -86,16 +86,19 @@ private struct PhoneTabBar: View {
                 } label: {
                     let isActive = activeTab == tab
                     VStack(spacing: 4) {
+                        Capsule(style: .continuous)
+                            .fill(isActive ? Color(hex: "F5A623") : Color.clear)
+                            .frame(width: 18, height: 4)
                         Image(systemName: tab.symbol)
                             .font(.system(size: isActive ? 16 : 15, weight: .semibold))
                         Text(tab.title)
                             .font(.caption2.weight(isActive ? .bold : .semibold))
                     }
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 11)
+                    .padding(.vertical, 9)
                     .background(
                         RoundedRectangle(cornerRadius: 20, style: .continuous)
-                            .fill(isActive ? Color(hex: "F5A623").opacity(0.96) : Color.clear)
+                            .fill(isActive ? Color(hex: "F5A623").opacity(0.92) : Color.clear)
                     )
                     .foregroundStyle(isActive ? Color(hex: "0D0D0F") : Color.secondary)
                     .scaleEffect(isActive ? 1.01 : 1.0)

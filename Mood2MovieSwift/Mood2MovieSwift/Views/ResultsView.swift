@@ -55,7 +55,7 @@ struct ResultsView: View {
             }
             .padding(.vertical, 24)
             .padding(.horizontal, 16)
-            .frame(maxWidth: 430, alignment: .leading)
+            .frame(maxWidth: 400, alignment: .leading)
             .opacity(didAppear ? 1 : 0)
             .offset(y: didAppear ? 0 : 12)
         }
@@ -97,10 +97,11 @@ struct ResultsView: View {
                     .tracking(3)
                     .foregroundStyle(Color(hex: "F5A623"))
                 Text("Tonight's Picks")
-                    .font(.system(size: 34, weight: .black, design: .rounded))
+                    .font(.system(size: 32, weight: .black, design: .rounded))
                 Text(selectionSummary)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
             }
 
             Divider()
@@ -111,7 +112,7 @@ struct ResultsView: View {
     private var heroSummary: some View {
         GlassCard {
             VStack(alignment: .leading, spacing: 14) {
-                HStack(alignment: .top) {
+                VStack(alignment: .leading, spacing: 10) {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Selected vibe")
                             .font(.caption2.weight(.bold))
@@ -124,8 +125,8 @@ struct ResultsView: View {
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
-                    Spacer()
-                    VStack(alignment: .trailing, spacing: 8) {
+
+                    HStack(spacing: 12) {
                         SelectionStat(label: "Matches", value: "\(movies.count)")
                         SelectionStat(label: "Page", value: "\(page)")
                     }
@@ -236,7 +237,7 @@ private struct MovieCardView: View {
                     }
                 }
 
-                HStack(spacing: 10) {
+                VStack(spacing: 10) {
                     Button {
                         onOpenDetail()
                     } label: {
