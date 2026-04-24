@@ -27,7 +27,7 @@ struct RootView: View {
                 }
         }
         .safeAreaInset(edge: .bottom, spacing: 0) {
-            VStack(spacing: 10) {
+            VStack(spacing: 8) {
                 TabContextStrip(tab: activeTab)
                 PhoneTabBar(activeTab: activeTab) { tab in
                     switch tab {
@@ -42,7 +42,7 @@ struct RootView: View {
                     }
                 }
             }
-            .padding(.top, 6)
+            .padding(.top, 4)
         }
     }
 
@@ -83,13 +83,13 @@ private struct PhoneTabBar: View {
     let onSelect: (ShellTab) -> Void
 
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 7) {
             Capsule(style: .continuous)
-                .fill(Color.white.opacity(0.42))
-                .frame(width: 128, height: 4)
-                .padding(.top, 2)
+                .fill(Color.white.opacity(0.34))
+                .frame(width: 108, height: 4)
+                .padding(.top, 1)
 
-            HStack(spacing: 8) {
+            HStack(spacing: 7) {
                 ForEach(ShellTab.allCases, id: \.self) { tab in
                     Button {
                         onSelect(tab)
@@ -105,9 +105,9 @@ private struct PhoneTabBar: View {
                                 .font(.caption2.weight(isActive ? .bold : .semibold))
                         }
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 11)
+                        .padding(.vertical, 10)
                         .background(
-                            RoundedRectangle(cornerRadius: 22, style: .continuous)
+                            RoundedRectangle(cornerRadius: 20, style: .continuous)
                                 .fill(
                                     isActive
                                     ? LinearGradient(
@@ -115,33 +115,37 @@ private struct PhoneTabBar: View {
                                         startPoint: .topLeading,
                                         endPoint: .bottomTrailing
                                     )
-                                    : LinearGradient(colors: [.clear], startPoint: .top, endPoint: .bottom)
+                                    : LinearGradient(
+                                        colors: [Color.white.opacity(0.02), Color.white.opacity(0.01)],
+                                        startPoint: .top,
+                                        endPoint: .bottom
+                                    )
                                 )
                                 .overlay(
-                                    RoundedRectangle(cornerRadius: 22, style: .continuous)
-                                        .stroke(isActive ? Color.white.opacity(0.14) : Color.clear, lineWidth: 1)
+                                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                        .stroke(isActive ? Color.white.opacity(0.14) : Color.white.opacity(0.05), lineWidth: 1)
                                 )
                         )
                         .foregroundStyle(isActive ? Color(hex: "0D0D0F") : Color.secondary)
-                        .scaleEffect(isActive ? 1.01 : 1.0)
+                        .scaleEffect(isActive ? 1.02 : 1.0)
                     }
                     .buttonStyle(.plain)
                 }
             }
         }
-        .padding(8)
+        .padding(7)
         .background(
-            RoundedRectangle(cornerRadius: 32, style: .continuous)
+            RoundedRectangle(cornerRadius: 30, style: .continuous)
                 .fill(.ultraThinMaterial)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 32, style: .continuous)
-                        .stroke(Color.white.opacity(0.16), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 30, style: .continuous)
+                        .stroke(Color.white.opacity(0.14), lineWidth: 1)
                 )
         )
-        .shadow(color: .black.opacity(0.24), radius: 20, x: 0, y: 10)
+        .shadow(color: .black.opacity(0.22), radius: 18, x: 0, y: 9)
         .padding(.horizontal, 14)
-        .padding(.top, 8)
-        .padding(.bottom, 10)
+        .padding(.top, 6)
+        .padding(.bottom, 8)
     }
 }
 
@@ -166,12 +170,12 @@ private struct TabContextStrip: View {
             Spacer()
         }
         .padding(.horizontal, 18)
-        .padding(.vertical, 11)
+        .padding(.vertical, 10)
         .background(
-            RoundedRectangle(cornerRadius: 22, style: .continuous)
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .fill(Color.white.opacity(0.04))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 22, style: .continuous)
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
                         .stroke(Color.white.opacity(0.09), lineWidth: 1)
                 )
         )
