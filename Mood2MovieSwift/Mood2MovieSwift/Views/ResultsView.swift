@@ -103,22 +103,9 @@ struct ResultsView: View {
     private var heroSummary: some View {
         GlassCard {
             VStack(alignment: .leading, spacing: 14) {
-                VStack(alignment: .leading, spacing: 10) {
-                    HStack(spacing: 8) {
+                HStack(alignment: .top, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 6) {
                         Text("RESULTS")
-                            .font(.caption2.weight(.bold))
-                            .tracking(3)
-                            .foregroundStyle(Color(hex: "F5A623"))
-                        Text("Mobile stack")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(.secondary)
-                        Spacer()
-                        Image(systemName: "sparkles")
-                            .foregroundStyle(Color(hex: "F5A623"))
-                    }
-
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Selected vibe")
                             .font(.caption2.weight(.bold))
                             .tracking(3)
                             .foregroundStyle(Color(hex: "F5A623"))
@@ -130,16 +117,16 @@ struct ResultsView: View {
                             .foregroundStyle(.secondary)
                             .lineLimit(3)
                             .fixedSize(horizontal: false, vertical: true)
-                        Text("The engine is matching this mood to titles, providers, and watch status.")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
                     }
 
-                    HStack(spacing: 12) {
+                    Spacer(minLength: 8)
+
+                    VStack(spacing: 8) {
                         SelectionStat(label: "Matches", value: "\(movies.count)")
                         SelectionStat(label: "Page", value: "\(page)")
                         SelectionStat(label: "Genre", value: selection.genre.label)
                     }
+                    .frame(width: 116)
                 }
 
                 HStack(spacing: 8) {
@@ -148,6 +135,10 @@ struct ResultsView: View {
                     SummaryChip(text: selection.genre.label)
                     if let decade = selection.decade { SummaryChip(text: decade.label) }
                 }
+
+                Text("The engine is matching this mood to titles, providers, and watch status.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
             }
         }
     }
@@ -221,13 +212,10 @@ private struct MovieCardView: View {
 
                     VStack(alignment: .leading, spacing: 10) {
                         VStack(alignment: .leading, spacing: 4) {
-                            HStack {
-                                Text(movie.title)
-                                    .font(.headline.weight(.semibold))
-                                    .foregroundStyle(.primary)
-                                    .fixedSize(horizontal: false, vertical: true)
-                                Spacer(minLength: 8)
-                            }
+                            Text(movie.title)
+                                .font(.headline.weight(.semibold))
+                                .foregroundStyle(.primary)
+                                .fixedSize(horizontal: false, vertical: true)
                             Text("\(movie.year) • \(movie.genre.label)")
                                 .font(.footnote)
                                 .foregroundStyle(.secondary)
@@ -243,6 +231,9 @@ private struct MovieCardView: View {
                         HStack(spacing: 8) {
                             SummaryChip(text: movie.primaryAvailability.platformName)
                             SummaryChip(text: movie.primaryAvailability.type.label)
+                            if status == .watched {
+                                SummaryChip(text: "Watched")
+                            }
                         }
                     }
                 }
@@ -289,6 +280,25 @@ private struct MovieCardView: View {
                             .buttonStyle(InlineActionButtonStyle(isActive: false))
                         }
                     }
+                }
+            }
+            .overlay(alignment: .topTrailing) {
+                if let status {
+                    Text(status.label.uppercased())
+                        .font(.caption2.weight(.bold))
+                        .tracking(2)
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 5)
+                        .background(
+                            Capsule(style: .continuous)
+                                .fill(Color(hex: "F5A623").opacity(0.16))
+                                .overlay(
+                                    Capsule(style: .continuous)
+                                        .stroke(Color(hex: "F5A623").opacity(0.22), lineWidth: 1)
+                                )
+                        )
+                        .foregroundStyle(Color(hex: "F5A623"))
+                        .padding(6)
                 }
             }
         }
