@@ -1,6 +1,6 @@
 import Foundation
 
-public struct TMDBSearchResult: Decodable, Hashable {
+public struct TMDBSearchResult: Decodable, Hashable, Sendable {
     public let id: Int
     public let title: String
     public let releaseDate: String?
@@ -24,7 +24,7 @@ public struct TMDBSearchResult: Decodable, Hashable {
     }
 }
 
-public struct TMDBMovieDetail: Decodable, Hashable {
+public struct TMDBMovieDetail: Decodable, Hashable, Sendable {
     public let id: Int
     public let title: String
     public let releaseDate: String?
@@ -34,7 +34,7 @@ public struct TMDBMovieDetail: Decodable, Hashable {
     public let posterPath: String?
     public let genres: [TMDBGenre]
 
-    public struct TMDBGenre: Decodable, Hashable {
+    public struct TMDBGenre: Decodable, Hashable, Sendable {
         public let id: Int
     }
 
@@ -50,14 +50,14 @@ public struct TMDBMovieDetail: Decodable, Hashable {
     }
 }
 
-public struct TMDBProviderResponse: Decodable, Hashable {
-    public struct CountryProviders: Decodable, Hashable {
+public struct TMDBProviderResponse: Decodable, Hashable, Sendable {
+    public struct CountryProviders: Decodable, Hashable, Sendable {
         public let flatrate: [ProviderEntry]?
         public let rent: [ProviderEntry]?
         public let buy: [ProviderEntry]?
     }
 
-    public struct ProviderEntry: Decodable, Hashable {
+    public struct ProviderEntry: Decodable, Hashable, Sendable {
         public let providerId: Int
 
         private enum CodingKeys: String, CodingKey {
@@ -68,8 +68,8 @@ public struct TMDBProviderResponse: Decodable, Hashable {
     public let results: [String: CountryProviders]
 }
 
-public struct TMDBPeopleResponse: Decodable, Hashable {
-    public struct Person: Decodable, Hashable {
+public struct TMDBPeopleResponse: Decodable, Hashable, Sendable {
+    public struct Person: Decodable, Hashable, Sendable {
         public let id: Int
         public let name: String
     }
@@ -264,6 +264,8 @@ public final class TMDBClient {
         return try JSONDecoder().decode(T.self, from: data)
     }
 }
+
+extension TMDBClient: @unchecked Sendable {}
 
 private struct TMDBSearchEnvelope: Decodable {
     let results: [TMDBSearchResult]

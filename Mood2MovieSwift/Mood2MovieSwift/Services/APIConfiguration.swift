@@ -16,7 +16,7 @@ public struct APIConfiguration {
     }
 
     public static var live: APIConfiguration {
-        let values = AppConfigurationStore.shared.values
+        let values = AppConfigurationStore.liveValues()
         return APIConfiguration(
             tmdbAPIKey: values.tmdbAPIKey.isEmpty ? nil : values.tmdbAPIKey,
             anthropicAPIKey: values.anthropicAPIKey.isEmpty ? nil : values.anthropicAPIKey,

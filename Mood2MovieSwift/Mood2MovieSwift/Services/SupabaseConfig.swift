@@ -10,7 +10,7 @@ public struct SupabaseConfig {
     }
 
     public static var live: SupabaseConfig {
-        let values = AppConfigurationStore.shared.values
+        let values = AppConfigurationStore.liveValues()
         return SupabaseConfig(
             url: values.supabaseURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? nil : URL(string: values.supabaseURL),
             anonKey: values.supabaseAnonKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? nil : values.supabaseAnonKey

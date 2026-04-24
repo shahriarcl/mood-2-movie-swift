@@ -82,8 +82,8 @@ public enum MoodCatalog {
         genreMap[tmdbGenreId]
     }
 
-    public struct MovieBlueprint: Hashable {
-        public enum BlueprintAvailability: Hashable {
+    public struct MovieBlueprint: Hashable, Sendable {
+        public enum BlueprintAvailability: Hashable, Sendable {
             case subscription(String)
             case rent(String)
             case buy(String)

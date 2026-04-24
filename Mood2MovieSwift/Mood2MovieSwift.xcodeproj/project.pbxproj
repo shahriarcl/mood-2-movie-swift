@@ -8,10 +8,11 @@
 
 /* Begin PBXFileReference section */
 		F871F3132F9B08C0008F920B /* Mood2MovieSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mood2MovieSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F871F3A12F9B195F008F920B /* Mood2MovieSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Mood2MovieSwift.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		F871F3152F9B08C0008F920B /* Mood2MovieSwift */ = {
+		F871F3152F9B08C0008F920B /* ../Mood2MovieSwift */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = ../Mood2MovieSwift;
 			sourceTree = "<group>";
@@ -32,7 +33,7 @@
 		F871F30A2F9B08C0008F920B = {
 			isa = PBXGroup;
 			children = (
-				F871F3152F9B08C0008F920B /* Mood2MovieSwift */,
+				F871F3152F9B08C0008F920B /* ../Mood2MovieSwift */,
 				F871F3142F9B08C0008F920B /* Products */,
 			);
 			sourceTree = "<group>";
@@ -42,6 +43,11 @@
 			children = (
 				F871F3132F9B08C0008F920B /* Mood2MovieSwift.app */,
 			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F871F3A22F9B195F008F920B /* Products */ = {
+			isa = PBXGroup;
 			name = Products;
 			sourceTree = "<group>";
 		};
@@ -61,7 +67,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				F871F3152F9B08C0008F920B /* Mood2MovieSwift */,
+				F871F3152F9B08C0008F920B /* ../Mood2MovieSwift */,
 			);
 			name = Mood2MovieSwift;
 			packageProductDependencies = (
@@ -97,6 +103,12 @@
 			preferredProjectObjectVersion = 77;
 			productRefGroup = F871F3142F9B08C0008F920B /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = F871F3A22F9B195F008F920B /* Products */;
+					ProjectRef = F871F3A12F9B195F008F920B /* Mood2MovieSwift.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				F871F3122F9B08C0008F920B /* Mood2MovieSwift */,
@@ -254,8 +266,8 @@
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ../Mood2MovieSwift/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -284,8 +296,8 @@
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = ../Mood2MovieSwift/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",

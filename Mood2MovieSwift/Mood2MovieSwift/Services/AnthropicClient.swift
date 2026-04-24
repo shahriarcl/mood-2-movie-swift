@@ -1,6 +1,6 @@
 import Foundation
 
-public struct Nomination: Codable, Hashable {
+public struct Nomination: Codable, Hashable, Sendable {
     public let title: String
     public let year: Int
     public let reason: String
@@ -129,6 +129,8 @@ public final class AnthropicClient {
         throw NSError(domain: "AnthropicClient", code: 2, userInfo: [NSLocalizedDescriptionKey: "Unterminated JSON array in Claude response"])
     }
 }
+
+extension AnthropicClient: @unchecked Sendable {}
 
 private struct AnthropicMessagesRequest: Encodable {
     struct Message: Encodable {

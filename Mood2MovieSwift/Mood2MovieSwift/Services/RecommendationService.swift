@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol RecommendationService {
+public protocol RecommendationService: Sendable {
     func suggestions(
         for selection: MoodSelection,
         preferences: UserPreferences,
@@ -115,3 +115,5 @@ public final class LocalRecommendationService: RecommendationService {
         return Availability(type: blueprintAvailability.type, platformName: platformName, platformKey: platformKey)
     }
 }
+
+extension LocalRecommendationService: @unchecked Sendable {}

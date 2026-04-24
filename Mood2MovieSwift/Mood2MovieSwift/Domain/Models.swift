@@ -1,6 +1,6 @@
 import Foundation
 
-public enum MoodAudience: String, CaseIterable, Codable, Hashable, Identifiable {
+public enum MoodAudience: String, CaseIterable, Codable, Hashable, Identifiable, Sendable {
     case solo
     case couple
     case family
@@ -17,7 +17,7 @@ public enum MoodAudience: String, CaseIterable, Codable, Hashable, Identifiable 
     }
 }
 
-public enum MoodVibe: String, CaseIterable, Codable, Hashable, Identifiable {
+public enum MoodVibe: String, CaseIterable, Codable, Hashable, Identifiable, Sendable {
     case feelGood = "feel-good"
     case thrilling = "thrilling"
     case mindBending = "mind-bending"
@@ -38,7 +38,7 @@ public enum MoodVibe: String, CaseIterable, Codable, Hashable, Identifiable {
     }
 }
 
-public enum MoodGenre: String, CaseIterable, Codable, Hashable, Identifiable {
+public enum MoodGenre: String, CaseIterable, Codable, Hashable, Identifiable, Sendable {
     case sciFi = "sci-fi"
     case romance
     case comedy
@@ -65,7 +65,7 @@ public enum MoodGenre: String, CaseIterable, Codable, Hashable, Identifiable {
     }
 }
 
-public enum MoodDecade: String, CaseIterable, Codable, Hashable, Identifiable {
+public enum MoodDecade: String, CaseIterable, Codable, Hashable, Identifiable, Sendable {
     case forties = "40s"
     case fifties = "50s"
     case sixties = "60s"
@@ -77,7 +77,7 @@ public enum MoodDecade: String, CaseIterable, Codable, Hashable, Identifiable {
     public var label: String { rawValue }
 }
 
-public struct MoodSelection: Codable, Hashable, Identifiable {
+public struct MoodSelection: Codable, Hashable, Identifiable, Sendable {
     public var id: String {
         [audience.rawValue, vibe?.rawValue ?? "", genre.rawValue, decade?.rawValue ?? ""]
             .joined(separator: "|")
@@ -96,7 +96,7 @@ public struct MoodSelection: Codable, Hashable, Identifiable {
     }
 }
 
-public struct MoodSelectionDraft: Hashable {
+public struct MoodSelectionDraft: Hashable, Sendable {
     public var audience: MoodAudience?
     public var vibe: MoodVibe?
     public var genre: MoodGenre?
@@ -132,7 +132,7 @@ public struct MoodSelectionDraft: Hashable {
     }
 }
 
-public enum AvailabilityType: String, Codable, Hashable, CaseIterable, Identifiable {
+public enum AvailabilityType: String, Codable, Hashable, CaseIterable, Identifiable, Sendable {
     case subscription
     case rent
     case buy
@@ -147,14 +147,14 @@ public enum AvailabilityType: String, Codable, Hashable, CaseIterable, Identifia
     }
 }
 
-public struct Availability: Codable, Hashable, Identifiable {
+public struct Availability: Codable, Hashable, Identifiable, Sendable {
     public var id: String { [platformKey, type.rawValue].joined(separator: "|") }
     public let type: AvailabilityType
     public let platformName: String
     public let platformKey: String
 }
 
-public struct ProviderResult: Codable, Hashable {
+public struct ProviderResult: Codable, Hashable, Sendable {
     public let providerId: Int
     public let type: AvailabilityType
 
@@ -164,7 +164,7 @@ public struct ProviderResult: Codable, Hashable {
     }
 }
 
-public struct MovieResult: Codable, Hashable, Identifiable {
+public struct MovieResult: Codable, Hashable, Identifiable, Sendable {
     public var id: Int { tmdbId }
     public let tmdbId: Int
     public let title: String
@@ -176,7 +176,7 @@ public struct MovieResult: Codable, Hashable, Identifiable {
     public let genre: MoodGenre
 }
 
-public enum MovieStatus: String, Codable, Hashable, CaseIterable, Identifiable {
+public enum MovieStatus: String, Codable, Hashable, CaseIterable, Identifiable, Sendable {
     case watchlist
     case watched
 
@@ -189,7 +189,7 @@ public enum MovieStatus: String, Codable, Hashable, CaseIterable, Identifiable {
     }
 }
 
-public struct UserMovie: Codable, Hashable, Identifiable {
+public struct UserMovie: Codable, Hashable, Identifiable, Sendable {
     public var id: Int { tmdbId }
     public let tmdbId: Int
     public let title: String
@@ -200,7 +200,7 @@ public struct UserMovie: Codable, Hashable, Identifiable {
     public var createdAt: Date
 }
 
-public struct CloudUserMovie: Codable, Hashable, Identifiable {
+public struct CloudUserMovie: Codable, Hashable, Identifiable, Sendable {
     public var id: String
     public var tmdbId: Int
     public var title: String
@@ -305,7 +305,7 @@ public struct CloudMovieUpsert: Codable {
     }
 }
 
-public struct Platform: Codable, Hashable, Identifiable {
+public struct Platform: Codable, Hashable, Identifiable, Sendable {
     public var id: String { key }
     public let key: String
     public let name: String
@@ -313,13 +313,13 @@ public struct Platform: Codable, Hashable, Identifiable {
     public let symbolName: String
 }
 
-public struct CountryOption: Codable, Hashable, Identifiable {
+public struct CountryOption: Codable, Hashable, Identifiable, Sendable {
     public var id: String { code }
     public let code: String
     public let name: String
 }
 
-public struct UserPreferences: Codable, Hashable {
+public struct UserPreferences: Codable, Hashable, Sendable {
     public var platforms: [String]
     public var country: String
     public var familySafe: Bool

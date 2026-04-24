@@ -122,29 +122,29 @@ public final class CloudSyncService {
         return TMDBClient(apiKey: key)
     }
 
-    public static func merge(local: [UserMovie], remote: [UserMovie]) -> [UserMovie] {
-        var byId: [Int: UserMovie] = [:]
-
-        for movie in remote {
-            byId[movie.tmdbId] = movie
-        }
-
-        for movie in local {
-            if let existing = byId[movie.tmdbId] {
-                if movie.createdAt >= existing.createdAt {
-                    byId[movie.tmdbId] = movie
-                }
-            } else {
-                byId[movie.tmdbId] = movie
-            }
-        }
-
-        return byId.values.sorted { $0.createdAt > $1.createdAt }
-    }
-
     private func saveSession() {
         sessionStore.save(session)
     }
+}
+
+public func mergeUserMovies(local: [UserMovie], remote: [UserMovie]) -> [UserMovie] {
+    var byId: [Int: UserMovie] = [:]
+
+    for movie in remote {
+        byId[movie.tmdbId] = movie
+    }
+
+    for movie in local {
+        if let existing = byId[movie.tmdbId] {
+            if movie.createdAt >= existing.createdAt {
+                byId[movie.tmdbId] = movie
+            }
+        } else {
+            byId[movie.tmdbId] = movie
+        }
+    }
+
+    return byId.values.sorted { $0.createdAt > $1.createdAt }
 }
 
 private final class SessionStore {

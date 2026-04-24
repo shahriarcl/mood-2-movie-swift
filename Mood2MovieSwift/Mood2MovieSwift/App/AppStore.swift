@@ -1,7 +1,6 @@
 import Foundation
 import Observation
 
-@MainActor
 @Observable
 public final class AppStore {
     public var preferences: UserPreferences
@@ -88,7 +87,7 @@ public final class AppStore {
     }
 
     public func mergeLibrary(with movies: [UserMovie]) {
-        self.movies = CloudSyncService.merge(local: self.movies, remote: movies)
+        self.movies = mergeUserMovies(local: self.movies, remote: movies)
         libraryStore.save(self.movies)
     }
 
@@ -100,3 +99,5 @@ public final class AppStore {
         MoodCatalog.surpriseSelection(tasteGenres: favoriteGenres)
     }
 }
+
+extension AppStore: @unchecked Sendable {}

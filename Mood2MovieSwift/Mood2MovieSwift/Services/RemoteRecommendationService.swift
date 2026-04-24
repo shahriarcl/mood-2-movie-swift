@@ -110,21 +110,13 @@ public final class RemoteRecommendationService: RecommendationService {
     ) async -> [MovieResult] {
         let filtered = results.filter { !excludingTitles.contains($0.title) }
         let candidates = Array(filtered.prefix(8))
-        return await withTaskGroup(of: MovieResult?.self) { group in
-            for result in candidates {
-                group.addTask {
-                    await self.resolveMovie(result, tmdb: tmdb, platformKeys: platformKeys, country: country, allowFallbackAvailability: true)
-                }
+        var resolved: [MovieResult] = []
+        for result in candidates {
+            if let movie = await resolveMovie(result, tmdb: tmdb, platformKeys: platformKeys, country: country, allowFallbackAvailability: true) {
+                resolved.append(movie)
             }
-
-            var resolved: [MovieResult] = []
-            for await item in group {
-                if let item {
-                    resolved.append(item)
-                }
-            }
-            return resolved.sorted { $0.year > $1.year }
         }
+        return resolved.sorted { $0.year > $1.year }
     }
 
     private func resolveNominations(
@@ -135,21 +127,13 @@ public final class RemoteRecommendationService: RecommendationService {
         allowFallbackAvailability: Bool
     ) async throws -> [MovieResult] {
         let chunks = Array(nominations.prefix(30))
-        return await withTaskGroup(of: MovieResult?.self) { group in
-            for nomination in chunks {
-                group.addTask {
-                    await self.resolveNomination(nomination, tmdb: tmdb, platformKeys: platforms, country: country, allowFallbackAvailability: allowFallbackAvailability)
-                }
+        var results: [MovieResult] = []
+        for nomination in chunks {
+            if let movie = await resolveNomination(nomination, tmdb: tmdb, platformKeys: platforms, country: country, allowFallbackAvailability: allowFallbackAvailability) {
+                results.append(movie)
             }
-
-            var results: [MovieResult] = []
-            for await item in group {
-                if let item {
-                    results.append(item)
-                }
-            }
-            return results.sorted { $0.year > $1.year }.prefix(6).map { $0 }
         }
+        return results.sorted { $0.year > $1.year }.prefix(6).map { $0 }
     }
 
     private func resolveNomination(
@@ -231,3 +215,5 @@ public final class RemoteRecommendationService: RecommendationService {
         .sorted { (order[$0.type] ?? 99) < (order[$1.type] ?? 99) }
     }
 }
+
+extension RemoteRecommendationService: @unchecked Sendable {}

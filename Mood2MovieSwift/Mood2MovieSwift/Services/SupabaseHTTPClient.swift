@@ -154,3 +154,5 @@ public final class SupabaseHTTPClient {
         }
     }
 }
+
+extension SupabaseHTTPClient: @unchecked Sendable {}

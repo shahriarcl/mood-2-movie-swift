@@ -27,6 +27,10 @@ public struct AppConfigurationValues: Codable, Hashable {
 public final class AppConfigurationStore {
     public static let shared = AppConfigurationStore()
 
+    public static func liveValues() -> AppConfigurationValues {
+        ConfigurationPersistence().load()
+    }
+
     public var values: AppConfigurationValues {
         didSet {
             save(values)
@@ -47,6 +51,8 @@ public final class AppConfigurationStore {
         store.save(values)
     }
 }
+
+extension AppConfigurationStore: @unchecked Sendable {}
 
 private final class ConfigurationPersistence {
     private let fileURL: URL
