@@ -108,7 +108,7 @@ struct HomeView: View {
                     VStack(spacing: 10) {
                         ForEach(searchResults) { movie in
                             SearchResultRow(movie: movie) {
-                                path.append(.results(MoodSelection(audience: .solo, genre: movie.genre)))
+                                path.append(.movieDetail(movie))
                             }
                         }
                     }
@@ -128,13 +128,13 @@ struct HomeView: View {
                     .foregroundStyle(.secondary)
                     .font(.footnote)
             } else {
-                VStack(spacing: 10) {
-                    ForEach(forYouMovies) { movie in
-                        SearchResultRow(movie: movie) {
-                            path.append(.results(MoodSelection(audience: .solo, genre: movie.genre)))
+                    VStack(spacing: 10) {
+                        ForEach(forYouMovies) { movie in
+                            SearchResultRow(movie: movie) {
+                                path.append(.movieDetail(movie))
+                            }
                         }
                     }
-                }
             }
         }
         .padding(16)

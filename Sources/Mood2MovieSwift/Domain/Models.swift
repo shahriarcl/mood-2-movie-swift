@@ -190,6 +190,111 @@ public struct UserMovie: Codable, Hashable, Identifiable {
     public let createdAt: Date
 }
 
+public struct CloudUserMovie: Codable, Hashable, Identifiable {
+    public var id: String
+    public var tmdbId: Int
+    public var title: String
+    public var year: Int
+    public var posterPath: String?
+    public var status: MovieStatus
+    public var createdAt: Date
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case tmdbId = "tmdb_id"
+        case title
+        case year
+        case posterPath = "poster_path"
+        case status
+        case createdAt = "created_at"
+    }
+}
+
+public struct CloudSession: Codable, Hashable {
+    public let accessToken: String
+    public let refreshToken: String
+    public let expiresAt: Date?
+    public let userId: String
+    public let email: String?
+
+    private enum CodingKeys: String, CodingKey {
+        case accessToken = "access_token"
+        case refreshToken = "refresh_token"
+        case expiresAt = "expires_at"
+        case expiresIn = "expires_in"
+        case user
+    }
+
+    private enum UserKeys: String, CodingKey {
+        case id
+        case email
+    }
+
+    public init(accessToken: String, refreshToken: String, expiresAt: Date?, userId: String, email: String?) {
+        self.accessToken = accessToken
+        self.refreshToken = refreshToken
+        self.expiresAt = expiresAt
+        self.userId = userId
+        self.email = email
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        accessToken = try container.decode(String.self, forKey: .accessToken)
+        refreshToken = try container.decode(String.self, forKey: .refreshToken)
+        if let expiresRaw = try? container.decode(Double.self, forKey: .expiresAt) {
+            expiresAt = Date(timeIntervalSince1970: expiresRaw)
+        } else if let expiresInt = try? container.decode(Int.self, forKey: .expiresAt) {
+            expiresAt = Date(timeIntervalSince1970: TimeInterval(expiresInt))
+        } else if let expiresIn = try? container.decode(Int.self, forKey: .expiresIn) {
+            expiresAt = Date().addingTimeInterval(TimeInterval(expiresIn))
+        } else {
+            expiresAt = nil
+        }
+
+        let user = try container.nestedContainer(keyedBy: UserKeys.self, forKey: .user)
+        userId = try user.decode(String.self, forKey: .id)
+        email = try? user.decode(String.self, forKey: .email)
+    }
+
+    public func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(accessToken, forKey: .accessToken)
+        try container.encode(refreshToken, forKey: .refreshToken)
+        if let expiresAt {
+            try container.encode(Int(expiresAt.timeIntervalSince1970), forKey: .expiresAt)
+        }
+        var user = container.nestedContainer(keyedBy: UserKeys.self, forKey: .user)
+        try user.encode(userId, forKey: .id)
+        try user.encodeIfPresent(email, forKey: .email)
+    }
+}
+
+public struct CloudAuthPayload: Codable {
+    public let email: String
+    public let password: String
+}
+
+public struct CloudMovieUpsert: Codable {
+    public let userId: String
+    public let tmdbId: Int
+    public let title: String
+    public let year: Int
+    public let posterPath: String?
+    public let status: MovieStatus
+    public let createdAt: Date
+
+    private enum CodingKeys: String, CodingKey {
+        case userId = "user_id"
+        case tmdbId = "tmdb_id"
+        case title
+        case year
+        case posterPath = "poster_path"
+        case status
+        case createdAt = "created_at"
+    }
+}
+
 public struct Platform: Codable, Hashable, Identifiable {
     public var id: String { key }
     public let key: String

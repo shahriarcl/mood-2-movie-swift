@@ -2,6 +2,7 @@ import SwiftUI
 
 struct ResultsView: View {
     @Environment(AppStore.self) private var store
+    @Environment(CloudSyncService.self) private var cloud
     @Binding var path: [AppRoute]
     let selection: MoodSelection
 
@@ -25,11 +26,16 @@ struct ResultsView: View {
                             MovieCardView(
                                 movie: movie,
                                 status: store.status(for: movie.tmdbId),
+                                onOpenDetail: {
+                                    path.append(.movieDetail(movie))
+                                },
                                 onSave: { status in
                                     store.saveMovie(movie, status: status)
+                                    Task { await cloud.syncLocalLibrary(store.movies) }
                                 },
                                 onRemove: {
                                     store.removeMovie(movie.tmdbId)
+                                    Task { await cloud.syncDelete(movie.tmdbId) }
                                 }
                             )
                         }
@@ -137,12 +143,16 @@ struct ResultsView: View {
 private struct MovieCardView: View {
     let movie: MovieResult
     let status: MovieStatus?
+    let onOpenDetail: () -> Void
     let onSave: (MovieStatus) -> Void
     let onRemove: () -> Void
 
     var body: some View {
         HStack(alignment: .top, spacing: 14) {
-            PosterBadge(genre: movie.genre, title: movie.title, year: movie.year, size: .large)
+            Button(action: onOpenDetail) {
+                PosterBadge(genre: movie.genre, title: movie.title, year: movie.year, size: .large)
+            }
+            .buttonStyle(.plain)
 
             VStack(alignment: .leading, spacing: 10) {
                 HStack(alignment: .top) {
@@ -162,6 +172,14 @@ private struct MovieCardView: View {
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
+
+                Button {
+                    onOpenDetail()
+                } label: {
+                    Text("View details")
+                        .font(.footnote.weight(.semibold))
+                }
+                .buttonStyle(InlineActionButtonStyle(isActive: false))
 
                 if !movie.availability.isEmpty {
                     FlowLayout(spacing: 8) {

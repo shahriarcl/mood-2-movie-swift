@@ -81,6 +81,11 @@ public final class AppStore {
         libraryStore.save(movies)
     }
 
+    public func replaceLibrary(with movies: [UserMovie]) {
+        self.movies = movies
+        libraryStore.save(movies)
+    }
+
     public func status(for tmdbId: Int) -> MovieStatus? {
         movies.first(where: { $0.tmdbId == tmdbId })?.status
     }

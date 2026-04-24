@@ -4,6 +4,7 @@ enum AppRoute: Hashable {
     case results(MoodSelection)
     case settings
     case myMovies
+    case movieDetail(MovieResult)
 }
 
 struct RootView: View {
@@ -20,6 +21,8 @@ struct RootView: View {
                         SettingsView(path: $path)
                     case .myMovies:
                         MyMoviesView(path: $path)
+                    case .movieDetail(let movie):
+                        MovieDetailView(movie: movie)
                     }
                 }
         }
