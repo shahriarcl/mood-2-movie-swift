@@ -378,6 +378,10 @@ struct PosterBadge: View {
                         endPoint: .bottomTrailing
                     )
                 )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .stroke(Color.white.opacity(0.18), lineWidth: 1)
+                )
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(title)
@@ -388,9 +392,21 @@ struct PosterBadge: View {
                     .font(.caption2)
                     .foregroundStyle(Color(hex: "0D0D0F").opacity(0.75))
             }
-            .padding(8)
+                .padding(8)
+
+            VStack {
+                HStack {
+                    Spacer()
+                    Circle()
+                        .fill(Color.white.opacity(0.22))
+                        .frame(width: size == .small ? 7 : 9, height: size == .small ? 7 : 9)
+                        .padding(6)
+                }
+                Spacer()
+            }
         }
         .frame(width: dimensions.width, height: dimensions.height)
+        .shadow(color: genreColor.opacity(0.18), radius: 10, x: 0, y: 6)
     }
 
     private var genreColor: Color {

@@ -575,31 +575,33 @@ private struct SpotlightCard: View {
     let movie: MovieResult
 
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            PosterBadge(genre: movie.genre, title: movie.title, year: movie.year, size: .large)
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Top for you")
+                    .font(.caption2.weight(.bold))
+                    .tracking(3)
+                    .foregroundStyle(Color(hex: "F5A623"))
+                Spacer()
+                AvailabilityPill(availability: movie.primaryAvailability)
+            }
 
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Text("Top for you")
-                        .font(.caption2.weight(.bold))
-                        .tracking(3)
-                        .foregroundStyle(Color(hex: "F5A623"))
-                    Spacer()
-                    AvailabilityPill(availability: movie.primaryAvailability)
-                }
+            HStack(alignment: .top, spacing: 12) {
+                PosterBadge(genre: movie.genre, title: movie.title, year: movie.year, size: .large)
 
-                Text(movie.title)
-                    .font(.headline.weight(.semibold))
-                    .lineLimit(2)
-                Text(movie.reason)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(3)
-                    .fixedSize(horizontal: false, vertical: true)
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(movie.title)
+                        .font(.headline.weight(.semibold))
+                        .lineLimit(2)
+                    Text(movie.reason)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(4)
+                        .fixedSize(horizontal: false, vertical: true)
 
-                HStack(spacing: 8) {
-                    SummaryPill(text: movie.genre.label)
-                    SummaryPill(text: "\(movie.year)")
+                    HStack(spacing: 8) {
+                        SummaryPill(text: movie.genre.label)
+                        SummaryPill(text: "\(movie.year)")
+                    }
                 }
             }
         }
@@ -674,22 +676,25 @@ private struct FeaturedMovieCard: View {
                 PosterBadge(genre: movie.genre, title: movie.title, year: movie.year, size: .large)
 
                 VStack(alignment: .leading, spacing: 8) {
-                    HStack(alignment: .top) {
+                    HStack(alignment: .top, spacing: 8) {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(movie.title)
-                                .font(.subheadline.weight(.semibold))
+                                .font(.headline.weight(.semibold))
                                 .lineLimit(2)
                             Text("\(movie.year) • \(movie.genre.label)")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
                         Spacer()
+                        Image(systemName: "chevron.right")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(.secondary)
                     }
 
                     Text(movie.reason)
-                        .font(.caption)
+                        .font(.footnote)
                         .foregroundStyle(.secondary)
-                        .lineLimit(3)
+                        .lineLimit(4)
                         .fixedSize(horizontal: false, vertical: true)
 
                     HStack(spacing: 8) {
@@ -702,16 +707,16 @@ private struct FeaturedMovieCard: View {
             .padding(14)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(
-                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                RoundedRectangle(cornerRadius: 24, style: .continuous)
                     .fill(
                         LinearGradient(
-                            colors: [Color.white.opacity(0.09), Color.white.opacity(0.04)],
+                            colors: [Color.white.opacity(0.11), Color.white.opacity(0.04)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
                     )
                     .overlay(
-                        RoundedRectangle(cornerRadius: 22, style: .continuous)
+                        RoundedRectangle(cornerRadius: 24, style: .continuous)
                             .stroke(Color.white.opacity(0.10), lineWidth: 1)
                     )
             )
