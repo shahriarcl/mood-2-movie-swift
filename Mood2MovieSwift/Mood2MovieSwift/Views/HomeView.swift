@@ -12,46 +12,66 @@ struct HomeView: View {
     @State private var forYouMovies: [MovieResult] = []
     @State private var didAppear = false
     @FocusState private var searchFocused: Bool
+    private let topAnchor = "home-top"
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 18) {
-                motion(topBar, delay: 0.0)
-                motion(heroSection, delay: 0.05)
-                motion(searchSection, delay: 0.10)
-                motion(statsSection, delay: 0.16)
-                motion(forYouSection, delay: 0.22)
-                motion(moodSection, delay: 0.28)
-                motion(actionSection, delay: 0.34)
+        ScrollViewReader { proxy in
+            ScrollView {
+                VStack(alignment: .leading, spacing: 18) {
+                    Color.clear
+                        .frame(height: 0)
+                        .id(topAnchor)
+                    motion(topBar, delay: 0.0)
+                    motion(heroSection, delay: 0.05)
+                    motion(searchSection, delay: 0.10)
+                    motion(statsSection, delay: 0.16)
+                    motion(forYouSection, delay: 0.22)
+                    motion(moodSection, delay: 0.28)
+                    motion(actionSection, delay: 0.34)
+                }
+                .padding(.horizontal, 16)
+                .padding(.top, 12)
+                .padding(.bottom, 160)
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding(.horizontal, 16)
-            .padding(.top, 12)
-            .padding(.bottom, 122)
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .background(AppScreenBackground())
-        .scrollIndicators(.hidden)
-        .onAppear {
-            didAppear = true
-            if focusSearch {
-                searchFocused = true
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+            .background(AppScreenBackground())
+            .scrollIndicators(.hidden)
+            .onAppear {
+                didAppear = true
+                if focusSearch {
+                    searchFocused = true
+                }
+                DispatchQueue.main.async {
+                    proxy.scrollTo(topAnchor, anchor: .top)
+                }
             }
-        }
-        .onChange(of: focusSearch) { _, newValue in
-            if newValue {
-                searchFocused = true
+            .onChange(of: focusSearch) { _, newValue in
+                if newValue {
+                    searchFocused = true
+                    DispatchQueue.main.async {
+                        proxy.scrollTo(topAnchor, anchor: .top)
+                    }
+                }
             }
-        }
-        .onChange(of: searchFocused) { _, newValue in
-            if !newValue && focusSearch {
-                focusSearch = false
+            .onChange(of: searchFocused) { _, newValue in
+                if !newValue && focusSearch {
+                    focusSearch = false
+                }
             }
-        }
-        .task(id: store.favoriteGenres) {
-            await loadForYou()
-        }
-        .task(id: searchText) {
-            await runSearch()
+            .onChange(of: path) { _, _ in
+                if path.isEmpty {
+                    DispatchQueue.main.async {
+                        proxy.scrollTo(topAnchor, anchor: .top)
+                    }
+                }
+            }
+            .task(id: store.favoriteGenres) {
+                await loadForYou()
+            }
+            .task(id: searchText) {
+                await runSearch()
+            }
         }
     }
 

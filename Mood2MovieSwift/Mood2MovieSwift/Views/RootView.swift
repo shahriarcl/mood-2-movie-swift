@@ -51,8 +51,9 @@ struct RootView: View {
                     path = [.settings]
                 }
             }
+            .frame(maxWidth: .infinity)
             .padding(.horizontal, 14)
-            .padding(.bottom, 10)
+            .padding(.bottom, 24)
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
     }
