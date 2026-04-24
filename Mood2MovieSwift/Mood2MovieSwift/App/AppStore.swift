@@ -12,15 +12,24 @@ public final class AppStore {
     private let libraryStore: LibraryStore
 
     public init(
-        preferencesStore: PreferencesStore = PreferencesStore(),
-        libraryStore: LibraryStore = LibraryStore(),
-        recommendationService: RecommendationService = RemoteRecommendationService()
+        preferencesStore: PreferencesStore,
+        libraryStore: LibraryStore,
+        recommendationService: RecommendationService
     ) {
         self.preferencesStore = preferencesStore
         self.libraryStore = libraryStore
         self.recommendationService = recommendationService
         self.preferences = preferencesStore.load()
         self.movies = libraryStore.load()
+    }
+
+    public convenience init(
+    ) {
+        self.init(
+            preferencesStore: PreferencesStore(),
+            libraryStore: LibraryStore(),
+            recommendationService: RemoteRecommendationService()
+        )
     }
 
     public var watchlist: [UserMovie] {
