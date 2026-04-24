@@ -1,6 +1,7 @@
 import Foundation
 import Observation
 
+@MainActor
 @Observable
 public final class AppStore {
     public var preferences: UserPreferences
