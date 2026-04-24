@@ -14,7 +14,7 @@ public final class AppStore {
     public init(
         preferencesStore: PreferencesStore = PreferencesStore(),
         libraryStore: LibraryStore = LibraryStore(),
-        recommendationService: RecommendationService = LocalRecommendationService()
+        recommendationService: RecommendationService = RemoteRecommendationService()
     ) {
         self.preferencesStore = preferencesStore
         self.libraryStore = libraryStore
