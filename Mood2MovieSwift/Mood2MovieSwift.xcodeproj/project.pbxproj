@@ -9,6 +9,7 @@
 /* Begin PBXFileReference section */
 		F871F3132F9B08C0008F920B /* Mood2MovieSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mood2MovieSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F871F3A12F9B195F008F920B /* Mood2MovieSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Mood2MovieSwift.xcodeproj; sourceTree = "<group>"; };
+		F871F4142F9B19CF008F920B /* Mood2MovieSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Mood2MovieSwift.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -47,6 +48,11 @@
 			sourceTree = "<group>";
 		};
 		F871F3A22F9B195F008F920B /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F871F4152F9B19CF008F920B /* Products */ = {
 			isa = PBXGroup;
 			name = Products;
 			sourceTree = "<group>";
@@ -104,6 +110,10 @@
 			productRefGroup = F871F3142F9B08C0008F920B /* Products */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = F871F4152F9B19CF008F920B /* Products */;
+					ProjectRef = F871F4142F9B19CF008F920B /* Mood2MovieSwift.xcodeproj */;
+				},
 				{
 					ProductGroup = F871F3A22F9B195F008F920B /* Products */;
 					ProjectRef = F871F3A12F9B195F008F920B /* Mood2MovieSwift.xcodeproj */;
@@ -267,7 +277,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = ../Mood2MovieSwift/Info.plist;
+				INFOPLIST_FILE = Mood2MovieSwift/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
@@ -297,7 +307,7 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = ../Mood2MovieSwift/Info.plist;
+				INFOPLIST_FILE = Mood2MovieSwift/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
