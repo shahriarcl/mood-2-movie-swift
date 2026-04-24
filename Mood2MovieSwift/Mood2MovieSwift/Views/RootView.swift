@@ -12,22 +12,25 @@ struct RootView: View {
     @State private var focusSearch = false
 
     var body: some View {
-        NavigationStack(path: $path) {
-            HomeView(path: $path, focusSearch: $focusSearch)
-                .navigationDestination(for: AppRoute.self) { route in
-                    switch route {
-                    case .results(let selection):
-                        ResultsView(path: $path, selection: selection)
-                    case .settings:
-                        SettingsView(path: $path)
-                    case .myMovies:
-                        MyMoviesView(path: $path)
-                    case .movieDetail(let movie):
-                        MovieDetailView(movie: movie)
+        ZStack(alignment: .bottom) {
+            AppScreenBackground()
+
+            NavigationStack(path: $path) {
+                HomeView(path: $path, focusSearch: $focusSearch)
+                    .navigationDestination(for: AppRoute.self) { route in
+                        switch route {
+                        case .results(let selection):
+                            ResultsView(path: $path, selection: selection)
+                        case .settings:
+                            SettingsView(path: $path)
+                        case .myMovies:
+                            MyMoviesView(path: $path)
+                        case .movieDetail(let movie):
+                            MovieDetailView(movie: movie)
+                        }
                     }
-                }
-        }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
+            }
+
             PhoneTabBar(activeTab: activeTab) { tab in
                 switch tab {
                 case .home:
@@ -48,11 +51,10 @@ struct RootView: View {
                     path = [.settings]
                 }
             }
-            .frame(maxWidth: .infinity)
-            .padding(.horizontal, 10)
-            .padding(.top, 2)
-            .padding(.bottom, 6)
+            .padding(.horizontal, 14)
+            .padding(.bottom, 10)
         }
+        .ignoresSafeArea(.keyboard, edges: .bottom)
     }
 
     private var activeTab: ShellTab {
@@ -123,7 +125,7 @@ private struct PhoneTabBar: View {
         .padding(.vertical, 10)
         .background(
             RoundedRectangle(cornerRadius: 28, style: .continuous)
-                .fill(.thinMaterial)
+                .fill(.ultraThinMaterial)
                 .overlay(
                     RoundedRectangle(cornerRadius: 28, style: .continuous)
                         .stroke(Color.white.opacity(0.12), lineWidth: 1)

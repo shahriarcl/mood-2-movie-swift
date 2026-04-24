@@ -25,10 +25,12 @@ struct HomeView: View {
                 motion(actionSection, delay: 0.34)
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, 20)
-            .frame(maxWidth: 400, alignment: .leading)
+            .padding(.top, 12)
+            .padding(.bottom, 122)
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
         .background(AppScreenBackground())
+        .scrollIndicators(.hidden)
         .onAppear {
             didAppear = true
             if focusSearch {
