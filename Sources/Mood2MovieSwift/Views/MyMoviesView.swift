@@ -190,9 +190,7 @@ struct MyMoviesView: View {
             try await cloud.signIn(email: email, password: password)
             authMessage = "Signed in."
             let remote = await cloud.fetchRemoteLibrary()
-            if !remote.isEmpty {
-                store.replaceLibrary(with: remote)
-            }
+            store.mergeLibrary(with: remote)
             await cloud.syncLocalLibrary(store.movies)
         } catch {
             authMessage = "Sign in failed. Check your email/password and Supabase settings."

@@ -60,6 +60,7 @@ public final class AppStore {
         let now = Date()
         if let index = movies.firstIndex(where: { $0.tmdbId == movie.tmdbId }) {
             movies[index].status = status
+            movies[index].createdAt = now
         } else {
             movies.append(
                 UserMovie(
@@ -84,6 +85,11 @@ public final class AppStore {
     public func replaceLibrary(with movies: [UserMovie]) {
         self.movies = movies
         libraryStore.save(movies)
+    }
+
+    public func mergeLibrary(with movies: [UserMovie]) {
+        self.movies = CloudSyncService.merge(local: self.movies, remote: movies)
+        libraryStore.save(self.movies)
     }
 
     public func status(for tmdbId: Int) -> MovieStatus? {

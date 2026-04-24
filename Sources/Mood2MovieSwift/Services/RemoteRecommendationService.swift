@@ -1,18 +1,10 @@
 import Foundation
 
 public final class RemoteRecommendationService: RecommendationService {
-    private let config: APIConfiguration
-    private let tmdb: TMDBClient?
-    private let anthropic: AnthropicClient?
     private let fallback: LocalRecommendationService
 
-    public init(config: APIConfiguration = .live, fallback: LocalRecommendationService = LocalRecommendationService()) {
-        self.config = config
+    public init(fallback: LocalRecommendationService = LocalRecommendationService()) {
         self.fallback = fallback
-        self.tmdb = config.hasTMDB ? TMDBClient(apiKey: config.tmdbAPIKey ?? "") : nil
-        self.anthropic = (config.hasTMDB && config.hasAnthropic)
-            ? AnthropicClient(apiKey: config.anthropicAPIKey ?? "", model: config.anthropicModel)
-            : nil
     }
 
     public func suggestions(
@@ -21,9 +13,13 @@ public final class RemoteRecommendationService: RecommendationService {
         excludingTitles: Set<String>,
         page: Int
     ) async -> [MovieResult] {
-        guard let tmdb else {
+        let config = APIConfiguration.live
+        guard let tmdb = config.hasTMDB ? TMDBClient(apiKey: config.tmdbAPIKey ?? "") : nil else {
             return await fallback.suggestions(for: selection, preferences: preferences, excludingTitles: excludingTitles, page: page)
         }
+        let anthropic = (config.hasTMDB && config.hasAnthropic)
+            ? AnthropicClient(apiKey: config.anthropicAPIKey ?? "", model: config.anthropicModel)
+            : nil
 
         do {
             let nominations: [Nomination]
@@ -61,7 +57,8 @@ public final class RemoteRecommendationService: RecommendationService {
     }
 
     public func search(query: String, excludingTitles: Set<String>) async -> [MovieResult] {
-        guard let tmdb else {
+        let config = APIConfiguration.live
+        guard let tmdb = config.hasTMDB ? TMDBClient(apiKey: config.tmdbAPIKey ?? "") : nil else {
             return await fallback.search(query: query, excludingTitles: excludingTitles)
         }
 
@@ -77,10 +74,10 @@ public final class RemoteRecommendationService: RecommendationService {
         preferences: UserPreferences,
         favoriteGenres: [MoodGenre]
     ) async -> [MovieResult] {
-        guard let tmdb else {
+        let config = APIConfiguration.live
+        guard config.hasTMDB else {
             return await fallback.forYou(preferences: preferences, favoriteGenres: favoriteGenres)
         }
-
         let genre = favoriteGenres.first ?? .comedy
         let selection = MoodSelection(audience: .solo, vibe: nil, genre: genre, decade: nil)
         return await suggestions(for: selection, preferences: preferences, excludingTitles: [], page: 1)
@@ -92,7 +89,8 @@ public final class RemoteRecommendationService: RecommendationService {
         excludingTitles: Set<String>,
         page: Int
     ) async throws -> [MovieResult] {
-        guard let tmdb else { return [] }
+        let config = APIConfiguration.live
+        guard let tmdb = config.hasTMDB ? TMDBClient(apiKey: config.tmdbAPIKey ?? "") : nil else { return [] }
         let discovered = try await tmdb.discoverMovies(selection: selection, familySafe: preferences.familySafe, page: page)
         return await resolveSearchResults(
             discovered,

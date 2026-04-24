@@ -2,11 +2,17 @@ import SwiftUI
 
 struct SettingsView: View {
     @Environment(AppStore.self) private var store
+    @Environment(AppConfigurationStore.self) private var configuration
     @Binding var path: [AppRoute]
 
     @State private var selectedPlatforms: Set<String> = []
     @State private var selectedCountry = "US"
     @State private var familySafe = false
+    @State private var tmdbAPIKey = ""
+    @State private var anthropicAPIKey = ""
+    @State private var anthropicModel = "claude-3-5-haiku-latest"
+    @State private var supabaseURL = ""
+    @State private var supabaseAnonKey = ""
 
     var body: some View {
         ScrollView {
@@ -15,6 +21,8 @@ struct SettingsView: View {
                 platformSection
                 countrySection
                 contentSection
+                apiSection
+                cloudSection
                 saveButton
             }
             .padding(.vertical, 24)
@@ -27,6 +35,7 @@ struct SettingsView: View {
             selectedPlatforms = Set(store.preferences.platforms)
             selectedCountry = store.preferences.country
             familySafe = store.preferences.familySafe
+            loadConfiguration()
         }
     }
 
@@ -103,17 +112,79 @@ struct SettingsView: View {
         .background(cardBackground)
     }
 
+    private var apiSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            SectionHeader(title: "Movie Intelligence")
+            Text("These values are stored locally on this Mac and used by the recommendation engine.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+
+            VStack(alignment: .leading, spacing: 10) {
+                SecureField("TMDB API Key", text: $tmdbAPIKey)
+                    .textFieldStyle(.roundedBorder)
+                SecureField("Anthropic API Key", text: $anthropicAPIKey)
+                    .textFieldStyle(.roundedBorder)
+                TextField("Anthropic Model", text: $anthropicModel)
+                    .textFieldStyle(.roundedBorder)
+            }
+        }
+        .padding(16)
+        .background(cardBackground)
+    }
+
+    private var cloudSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            SectionHeader(title: "Cloud Sync")
+            Text("Supabase powers sign-in and cross-device library sync.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+
+            VStack(alignment: .leading, spacing: 10) {
+                TextField("Supabase URL", text: $supabaseURL)
+                    .textFieldStyle(.roundedBorder)
+                SecureField("Supabase Anon Key", text: $supabaseAnonKey)
+                    .textFieldStyle(.roundedBorder)
+            }
+
+            HStack {
+                Button("Reset to environment defaults") {
+                    configuration.resetToEnvironmentDefaults()
+                    loadConfiguration()
+                }
+                .buttonStyle(SecondaryActionButtonStyle())
+                Spacer()
+            }
+        }
+        .padding(16)
+        .background(cardBackground)
+    }
+
     private var saveButton: some View {
         Button {
             store.setPlatforms(Array(selectedPlatforms).sorted())
             store.setCountry(selectedCountry)
             store.setFamilySafe(familySafe)
+            configuration.values = AppConfigurationValues(
+                tmdbAPIKey: tmdbAPIKey.trimmingCharacters(in: .whitespacesAndNewlines),
+                anthropicAPIKey: anthropicAPIKey.trimmingCharacters(in: .whitespacesAndNewlines),
+                anthropicModel: anthropicModel.trimmingCharacters(in: .whitespacesAndNewlines),
+                supabaseURL: supabaseURL.trimmingCharacters(in: .whitespacesAndNewlines),
+                supabaseAnonKey: supabaseAnonKey.trimmingCharacters(in: .whitespacesAndNewlines)
+            )
             path.removeAll()
         } label: {
             Text("Save & go home")
                 .frame(maxWidth: .infinity)
         }
         .buttonStyle(PrimaryActionButtonStyle(isEnabled: true))
+    }
+
+    private func loadConfiguration() {
+        tmdbAPIKey = configuration.values.tmdbAPIKey
+        anthropicAPIKey = configuration.values.anthropicAPIKey
+        anthropicModel = configuration.values.anthropicModel
+        supabaseURL = configuration.values.supabaseURL
+        supabaseAnonKey = configuration.values.supabaseAnonKey
     }
 
     private var backgroundView: some View {

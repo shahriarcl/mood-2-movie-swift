@@ -10,10 +10,10 @@ public struct SupabaseConfig {
     }
 
     public static var live: SupabaseConfig {
-        let env = ProcessInfo.processInfo.environment
+        let values = AppConfigurationStore.shared.values
         return SupabaseConfig(
-            url: env["SUPABASE_URL"].flatMap(URL.init(string:)),
-            anonKey: env["SUPABASE_ANON_KEY"]
+            url: values.supabaseURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? nil : URL(string: values.supabaseURL),
+            anonKey: values.supabaseAnonKey.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? nil : values.supabaseAnonKey
         )
     }
 

@@ -12,13 +12,12 @@ public final class CloudSyncService {
     public var isConfigured: Bool { client.isConfigured }
     public var isSignedIn: Bool { session != nil }
 
-    private let client: SupabaseHTTPClient
     private let sessionStore = SessionStore()
-    private let tmdbClient: TMDBClient
+    private var client: SupabaseHTTPClient {
+        SupabaseHTTPClient(config: .live)
+    }
 
-    public init(client: SupabaseHTTPClient = SupabaseHTTPClient(), tmdbClient: TMDBClient = TMDBClient(apiKey: ProcessInfo.processInfo.environment["TMDB_API_KEY"] ?? "")) {
-        self.client = client
-        self.tmdbClient = tmdbClient
+    public init() {
         self.session = sessionStore.load()
     }
 
@@ -111,10 +110,36 @@ public final class CloudSyncService {
     }
 
     private func lookupGenre(title: String, year: Int) async -> MoodGenre {
-        guard let movie = try? await tmdbClient.searchMovieByTitle(title: title, year: year) else {
+        guard let tmdbClient = tmdbClient, let movie = try? await tmdbClient.searchMovieByTitle(title: title, year: year) else {
             return .comedy
         }
         return movie.genreIds.first.flatMap(MoodCatalog.genre(for:)) ?? .comedy
+    }
+
+    private var tmdbClient: TMDBClient? {
+        let config = APIConfiguration.live
+        guard config.hasTMDB, let key = config.tmdbAPIKey else { return nil }
+        return TMDBClient(apiKey: key)
+    }
+
+    public static func merge(local: [UserMovie], remote: [UserMovie]) -> [UserMovie] {
+        var byId: [Int: UserMovie] = [:]
+
+        for movie in remote {
+            byId[movie.tmdbId] = movie
+        }
+
+        for movie in local {
+            if let existing = byId[movie.tmdbId] {
+                if movie.createdAt >= existing.createdAt {
+                    byId[movie.tmdbId] = movie
+                }
+            } else {
+                byId[movie.tmdbId] = movie
+            }
+        }
+
+        return byId.values.sorted { $0.createdAt > $1.createdAt }
     }
 
     private func saveSession() {

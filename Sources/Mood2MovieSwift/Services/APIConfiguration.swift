@@ -16,11 +16,11 @@ public struct APIConfiguration {
     }
 
     public static var live: APIConfiguration {
-        let env = ProcessInfo.processInfo.environment
+        let values = AppConfigurationStore.shared.values
         return APIConfiguration(
-            tmdbAPIKey: env["TMDB_API_KEY"],
-            anthropicAPIKey: env["ANTHROPIC_API_KEY"],
-            anthropicModel: env["ANTHROPIC_MODEL"] ?? "claude-3-5-haiku-latest"
+            tmdbAPIKey: values.tmdbAPIKey.isEmpty ? nil : values.tmdbAPIKey,
+            anthropicAPIKey: values.anthropicAPIKey.isEmpty ? nil : values.anthropicAPIKey,
+            anthropicModel: values.anthropicModel.isEmpty ? "claude-3-5-haiku-latest" : values.anthropicModel
         )
     }
 
