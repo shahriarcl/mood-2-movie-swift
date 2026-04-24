@@ -161,7 +161,7 @@ struct MoodSelectorView: View {
         title: String,
         values: [Value],
         selection: Value?,
-        label: (Value) -> String,
+        label: @escaping (Value) -> String,
         onSelect: @escaping (Value) -> Void
     ) -> some View {
         VStack(alignment: .leading, spacing: 10) {

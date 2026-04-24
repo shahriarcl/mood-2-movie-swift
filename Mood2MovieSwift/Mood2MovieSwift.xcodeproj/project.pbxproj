@@ -13,7 +13,7 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F871F3152F9B08C0008F920B /* Mood2MovieSwift */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ../../Sources/Mood2MovieSwift;
+			path = ../Mood2MovieSwift;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */

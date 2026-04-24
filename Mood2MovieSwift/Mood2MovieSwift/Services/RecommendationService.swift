@@ -33,7 +33,7 @@ public final class LocalRecommendationService: RecommendationService {
             }
             .filter { $0.score > 0 }
             .sorted { lhs, rhs in
-                if lhs.score == rhs.score { lhs.blueprint.year > rhs.blueprint.year }
+                if lhs.score == rhs.score { return lhs.blueprint.year > rhs.blueprint.year }
                 return lhs.score > rhs.score
             }
 
@@ -87,7 +87,7 @@ public final class LocalRecommendationService: RecommendationService {
     }
 
     private func makeMovieResult(from blueprint: MoodCatalog.MovieBlueprint) -> MovieResult {
-        let availability = blueprint.availability.map(MoodCatalog.makeAvailability)
+        let availability = blueprint.availability.map(makeAvailability)
         let primary = availability.sorted(by: availabilitySort).first
             ?? Availability(type: .subscription, platformName: "TBD", platformKey: "tbd")
 
@@ -106,5 +106,12 @@ public final class LocalRecommendationService: RecommendationService {
     private func availabilitySort(_ lhs: Availability, _ rhs: Availability) -> Bool {
         let order: [AvailabilityType: Int] = [.subscription: 0, .rent: 1, .buy: 2]
         return (order[lhs.type] ?? 99) < (order[rhs.type] ?? 99)
+    }
+
+    private func makeAvailability(from blueprintAvailability: MoodCatalog.MovieBlueprint.BlueprintAvailability) -> Availability {
+        let platformName = blueprintAvailability.platformName
+        let platformKey = MoodCatalog.platforms.first(where: { $0.name == platformName })?.key
+            ?? platformName.lowercased().replacingOccurrences(of: " ", with: "-")
+        return Availability(type: blueprintAvailability.type, platformName: platformName, platformKey: platformKey)
     }
 }

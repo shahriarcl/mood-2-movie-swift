@@ -57,7 +57,6 @@ struct ResultsView: View {
         }
         .background(backgroundView)
         .navigationTitle("Tonight's Picks")
-        .navigationBarTitleDisplayMode(.inline)
         .task(id: fetchKey) {
             await loadMovies()
         }

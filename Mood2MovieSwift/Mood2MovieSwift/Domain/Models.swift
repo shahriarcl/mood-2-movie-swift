@@ -154,6 +154,16 @@ public struct Availability: Codable, Hashable, Identifiable {
     public let platformKey: String
 }
 
+public struct ProviderResult: Codable, Hashable {
+    public let providerId: Int
+    public let type: AvailabilityType
+
+    public init(providerId: Int, type: AvailabilityType) {
+        self.providerId = providerId
+        self.type = type
+    }
+}
+
 public struct MovieResult: Codable, Hashable, Identifiable {
     public var id: Int { tmdbId }
     public let tmdbId: Int
@@ -187,7 +197,7 @@ public struct UserMovie: Codable, Hashable, Identifiable {
     public let posterPath: String?
     public let genre: MoodGenre
     public var status: MovieStatus
-    public let createdAt: Date
+    public var createdAt: Date
 }
 
 public struct CloudUserMovie: Codable, Hashable, Identifiable {

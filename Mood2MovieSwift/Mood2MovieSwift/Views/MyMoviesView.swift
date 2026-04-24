@@ -110,7 +110,6 @@ struct MyMoviesView: View {
                 VStack(alignment: .leading, spacing: 10) {
                     TextField("Email", text: $email)
                         .textFieldStyle(.roundedBorder)
-                        .textInputAutocapitalization(.never)
                     SecureField("Password", text: $password)
                         .textFieldStyle(.roundedBorder)
 
@@ -215,6 +214,15 @@ struct MyMoviesView: View {
             endPoint: .bottomTrailing
         )
         .ignoresSafeArea()
+    }
+
+    private var cardBackground: some View {
+        RoundedRectangle(cornerRadius: 20, style: .continuous)
+            .fill(Color.white.opacity(0.045))
+            .overlay(
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .stroke(Color.white.opacity(0.08), lineWidth: 1)
+            )
     }
 }
 

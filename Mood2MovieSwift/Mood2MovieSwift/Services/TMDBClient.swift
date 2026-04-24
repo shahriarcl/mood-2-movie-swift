@@ -188,9 +188,9 @@ public final class TMDBClient {
 
     private func pickBestMatch(requestedTitle: String, requestedYear: Int?, candidates: [TMDBSearchResult]) -> TMDBSearchResult? {
         let requested = normalizeTitle(requestedTitle)
-        let ranked = candidates
+        let ranked: [(candidate: TMDBSearchResult, score: Double)] = candidates
             .map { candidate in
-                (candidate, score: titleScore(requested: requested, candidate: normalizeTitle(candidate.title), requestedYear: requestedYear, candidateYear: candidate.year))
+                (candidate: candidate, score: titleScore(requested: requested, candidate: normalizeTitle(candidate.title), requestedYear: requestedYear, candidateYear: candidate.year))
             }
             .sorted { lhs, rhs in
                 if lhs.score == rhs.score {

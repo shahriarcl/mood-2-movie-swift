@@ -16,7 +16,7 @@ struct RootView: View {
                 .navigationDestination(for: AppRoute.self) { route in
                     switch route {
                     case .results(let selection):
-                        ResultsView(selection: selection, path: $path)
+                        ResultsView(path: $path, selection: selection)
                     case .settings:
                         SettingsView(path: $path)
                     case .myMovies:

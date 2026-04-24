@@ -188,7 +188,7 @@ public final class RemoteRecommendationService: RecommendationService {
             posterPath: movie.posterPath,
             reason: reason ?? (movie.overview ?? "A strong fit for this mood."),
             availability: availability,
-            primaryAvailability: availability[0]!,
+            primaryAvailability: availability[0],
             genre: genre
         )
     }

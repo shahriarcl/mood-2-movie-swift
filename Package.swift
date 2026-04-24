@@ -16,7 +16,8 @@ let package = Package(
     ],
     targets: [
         .executableTarget(
-            name: "Mood2MovieSwift"
+            name: "Mood2MovieSwift",
+            path: "Mood2MovieSwift/Mood2MovieSwift"
         ),
         .testTarget(
             name: "Mood2MovieSwiftTests",

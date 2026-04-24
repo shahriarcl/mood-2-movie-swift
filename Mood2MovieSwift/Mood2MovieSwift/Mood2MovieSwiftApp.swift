@@ -1,5 +1,6 @@
 import SwiftUI
 
+@MainActor
 @main
 struct Mood2MovieSwiftApp: App {
     @State private var store = AppStore()
