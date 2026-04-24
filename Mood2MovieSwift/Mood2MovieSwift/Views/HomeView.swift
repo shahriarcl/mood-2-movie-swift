@@ -114,6 +114,19 @@ struct HomeView: View {
 
     private var heroShowcaseStacked: some View {
         VStack(alignment: .leading, spacing: 18) {
+            HStack(spacing: 8) {
+                Text("TODAY")
+                    .font(.caption2.weight(.bold))
+                    .tracking(3)
+                    .foregroundStyle(Color(hex: "F5A623"))
+                Text("Phone-first vibe")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+                Spacer()
+                Image(systemName: "sparkles")
+                    .foregroundStyle(Color(hex: "F5A623"))
+            }
+
             VStack(alignment: .leading, spacing: 8) {
                 Text("◆ MOOD-DRIVEN RECOMMENDATIONS")
                     .font(.caption2.weight(.bold))
@@ -133,10 +146,11 @@ struct HomeView: View {
                     .fixedSize(horizontal: false, vertical: true)
             }
 
-            HStack(spacing: 8) {
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 8) {
                 HeroTag(text: "\(store.movies.count) saved")
                 HeroTag(text: "\(store.favoriteGenres.count) favorite genres")
                 HeroTag(text: "\(store.preferences.platforms.count) platforms")
+                HeroTag(text: "\(forYouMovies.count) picks")
             }
 
             VStack(spacing: 12) {
@@ -159,10 +173,11 @@ struct HomeView: View {
                 .buttonStyle(SecondaryActionButtonStyle())
             }
 
-            VStack(spacing: 14) {
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
                 MiniStat(label: "Saved", value: "\(store.movies.count)")
                 MiniStat(label: "For you", value: "\(forYouMovies.count)")
                 MiniStat(label: "Platforms", value: "\(store.preferences.platforms.count)")
+                MiniStat(label: "Genres", value: "\(store.favoriteGenres.count)")
             }
 
             if let spotlight = forYouMovies.first {

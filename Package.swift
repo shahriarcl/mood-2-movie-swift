@@ -6,6 +6,7 @@ import PackageDescription
 let package = Package(
     name: "Mood2MovieSwift",
     platforms: [
+        .iOS(.v17),
         .macOS(.v14)
     ],
     products: [

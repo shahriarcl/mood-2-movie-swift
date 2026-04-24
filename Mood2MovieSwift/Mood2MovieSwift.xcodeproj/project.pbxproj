@@ -8,9 +8,20 @@
 
 /* Begin PBXFileReference section */
 		F871F3132F9B08C0008F920B /* Mood2MovieSwift.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mood2MovieSwift.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A871F3032F9C2000008F920B /* Mood2MovieSwiftiOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Mood2MovieSwiftiOS.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F871F3A12F9B195F008F920B /* Mood2MovieSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Mood2MovieSwift.xcodeproj; sourceTree = "<group>"; };
 		F871F4142F9B19CF008F920B /* Mood2MovieSwift.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Mood2MovieSwift.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A871F3012F9C2000008F920B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		F871F3152F9B08C0008F920B /* ../Mood2MovieSwift */ = {
@@ -30,6 +41,46 @@
 		};
 /* End PBXFrameworksBuildPhase section */
 
+/* Begin PBXResourcesBuildPhase section */
+		A871F3022F9C2000008F920B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A871F3002F9C2000008F920B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXResourcesBuildPhase section */
+		F871F3112F9B08C0008F920B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F871F30F2F9B08C0008F920B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
 /* Begin PBXGroup section */
 		F871F30A2F9B08C0008F920B = {
 			isa = PBXGroup;
@@ -43,6 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				F871F3132F9B08C0008F920B /* Mood2MovieSwift.app */,
+				A871F3032F9C2000008F920B /* Mood2MovieSwiftiOS.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -82,6 +134,28 @@
 			productReference = F871F3132F9B08C0008F920B /* Mood2MovieSwift.app */;
 			productType = "com.apple.product-type.application";
 		};
+		A871F3042F9C2000008F920B /* Mood2MovieSwiftiOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A871F3072F9C2000008F920B /* Build configuration list for PBXNativeTarget "Mood2MovieSwiftiOS" */;
+			buildPhases = (
+				A871F3002F9C2000008F920B /* Sources */,
+				A871F3012F9C2000008F920B /* Frameworks */,
+				A871F3022F9C2000008F920B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				F871F3152F9B08C0008F920B /* ../Mood2MovieSwift */,
+			);
+			name = Mood2MovieSwiftiOS;
+			packageProductDependencies = (
+			);
+			productName = Mood2MovieSwiftiOS;
+			productReference = A871F3032F9C2000008F920B /* Mood2MovieSwiftiOS.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -93,6 +167,9 @@
 				LastUpgradeCheck = 2640;
 				TargetAttributes = {
 					F871F3122F9B08C0008F920B = {
+						CreatedOnToolsVersion = 26.4.1;
+					};
+					A871F3042F9C2000008F920B = {
 						CreatedOnToolsVersion = 26.4.1;
 					};
 				};
@@ -122,29 +199,10 @@
 			projectRoot = "";
 			targets = (
 				F871F3122F9B08C0008F920B /* Mood2MovieSwift */,
+				A871F3042F9C2000008F920B /* Mood2MovieSwiftiOS */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXResourcesBuildPhase section */
-		F871F3112F9B08C0008F920B /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
-
-/* Begin PBXSourcesBuildPhase section */
-		F871F30F2F9B08C0008F920B /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
 		F871F31C2F9B08C1008F920B /* Debug */ = {
@@ -325,6 +383,52 @@
 			};
 			name = Release;
 		};
+		A871F3052F9C2000008F920B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconiOS;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shahriarcl.Mood2MovieSwift.phone;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				SDKROOT = iphoneos;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+			};
+			name = Debug;
+		};
+		A871F3062F9C2000008F920B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIconiOS;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.shahriarcl.Mood2MovieSwift.phone;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				SDKROOT = iphoneos;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -342,6 +446,15 @@
 			buildConfigurations = (
 				F871F31F2F9B08C1008F920B /* Debug */,
 				F871F3202F9B08C1008F920B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A871F3072F9C2000008F920B /* Build configuration list for PBXNativeTarget "Mood2MovieSwiftiOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A871F3052F9C2000008F920B /* Debug */,
+				A871F3062F9C2000008F920B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

@@ -113,6 +113,19 @@ struct ResultsView: View {
         GlassCard {
             VStack(alignment: .leading, spacing: 14) {
                 VStack(alignment: .leading, spacing: 10) {
+                    HStack(spacing: 8) {
+                        Text("RESULTS")
+                            .font(.caption2.weight(.bold))
+                            .tracking(3)
+                            .foregroundStyle(Color(hex: "F5A623"))
+                        Text("iPhone stack")
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                        Spacer()
+                        Image(systemName: "sparkles")
+                            .foregroundStyle(Color(hex: "F5A623"))
+                    }
+
                     VStack(alignment: .leading, spacing: 8) {
                         Text("Selected vibe")
                             .font(.caption2.weight(.bold))
