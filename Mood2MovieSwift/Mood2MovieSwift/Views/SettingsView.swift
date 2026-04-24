@@ -5,6 +5,7 @@ struct SettingsView: View {
     @Environment(AppConfigurationStore.self) private var configuration
     @Binding var path: [AppRoute]
 
+    @State private var didAppear = false
     @State private var selectedPlatforms: Set<String> = []
     @State private var selectedCountry = "US"
     @State private var familySafe = false
@@ -29,6 +30,8 @@ struct SettingsView: View {
             .padding(.vertical, 24)
             .padding(.horizontal, 20)
             .frame(maxWidth: 980, alignment: .leading)
+            .opacity(didAppear ? 1 : 0)
+            .offset(y: didAppear ? 0 : 12)
         }
         .background(AppScreenBackground())
         .navigationBarBackButtonHidden(true)
@@ -37,6 +40,11 @@ struct SettingsView: View {
             selectedCountry = store.preferences.country
             familySafe = store.preferences.familySafe
             loadConfiguration()
+        }
+        .onAppear {
+            withAnimation(.spring(response: 0.55, dampingFraction: 0.86)) {
+                didAppear = true
+            }
         }
     }
 
@@ -50,8 +58,12 @@ struct SettingsView: View {
             .buttonStyle(PlainBackButtonStyle())
 
             VStack(alignment: .leading, spacing: 6) {
+                Text("CONFIGURE")
+                    .font(.caption2.weight(.bold))
+                    .tracking(3)
+                    .foregroundStyle(Color(hex: "F5A623"))
                 Text("Settings")
-                    .font(.system(size: 32, weight: .black, design: .rounded))
+                    .font(.system(size: 34, weight: .black, design: .rounded))
                 Text("Tune the platforms and country used by the recommendation engine.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -203,10 +215,15 @@ struct SettingsView: View {
     private var heroSummary: some View {
         GlassCard {
             HStack(alignment: .top, spacing: 16) {
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: 10) {
                     Text("Tune the engine")
-                        .font(.system(size: 28, weight: .black, design: .rounded))
+                        .font(.caption2.weight(.bold))
+                        .tracking(3)
+                        .foregroundStyle(Color(hex: "F5A623"))
                     Text("Set up platforms, country, content filters, and your API keys in one place.")
+                        .font(.system(size: 28, weight: .black, design: .rounded))
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text("Changes apply immediately after saving, so the app stays responsive while you refine it.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                         .fixedSize(horizontal: false, vertical: true)
@@ -214,15 +231,36 @@ struct SettingsView: View {
 
                 Spacer()
 
-                VStack(alignment: .trailing, spacing: 6) {
-                    Text("\(selectedPlatforms.count)")
-                        .font(.system(size: 30, weight: .black, design: .rounded))
-                    Text("platforms selected")
-                        .font(.caption2.weight(.semibold))
-                        .tracking(2)
-                        .foregroundStyle(.secondary)
+                VStack(alignment: .trailing, spacing: 8) {
+                    SettingsStat(label: "Platforms", value: "\(selectedPlatforms.count)")
+                    SettingsStat(label: "Keys", value: "\(configuredKeyCount)")
                 }
             }
+        }
+    }
+
+    private var configuredKeyCount: Int {
+        [
+            tmdbAPIKey,
+            anthropicAPIKey,
+            supabaseURL,
+            supabaseAnonKey
+        ].filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }.count
+    }
+}
+
+private struct SettingsStat: View {
+    let label: String
+    let value: String
+
+    var body: some View {
+        VStack(alignment: .trailing, spacing: 2) {
+            Text(value)
+                .font(.system(size: 24, weight: .black, design: .rounded))
+            Text(label.uppercased())
+                .font(.caption2.weight(.bold))
+                .tracking(2)
+                .foregroundStyle(.secondary)
         }
     }
 }
