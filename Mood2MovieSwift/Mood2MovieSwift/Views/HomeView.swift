@@ -39,10 +39,20 @@ struct HomeView: View {
 
     private var topBar: some View {
         VStack(alignment: .leading, spacing: 14) {
-            HStack(alignment: .top, spacing: 14) {
-                brandHeader
-                Spacer(minLength: 12)
-                topBarBadge
+            ViewThatFits(in: .horizontal) {
+                HStack(alignment: .top, spacing: 14) {
+                    brandHeader
+                    Spacer(minLength: 12)
+                    topBarBadge
+                }
+
+                VStack(alignment: .leading, spacing: 10) {
+                    HStack(alignment: .top, spacing: 12) {
+                        brandHeader
+                        Spacer(minLength: 8)
+                    }
+                    topBarBadge
+                }
             }
 
             ViewThatFits(in: .horizontal) {
@@ -70,8 +80,10 @@ struct HomeView: View {
 
             VStack(alignment: .leading, spacing: 3) {
                 Text("Mood2Movie")
-                    .font(.title2.weight(.black))
+                    .font(.system(size: 22, weight: .black, design: .rounded))
                     .foregroundStyle(Color.white)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.85)
                 Text("Pick a movie by how you feel")
                     .font(.caption.weight(.medium))
                     .foregroundStyle(.secondary)

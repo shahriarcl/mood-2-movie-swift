@@ -42,7 +42,10 @@ struct RootView: View {
                     }
                 }
             }
-            .padding(.top, 4)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 8)
+            .padding(.top, 2)
+            .padding(.bottom, 2)
         }
     }
 
@@ -86,8 +89,8 @@ private struct PhoneTabBar: View {
         VStack(spacing: 7) {
             Capsule(style: .continuous)
                 .fill(Color.white.opacity(0.24))
-                .frame(width: 102, height: 3)
-                .padding(.top, 1)
+                .frame(width: 96, height: 3)
+                .padding(.top, 0)
 
             HStack(spacing: 7) {
                 ForEach(ShellTab.allCases, id: \.self) { tab in
@@ -142,10 +145,7 @@ private struct PhoneTabBar: View {
                         .stroke(Color.white.opacity(0.12), lineWidth: 1)
                 )
         )
-        .shadow(color: .black.opacity(0.18), radius: 14, x: 0, y: 7)
-        .padding(.horizontal, 14)
-        .padding(.top, 6)
-        .padding(.bottom, 8)
+        .shadow(color: .black.opacity(0.16), radius: 12, x: 0, y: 6)
     }
 }
 
@@ -170,7 +170,7 @@ private struct TabContextStrip: View {
             Spacer()
         }
         .padding(.horizontal, 18)
-        .padding(.vertical, 9)
+        .padding(.vertical, 8)
         .background(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
                 .fill(Color.white.opacity(0.035))
