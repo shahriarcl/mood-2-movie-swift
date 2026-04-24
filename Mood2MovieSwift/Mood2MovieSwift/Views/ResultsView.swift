@@ -6,6 +6,7 @@ struct ResultsView: View {
     @Binding var path: [AppRoute]
     let selection: MoodSelection
 
+    @State private var didAppear = false
     @State private var movies: [MovieResult] = []
     @State private var message: String?
     @State private var loading = true
@@ -55,6 +56,8 @@ struct ResultsView: View {
             .padding(.vertical, 24)
             .padding(.horizontal, 20)
             .frame(maxWidth: 980, alignment: .leading)
+            .opacity(didAppear ? 1 : 0)
+            .offset(y: didAppear ? 0 : 12)
         }
         .background(AppScreenBackground())
         .navigationTitle("Tonight's Picks")
@@ -65,6 +68,11 @@ struct ResultsView: View {
             movies = []
             message = nil
             page = 1
+        }
+        .onAppear {
+            withAnimation(.spring(response: 0.55, dampingFraction: 0.86)) {
+                didAppear = true
+            }
         }
     }
 
@@ -84,8 +92,12 @@ struct ResultsView: View {
             .buttonStyle(PlainBackButtonStyle())
 
             VStack(alignment: .leading, spacing: 6) {
+                Text("TONIGHT'S PICKS")
+                    .font(.caption2.weight(.bold))
+                    .tracking(3)
+                    .foregroundStyle(Color(hex: "F5A623"))
                 Text("Tonight's Picks")
-                    .font(.system(size: 32, weight: .black, design: .rounded))
+                    .font(.system(size: 34, weight: .black, design: .rounded))
                 Text(selectionSummary)
                     .font(.footnote)
                     .foregroundStyle(.secondary)
@@ -100,21 +112,22 @@ struct ResultsView: View {
         GlassCard {
             VStack(alignment: .leading, spacing: 14) {
                 HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text("Tonight's Picks")
-                            .font(.system(size: 30, weight: .black, design: .rounded))
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Selected vibe")
+                            .font(.caption2.weight(.bold))
+                            .tracking(3)
+                            .foregroundStyle(Color(hex: "F5A623"))
                         Text(selectionSummary)
+                            .font(.system(size: 28, weight: .black, design: .rounded))
+                            .fixedSize(horizontal: false, vertical: true)
+                        Text("The engine is matching this mood to titles, providers, and watch status.")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
                     Spacer()
-                    VStack(alignment: .trailing, spacing: 4) {
-                        Text("\(movies.count)")
-                            .font(.system(size: 28, weight: .black, design: .rounded))
-                        Text("matches")
-                            .font(.caption2.weight(.semibold))
-                            .tracking(2)
-                            .foregroundStyle(.secondary)
+                    VStack(alignment: .trailing, spacing: 8) {
+                        SelectionStat(label: "Matches", value: "\(movies.count)")
+                        SelectionStat(label: "Page", value: "\(page)")
                     }
                 }
 
@@ -124,6 +137,22 @@ struct ResultsView: View {
                     SummaryChip(text: selection.genre.label)
                     if let decade = selection.decade { SummaryChip(text: decade.label) }
                 }
+            }
+        }
+    }
+
+    private struct SelectionStat: View {
+        let label: String
+        let value: String
+
+        var body: some View {
+            VStack(alignment: .trailing, spacing: 2) {
+                Text(value)
+                    .font(.system(size: 24, weight: .black, design: .rounded))
+                Text(label.uppercased())
+                    .font(.caption2.weight(.bold))
+                    .tracking(2)
+                    .foregroundStyle(.secondary)
             }
         }
     }
