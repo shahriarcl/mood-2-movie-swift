@@ -68,13 +68,19 @@ struct SettingsView: View {
 
     private var platformSection: some View {
         GlassCard {
-            VStack(alignment: .leading, spacing: 12) {
-                SectionHeader(title: "Streaming Platforms")
-                Text("Pick the services you actually use so recommendations stay relevant.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
+            VStack(alignment: .leading, spacing: 14) {
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        SectionHeader(title: "Streaming Platforms")
+                        Text("Pick the services you actually use so recommendations stay relevant.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                    SummaryPill(text: "\(selectedPlatforms.count) selected")
+                }
 
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 12)], spacing: 12) {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), spacing: 12)], spacing: 12) {
                     ForEach(MoodCatalog.platforms) { platform in
                         PlatformTile(platform: platform, isSelected: selectedPlatforms.contains(platform.key)) {
                             if selectedPlatforms.contains(platform.key) {
@@ -91,26 +97,41 @@ struct SettingsView: View {
 
     private var countrySection: some View {
         GlassCard {
-            VStack(alignment: .leading, spacing: 12) {
-                SectionHeader(title: "Country")
+            VStack(alignment: .leading, spacing: 14) {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        SectionHeader(title: "Country")
+                        Text("Country affects availability results and provider matching.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                    SummaryPill(text: selectedCountry)
+                }
+
                 Picker("Country", selection: $selectedCountry) {
                     ForEach(MoodCatalog.countries) { country in
                         Text(country.name).tag(country.code)
                     }
                 }
                 .pickerStyle(.menu)
-
-                Text("Country affects availability results and provider matching.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
             }
         }
     }
 
     private var contentSection: some View {
         GlassCard {
-            VStack(alignment: .leading, spacing: 12) {
-                SectionHeader(title: "Content")
+            VStack(alignment: .leading, spacing: 14) {
+                HStack {
+                    VStack(alignment: .leading, spacing: 4) {
+                        SectionHeader(title: "Content")
+                        Text("Keep the vibe family-safe or open the catalog up.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                    SummaryPill(text: familySafe ? "Filtered" : "Open")
+                }
 
                 Toggle(isOn: $familySafe) {
                     VStack(alignment: .leading, spacing: 3) {
@@ -122,12 +143,8 @@ struct SettingsView: View {
                 }
                 .toggleStyle(.switch)
 
-                Text("When this is on, the discovery engine leans away from harder-rated titles.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-
                 HStack(spacing: 8) {
-                    SummaryPill(text: familySafe ? "Filtered" : "Open catalog")
+                    SummaryPill(text: familySafe ? "Filtered catalog" : "Open catalog")
                     SummaryPill(text: selectedCountry)
                 }
             }
@@ -136,19 +153,18 @@ struct SettingsView: View {
 
     private var apiSection: some View {
         GlassCard {
-            VStack(alignment: .leading, spacing: 12) {
-                SectionHeader(title: "Movie Intelligence")
-                Text("These values are stored locally on this Mac and used by the recommendation engine.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
+            VStack(alignment: .leading, spacing: 14) {
+                VStack(alignment: .leading, spacing: 4) {
+                    SectionHeader(title: "Movie Intelligence")
+                    Text("These values are stored locally on this Mac and used by the recommendation engine.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
 
                 VStack(alignment: .leading, spacing: 10) {
-                    SecureField("TMDB API Key", text: $tmdbAPIKey)
-                        .textFieldStyle(.roundedBorder)
-                    SecureField("Anthropic API Key", text: $anthropicAPIKey)
-                        .textFieldStyle(.roundedBorder)
-                    TextField("Anthropic Model", text: $anthropicModel)
-                        .textFieldStyle(.roundedBorder)
+                    SettingsInputField(title: "TMDB API Key", text: $tmdbAPIKey, secure: true)
+                    SettingsInputField(title: "Anthropic API Key", text: $anthropicAPIKey, secure: true)
+                    SettingsInputField(title: "Anthropic Model", text: $anthropicModel, secure: false)
                 }
             }
         }
@@ -156,17 +172,17 @@ struct SettingsView: View {
 
     private var cloudSection: some View {
         GlassCard {
-            VStack(alignment: .leading, spacing: 12) {
-                SectionHeader(title: "Cloud Sync")
-                Text("Supabase powers sign-in and cross-device library sync.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
+            VStack(alignment: .leading, spacing: 14) {
+                VStack(alignment: .leading, spacing: 4) {
+                    SectionHeader(title: "Cloud Sync")
+                    Text("Supabase powers sign-in and cross-device library sync.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
 
                 VStack(alignment: .leading, spacing: 10) {
-                    TextField("Supabase URL", text: $supabaseURL)
-                        .textFieldStyle(.roundedBorder)
-                    SecureField("Supabase Anon Key", text: $supabaseAnonKey)
-                        .textFieldStyle(.roundedBorder)
+                    SettingsInputField(title: "Supabase URL", text: $supabaseURL, secure: false)
+                    SettingsInputField(title: "Supabase Anon Key", text: $supabaseAnonKey, secure: true)
                 }
 
                 HStack {
@@ -195,7 +211,7 @@ struct SettingsView: View {
             )
             path.removeAll()
         } label: {
-            Text("Save & go home")
+            Text("Save preferences")
                 .frame(maxWidth: .infinity)
         }
         .buttonStyle(PrimaryActionButtonStyle(isEnabled: true))
@@ -212,24 +228,29 @@ struct SettingsView: View {
     private var heroSummary: some View {
         GlassCard {
             VStack(alignment: .leading, spacing: 16) {
-                VStack(alignment: .leading, spacing: 10) {
-                    Text("Tune the engine")
-                        .font(.caption2.weight(.bold))
-                        .tracking(3)
-                        .foregroundStyle(Color(hex: "F5A623"))
-                    Text("Set up platforms, country, content filters, and your API keys in one place.")
-                        .font(.system(size: 28, weight: .black, design: .rounded))
-                        .fixedSize(horizontal: false, vertical: true)
-                    Text("Changes apply immediately after saving, so the app stays responsive while you refine it.")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
+                HStack(alignment: .top, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("TUNE THE ENGINE")
+                            .font(.caption2.weight(.bold))
+                            .tracking(3.2)
+                            .foregroundStyle(Color(hex: "F5A623"))
+                        Text("Set up platforms, country, content filters, and your API keys in one place.")
+                            .font(.system(size: 28, weight: .black, design: .rounded))
+                            .fixedSize(horizontal: false, vertical: true)
+                        Text("Changes apply immediately after saving, so the app stays responsive while you refine it.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
 
-                HStack(spacing: 12) {
-                    SettingsStat(label: "Platforms", value: "\(selectedPlatforms.count)")
-                    SettingsStat(label: "Keys", value: "\(configuredKeyCount)")
-                    SettingsStat(label: "Safe", value: familySafe ? "On" : "Off")
+                    Spacer(minLength: 8)
+
+                    VStack(spacing: 8) {
+                        SettingsStat(label: "Platforms", value: "\(selectedPlatforms.count)")
+                        SettingsStat(label: "Keys", value: "\(configuredKeyCount)")
+                        SettingsStat(label: "Safe", value: familySafe ? "On" : "Off")
+                    }
+                    .frame(width: 116)
                 }
             }
         }
@@ -257,6 +278,40 @@ private struct SettingsStat: View {
                 .font(.caption2.weight(.bold))
                 .tracking(2)
                 .foregroundStyle(.secondary)
+        }
+    }
+}
+
+private struct SettingsInputField: View {
+    let title: String
+    @Binding var text: String
+    let secure: Bool
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            Text(title)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+
+            Group {
+                if secure {
+                    SecureField(title, text: $text)
+                } else {
+                    TextField(title, text: $text)
+                }
+            }
+            .textInputAutocapitalization(.never)
+            .autocorrectionDisabled()
+            .padding(.horizontal, 12)
+            .padding(.vertical, 12)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(Color.white.opacity(0.05))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .stroke(Color.white.opacity(0.09), lineWidth: 1)
+                    )
+            )
         }
     }
 }
