@@ -46,15 +46,39 @@ struct GlassCard<Content: View>: View {
 
     var body: some View {
         content
-            .padding(18)
+            .padding(16)
             .background(
-                RoundedRectangle(cornerRadius: 22, style: .continuous)
-                    .fill(Color.white.opacity(0.05))
+                RoundedRectangle(cornerRadius: 20, style: .continuous)
+                    .fill(Color.white.opacity(0.055))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 22, style: .continuous)
-                            .stroke(Color.white.opacity(0.10), lineWidth: 1)
+                        RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            .stroke(Color.white.opacity(0.11), lineWidth: 1)
                     )
             )
+    }
+}
+
+struct BrandMark: View {
+    var body: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(
+                    LinearGradient(
+                        colors: [Color(hex: "F5A623"), Color(hex: "FF7A59")],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+            VStack(spacing: 0) {
+                Text("M2")
+                    .font(.system(size: 18, weight: .black, design: .rounded))
+                Text("M")
+                    .font(.system(size: 18, weight: .black, design: .rounded))
+            }
+            .foregroundStyle(Color(hex: "0D0D0F"))
+        }
+        .frame(width: 42, height: 42)
+        .shadow(color: Color(hex: "F5A623").opacity(0.2), radius: 10, x: 0, y: 6)
     }
 }
 

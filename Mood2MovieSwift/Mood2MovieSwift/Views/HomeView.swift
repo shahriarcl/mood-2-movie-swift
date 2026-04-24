@@ -38,26 +38,14 @@ struct HomeView: View {
     private var topBar: some View {
         HStack(spacing: 14) {
             HStack(spacing: 10) {
-                ZStack {
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .fill(
-                            LinearGradient(
-                                colors: [Color(hex: "F5A623"), Color(hex: "FF7A59")],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                    Image(systemName: "play.circle.fill")
-                        .font(.title3.weight(.semibold))
-                        .foregroundStyle(Color(hex: "0D0D0F"))
-                }
-                .frame(width: 34, height: 34)
+                BrandMark()
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Mood2Movie")
-                        .font(.headline.weight(.semibold))
+                        .font(.title3.weight(.black))
+                        .foregroundStyle(Color.white)
                     Text("Pick a movie by how you feel")
-                        .font(.caption2)
+                        .font(.caption.weight(.medium))
                         .foregroundStyle(.secondary)
                 }
             }
@@ -86,9 +74,9 @@ struct HomeView: View {
         GlassCard {
             HStack(alignment: .top, spacing: 20) {
                 VStack(alignment: .leading, spacing: 14) {
-                    Text("◆ AI-Curated")
-                        .font(.caption2.weight(.semibold))
-                        .tracking(2.4)
+                    Text("◆ MOOD-DRIVEN RECOMMENDATIONS")
+                        .font(.caption2.weight(.bold))
+                        .tracking(3.0)
                         .foregroundStyle(Color(hex: "F5A623"))
                         .textCase(.uppercase)
 
@@ -98,9 +86,9 @@ struct HomeView: View {
                             .foregroundStyle(Color(hex: "F5A623"))
                         Text("Movie")
                     }
-                    .font(.system(size: 60, weight: .black, design: .rounded))
+                    .font(.system(size: 66, weight: .black, design: .rounded))
                     .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+                    .minimumScaleFactor(0.68)
 
                     Text("You do not need the perfect title. You just need the right feeling.")
                         .font(.system(.body, design: .serif).italic())
@@ -135,7 +123,11 @@ struct HomeView: View {
                 .padding(16)
                 .background(
                     RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .fill(Color.white.opacity(0.04))
+                        .fill(Color.white.opacity(0.045))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                        )
                 )
             }
         }
