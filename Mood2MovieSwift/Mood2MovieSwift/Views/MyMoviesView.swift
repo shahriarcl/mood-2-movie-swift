@@ -4,6 +4,7 @@ struct MyMoviesView: View {
     @Environment(AppStore.self) private var store
     @Environment(CloudSyncService.self) private var cloud
     @Binding var path: [AppRoute]
+    @State private var didAppear = false
     @State private var email = ""
     @State private var password = ""
     @State private var authMessage: String?
@@ -17,7 +18,7 @@ struct MyMoviesView: View {
                 heroSummary
                 authSection
                 if store.movies.isEmpty {
-                    EmptyStateView(message: "Sign in support and remote sync can come next. For now, this local library is ready once you save a movie.")
+                    emptyLibraryState
                 } else {
                     MoviesSection(
                         title: "Watchlist",
@@ -45,9 +46,16 @@ struct MyMoviesView: View {
             .padding(.vertical, 24)
             .padding(.horizontal, 20)
             .frame(maxWidth: 980, alignment: .leading)
+            .opacity(didAppear ? 1 : 0)
+            .offset(y: didAppear ? 0 : 12)
         }
         .background(AppScreenBackground())
         .navigationBarBackButtonHidden(true)
+        .onAppear {
+            withAnimation(.spring(response: 0.55, dampingFraction: 0.86)) {
+                didAppear = true
+            }
+        }
     }
 
     private var header: some View {
@@ -60,9 +68,13 @@ struct MyMoviesView: View {
             .buttonStyle(PlainBackButtonStyle())
 
             VStack(alignment: .leading, spacing: 6) {
-                Text("My Movies")
-                    .font(.system(size: 32, weight: .black, design: .rounded))
-                Text("Saved picks live here, split between watchlist and watched.")
+                Text("YOUR LIBRARY")
+                    .font(.caption2.weight(.bold))
+                    .tracking(3)
+                    .foregroundStyle(Color(hex: "F5A623"))
+                Text("Saved movies")
+                    .font(.system(size: 34, weight: .black, design: .rounded))
+                Text("Watchlist and watched titles live here, and cloud sync keeps them with you.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
@@ -227,22 +239,43 @@ struct MyMoviesView: View {
     private var heroSummary: some View {
         GlassCard {
             HStack(alignment: .top, spacing: 16) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Your library")
-                        .font(.system(size: 28, weight: .black, design: .rounded))
-                    Text("Watchlist and watched titles live here, and cloud sync keeps them with you.")
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Saved titles")
+                        .font(.caption2.weight(.bold))
+                        .tracking(3)
+                        .foregroundStyle(Color(hex: "F5A623"))
+                    Text("\(store.movies.count)")
+                        .font(.system(size: 40, weight: .black, design: .rounded))
+                    Text("movies in the library")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
                 }
+
                 Spacer()
-                VStack(alignment: .trailing, spacing: 6) {
-                    Text("\(store.movies.count)")
-                        .font(.system(size: 30, weight: .black, design: .rounded))
-                    Text("saved titles")
-                        .font(.caption2.weight(.semibold))
-                        .tracking(2)
-                        .foregroundStyle(.secondary)
+
+                VStack(alignment: .trailing, spacing: 8) {
+                    LibraryStat(label: "Watchlist", value: "\(store.watchlist.count)")
+                    LibraryStat(label: "Watched", value: "\(store.watched.count)")
                 }
+            }
+        }
+    }
+
+    private var emptyLibraryState: some View {
+        GlassCard {
+            VStack(alignment: .leading, spacing: 14) {
+                SectionHeader(title: "Nothing saved yet")
+                Text("Start from the Home screen, pick a mood, and save a title here to build your own watchlist.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                Button {
+                    path.removeAll()
+                } label: {
+                    Text("Go explore moods")
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(PrimaryActionButtonStyle(isEnabled: true))
             }
         }
     }
@@ -267,7 +300,10 @@ private struct MoviesSection: View {
                         .font(.caption.weight(.semibold))
                         .padding(.horizontal, 8)
                         .padding(.vertical, 3)
-                        .background(Capsule().fill(Color.white.opacity(0.08)))
+                        .background(
+                            Capsule(style: .continuous)
+                                .fill(Color.white.opacity(0.08))
+                        )
                     Spacer()
                 }
 
@@ -295,6 +331,22 @@ private struct MoviesSection: View {
                     }
                 }
             }
+        }
+    }
+}
+
+private struct LibraryStat: View {
+    let label: String
+    let value: String
+
+    var body: some View {
+        VStack(alignment: .trailing, spacing: 2) {
+            Text(value)
+                .font(.system(size: 24, weight: .black, design: .rounded))
+            Text(label.uppercased())
+                .font(.caption2.weight(.bold))
+                .tracking(2)
+                .foregroundStyle(.secondary)
         }
     }
 }
