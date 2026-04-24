@@ -83,7 +83,7 @@ struct SettingsView: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
 
-                LazyVGrid(columns: [GridItem(.adaptive(minimum: 140), spacing: 12)], spacing: 12) {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 150), spacing: 12)], spacing: 12) {
                     ForEach(MoodCatalog.platforms) { platform in
                         PlatformTile(platform: platform, isSelected: selectedPlatforms.contains(platform.key)) {
                             if selectedPlatforms.contains(platform.key) {
@@ -134,6 +134,11 @@ struct SettingsView: View {
                 Text("When this is on, the discovery engine leans away from harder-rated titles.")
                     .font(.footnote)
                     .foregroundStyle(.secondary)
+
+                HStack(spacing: 8) {
+                    SummaryPill(text: familySafe ? "Filtered" : "Open catalog")
+                    SummaryPill(text: selectedCountry)
+                }
             }
         }
     }
@@ -233,6 +238,7 @@ struct SettingsView: View {
                 HStack(spacing: 12) {
                     SettingsStat(label: "Platforms", value: "\(selectedPlatforms.count)")
                     SettingsStat(label: "Keys", value: "\(configuredKeyCount)")
+                    SettingsStat(label: "Safe", value: familySafe ? "On" : "Off")
                 }
             }
         }
@@ -264,6 +270,26 @@ private struct SettingsStat: View {
     }
 }
 
+private struct SummaryPill: View {
+    let text: String
+
+    var body: some View {
+        Text(text)
+            .font(.caption.weight(.semibold))
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(
+                Capsule(style: .continuous)
+                    .fill(Color.white.opacity(0.06))
+                    .overlay(
+                        Capsule(style: .continuous)
+                            .stroke(Color.white.opacity(0.09), lineWidth: 1)
+                    )
+            )
+            .foregroundStyle(.secondary)
+    }
+}
+
 private struct PlatformTile: View {
     let platform: Platform
     let isSelected: Bool
@@ -271,9 +297,14 @@ private struct PlatformTile: View {
 
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 10) {
-                Image(systemName: platform.symbolName)
-                    .foregroundStyle(isSelected ? Color(hex: "0D0D0F") : Color(hex: "F5A623"))
+            VStack(alignment: .leading, spacing: 12) {
+                HStack {
+                    Image(systemName: platform.symbolName)
+                        .foregroundStyle(isSelected ? Color(hex: "0D0D0F") : Color(hex: "F5A623"))
+                    Spacer()
+                    Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                        .foregroundStyle(isSelected ? Color(hex: "0D0D0F") : Color.secondary)
+                }
                 VStack(alignment: .leading, spacing: 2) {
                     Text(platform.name)
                         .font(.subheadline.weight(.semibold))
@@ -282,14 +313,14 @@ private struct PlatformTile: View {
                         .font(.caption2)
                         .foregroundStyle(isSelected ? Color(hex: "0D0D0F").opacity(0.75) : Color.secondary)
                 }
-                Spacer()
             }
             .padding(14)
+            .frame(maxWidth: .infinity, minHeight: 92, alignment: .leading)
             .background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                RoundedRectangle(cornerRadius: 18, style: .continuous)
                     .fill(isSelected ? Color(hex: "F5A623") : Color.white.opacity(0.04))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
                             .stroke(isSelected ? Color(hex: "F5A623") : Color.white.opacity(0.08), lineWidth: 1)
                     )
             )

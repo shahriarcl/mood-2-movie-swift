@@ -131,8 +131,13 @@ struct ResultsView: View {
                             .font(.caption2.weight(.bold))
                             .tracking(3)
                             .foregroundStyle(Color(hex: "F5A623"))
-                        Text(selectionSummary)
+                        Text("One stack of movies tuned to this mood.")
                             .font(.system(size: 28, weight: .black, design: .rounded))
+                            .fixedSize(horizontal: false, vertical: true)
+                        Text(selectionSummary)
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                            .lineLimit(3)
                             .fixedSize(horizontal: false, vertical: true)
                         Text("The engine is matching this mood to titles, providers, and watch status.")
                             .font(.footnote)
@@ -142,6 +147,7 @@ struct ResultsView: View {
                     HStack(spacing: 12) {
                         SelectionStat(label: "Matches", value: "\(movies.count)")
                         SelectionStat(label: "Page", value: "\(page)")
+                        SelectionStat(label: "Mood", value: selection.genre.label)
                     }
                 }
 
@@ -251,34 +257,38 @@ private struct MovieCardView: View {
                 }
 
                 VStack(spacing: 10) {
-                    Button {
-                        onOpenDetail()
-                    } label: {
-                        Label("Details", systemImage: "info.circle")
-                    }
-                    .buttonStyle(InlineActionButtonStyle(isActive: false))
-
-                    Button {
-                        onSave(.watchlist)
-                    } label: {
-                        Label("Watchlist", systemImage: "bookmark")
-                    }
-                    .buttonStyle(InlineActionButtonStyle(isActive: status == .watchlist))
-
-                    Button {
-                        onSave(.watched)
-                    } label: {
-                        Label("Watched", systemImage: "checkmark.circle")
-                    }
-                    .buttonStyle(InlineActionButtonStyle(isActive: status == .watched))
-
-                    if status != nil {
-                        Button(role: .destructive) {
-                            onRemove()
+                    HStack(spacing: 8) {
+                        Button {
+                            onOpenDetail()
                         } label: {
-                            Label("Remove", systemImage: "trash")
+                            Label("Details", systemImage: "info.circle")
                         }
                         .buttonStyle(InlineActionButtonStyle(isActive: false))
+
+                        Button {
+                            onSave(.watchlist)
+                        } label: {
+                            Label("Watchlist", systemImage: "bookmark")
+                        }
+                        .buttonStyle(InlineActionButtonStyle(isActive: status == .watchlist))
+                    }
+
+                    HStack(spacing: 8) {
+                        Button {
+                            onSave(.watched)
+                        } label: {
+                            Label("Watched", systemImage: "checkmark.circle")
+                        }
+                        .buttonStyle(InlineActionButtonStyle(isActive: status == .watched))
+
+                        if status != nil {
+                            Button(role: .destructive) {
+                                onRemove()
+                            } label: {
+                                Label("Remove", systemImage: "trash")
+                            }
+                            .buttonStyle(InlineActionButtonStyle(isActive: false))
+                        }
                     }
                 }
             }

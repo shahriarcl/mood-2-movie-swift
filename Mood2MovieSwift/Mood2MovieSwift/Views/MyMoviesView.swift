@@ -255,7 +255,12 @@ struct MyMoviesView: View {
                 HStack(spacing: 12) {
                     LibraryStat(label: "Watchlist", value: "\(store.watchlist.count)")
                     LibraryStat(label: "Watched", value: "\(store.watched.count)")
+                    LibraryStat(label: "Sync", value: cloud.isSignedIn ? "On" : "Off")
                 }
+
+                Text(cloud.isSignedIn ? "Cloud sync is active." : "Sign in to move your library between devices.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
             }
         }
     }
@@ -306,6 +311,10 @@ private struct MoviesSection: View {
                     Spacer()
                 }
 
+                Text(title == "Watchlist" ? "Ready for your next session." : "Titles you’ve already watched.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+
                 if movies.isEmpty {
                     Text("Nothing here yet.")
                         .foregroundStyle(.secondary)
@@ -341,7 +350,7 @@ private struct LibraryStat: View {
     var body: some View {
         VStack(alignment: .trailing, spacing: 2) {
             Text(value)
-                .font(.system(size: 24, weight: .black, design: .rounded))
+                .font(.system(size: 22, weight: .black, design: .rounded))
             Text(label.uppercased())
                 .font(.caption2.weight(.bold))
                 .tracking(2)
@@ -369,14 +378,19 @@ private struct MovieListRow: View {
                 Text("\(movie.year) • \(movie.status.label)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                Text(movie.genre.label)
+                    .font(.caption2.weight(.semibold))
+                    .foregroundStyle(Color(hex: "F5A623"))
             }
             Spacer()
-            Button(movie.status == .watchlist ? "Watched" : "Watchlist", action: swapStatus)
+            VStack(spacing: 8) {
+                Button(movie.status == .watchlist ? "Watched" : "Watchlist", action: swapStatus)
+                    .buttonStyle(InlineActionButtonStyle(isActive: false))
+                Button(role: .destructive, action: remove) {
+                    Label("Remove", systemImage: "trash")
+                }
                 .buttonStyle(InlineActionButtonStyle(isActive: false))
-            Button(role: .destructive, action: remove) {
-                Image(systemName: "trash")
             }
-            .buttonStyle(InlineActionButtonStyle(isActive: false))
         }
         .padding(12)
         .background(
