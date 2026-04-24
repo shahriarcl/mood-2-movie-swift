@@ -315,6 +315,15 @@ struct HomeView: View {
                             .foregroundStyle(.secondary)
                             .font(.footnote)
                     } else {
+                        HStack {
+                            Text("\(searchResults.count) matches")
+                                .font(.caption.weight(.semibold))
+                                .foregroundStyle(Color(hex: "F5A623"))
+                            Spacer()
+                            Text("Tap a title to open details")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
                         VStack(spacing: 10) {
                             ForEach(searchResults) { movie in
                                 SearchResultRow(movie: movie) {
@@ -332,26 +341,27 @@ struct HomeView: View {
         GlassCard {
             VStack(alignment: .leading, spacing: 14) {
                 VStack(alignment: .leading, spacing: 10) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        SectionHeader(title: "For You")
-                        Text("Built from your saved library and platform preferences.")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            SectionHeader(title: "For You")
+                            Text("Built from your saved library and platform preferences.")
+                                .font(.footnote)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                        Text("\(forYouMovies.count) picks")
+                            .font(.caption.weight(.semibold))
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 6)
+                            .background(
+                                Capsule(style: .continuous)
+                                    .fill(Color.white.opacity(0.06))
+                            )
                     }
-                    Text("\(forYouMovies.count) picks")
-                        .font(.caption.weight(.semibold))
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 6)
-                        .background(
-                            Capsule(style: .continuous)
-                                .fill(Color.white.opacity(0.06))
-                        )
                 }
 
                 if forYouMovies.isEmpty {
-                    Text("Save a few movies and the app will start shaping recommendations around your taste.")
-                        .foregroundStyle(.secondary)
-                        .font(.footnote)
+                    EmptyStateView(message: "Save a few movies and the app will start shaping recommendations around your taste.")
                 } else {
                     LazyVStack(spacing: 12) {
                         ForEach(forYouMovies.prefix(3)) { movie in
@@ -660,28 +670,33 @@ private struct FeaturedMovieCard: View {
 
     var body: some View {
         Button(action: action) {
-            VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .top, spacing: 12) {
                 PosterBadge(genre: movie.genre, title: movie.title, year: movie.year, size: .large)
-                    .frame(height: 138, alignment: .leading)
 
-                VStack(alignment: .leading, spacing: 5) {
-                    Text(movie.title)
-                        .font(.subheadline.weight(.semibold))
-                        .lineLimit(1)
-                    Text("\(movie.year) • \(movie.genre.label)")
+                VStack(alignment: .leading, spacing: 8) {
+                    HStack(alignment: .top) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(movie.title)
+                                .font(.subheadline.weight(.semibold))
+                                .lineLimit(2)
+                            Text("\(movie.year) • \(movie.genre.label)")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        Spacer()
+                    }
+
+                    Text(movie.reason)
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                }
+                        .lineLimit(3)
+                        .fixedSize(horizontal: false, vertical: true)
 
-                Text(movie.reason)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(2)
-                    .fixedSize(horizontal: false, vertical: true)
-
-                HStack(spacing: 8) {
-                    SummaryPill(text: movie.primaryAvailability.platformName)
-                    SummaryPill(text: movie.primaryAvailability.type.label)
+                    HStack(spacing: 8) {
+                        SummaryPill(text: movie.primaryAvailability.platformName)
+                        SummaryPill(text: movie.primaryAvailability.type.label)
+                        Spacer()
+                    }
                 }
             }
             .padding(14)
@@ -690,7 +705,7 @@ private struct FeaturedMovieCard: View {
                 RoundedRectangle(cornerRadius: 22, style: .continuous)
                     .fill(
                         LinearGradient(
-                            colors: [Color.white.opacity(0.08), Color.white.opacity(0.035)],
+                            colors: [Color.white.opacity(0.09), Color.white.opacity(0.04)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
