@@ -85,8 +85,8 @@ private struct PhoneTabBar: View {
     var body: some View {
         VStack(spacing: 7) {
             Capsule(style: .continuous)
-                .fill(Color.white.opacity(0.28))
-                .frame(width: 108, height: 4)
+                .fill(Color.white.opacity(0.24))
+                .frame(width: 102, height: 3)
                 .padding(.top, 1)
 
             HStack(spacing: 7) {
@@ -98,7 +98,7 @@ private struct PhoneTabBar: View {
                         VStack(spacing: 4) {
                             Capsule(style: .continuous)
                                 .fill(isActive ? Color(hex: "F5A623") : Color.clear)
-                                .frame(width: isActive ? 20 : 12, height: 4)
+                                .frame(width: isActive ? 18 : 11, height: 3)
                             Image(systemName: tab.symbol)
                                 .font(.system(size: isActive ? 16 : 15, weight: .semibold))
                             Text(tab.title)
@@ -136,13 +136,13 @@ private struct PhoneTabBar: View {
         .padding(7)
         .background(
             RoundedRectangle(cornerRadius: 28, style: .continuous)
-                .fill(.ultraThinMaterial)
+                .fill(.thinMaterial)
                 .overlay(
                     RoundedRectangle(cornerRadius: 28, style: .continuous)
-                        .stroke(Color.white.opacity(0.14), lineWidth: 1)
+                        .stroke(Color.white.opacity(0.12), lineWidth: 1)
                 )
         )
-        .shadow(color: .black.opacity(0.20), radius: 16, x: 0, y: 8)
+        .shadow(color: .black.opacity(0.18), radius: 14, x: 0, y: 7)
         .padding(.horizontal, 14)
         .padding(.top, 6)
         .padding(.bottom, 8)
@@ -173,10 +173,10 @@ private struct TabContextStrip: View {
         .padding(.vertical, 9)
         .background(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(Color.white.opacity(0.04))
+                .fill(Color.white.opacity(0.035))
                 .overlay(
                     RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .stroke(Color.white.opacity(0.09), lineWidth: 1)
+                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
                 )
         )
         .padding(.horizontal, 16)
