@@ -46,15 +46,16 @@ struct GlassCard<Content: View>: View {
 
     var body: some View {
         content
-            .padding(16)
+            .padding(18)
             .background(
                 RoundedRectangle(cornerRadius: 20, style: .continuous)
-                    .fill(Color.white.opacity(0.055))
+                    .fill(Color.white.opacity(0.06))
                     .overlay(
                         RoundedRectangle(cornerRadius: 20, style: .continuous)
                             .stroke(Color.white.opacity(0.11), lineWidth: 1)
                     )
             )
+            .shadow(color: .black.opacity(0.28), radius: 24, x: 0, y: 12)
     }
 }
 
@@ -98,11 +99,16 @@ struct EmptyStateView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Nothing to show yet")
-                .font(.headline.weight(.semibold))
+            HStack(spacing: 10) {
+                Image(systemName: "sparkles")
+                    .foregroundStyle(Color(hex: "F5A623"))
+                Text("Nothing to show yet")
+                    .font(.headline.weight(.semibold))
+            }
             Text(message)
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
         }
         .padding(18)
         .frame(maxWidth: .infinity, alignment: .leading)
@@ -123,6 +129,7 @@ struct LoadingStateView: View {
     var body: some View {
         HStack(spacing: 12) {
             ProgressView()
+                .controlSize(.small)
             Text(text)
                 .font(.footnote)
                 .foregroundStyle(.secondary)
@@ -132,6 +139,10 @@ struct LoadingStateView: View {
         .background(
             RoundedRectangle(cornerRadius: 20, style: .continuous)
                 .fill(Color.white.opacity(0.045))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                )
         )
     }
 }
@@ -140,15 +151,25 @@ struct AvailabilityPill: View {
     let availability: Availability
 
     var body: some View {
-        Text("\(availability.type.label) • \(availability.platformName)")
-            .font(.caption2.weight(.semibold))
-            .foregroundStyle(availability.type == .subscription ? Color(hex: "F5A623") : Color.secondary)
-            .padding(.horizontal, 10)
-            .padding(.vertical, 5)
-            .background(
-                Capsule(style: .continuous)
-                    .fill(Color.white.opacity(0.06))
-            )
+        HStack(spacing: 6) {
+            Circle()
+                .fill(availability.type == .subscription ? Color(hex: "F5A623") : Color.white.opacity(0.35))
+                .frame(width: 6, height: 6)
+            Text("\(availability.type.label) • \(availability.platformName)")
+                .lineLimit(1)
+        }
+        .font(.caption2.weight(.semibold))
+        .foregroundStyle(availability.type == .subscription ? Color(hex: "F5A623") : Color.secondary)
+        .padding(.horizontal, 10)
+        .padding(.vertical, 5)
+        .background(
+            Capsule(style: .continuous)
+                .fill(Color.white.opacity(0.06))
+                .overlay(
+                    Capsule(style: .continuous)
+                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                )
+        )
     }
 }
 
