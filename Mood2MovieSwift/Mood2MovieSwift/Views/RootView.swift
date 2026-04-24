@@ -27,7 +27,7 @@ struct RootView: View {
                 }
         }
         .safeAreaInset(edge: .bottom, spacing: 0) {
-            VStack(spacing: 8) {
+            VStack(spacing: 10) {
                 TabContextStrip(tab: activeTab)
                 PhoneTabBar(activeTab: activeTab) { tab in
                     switch tab {
@@ -42,7 +42,7 @@ struct RootView: View {
                     }
                 }
             }
-            .padding(.top, 8)
+            .padding(.top, 6)
         }
     }
 
@@ -85,11 +85,11 @@ private struct PhoneTabBar: View {
     var body: some View {
         VStack(spacing: 8) {
             Capsule(style: .continuous)
-                .fill(Color.white.opacity(0.35))
-                .frame(width: 122, height: 4)
+                .fill(Color.white.opacity(0.42))
+                .frame(width: 128, height: 4)
                 .padding(.top, 2)
 
-            HStack(spacing: 10) {
+            HStack(spacing: 8) {
                 ForEach(ShellTab.allCases, id: \.self) { tab in
                     Button {
                         onSelect(tab)
@@ -105,9 +105,9 @@ private struct PhoneTabBar: View {
                                 .font(.caption2.weight(isActive ? .bold : .semibold))
                         }
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
+                        .padding(.vertical, 11)
                         .background(
-                            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                            RoundedRectangle(cornerRadius: 22, style: .continuous)
                                 .fill(
                                     isActive
                                     ? LinearGradient(
@@ -118,7 +118,7 @@ private struct PhoneTabBar: View {
                                     : LinearGradient(colors: [.clear], startPoint: .top, endPoint: .bottom)
                                 )
                                 .overlay(
-                                    RoundedRectangle(cornerRadius: 20, style: .continuous)
+                                    RoundedRectangle(cornerRadius: 22, style: .continuous)
                                         .stroke(isActive ? Color.white.opacity(0.14) : Color.clear, lineWidth: 1)
                                 )
                         )
@@ -131,17 +131,17 @@ private struct PhoneTabBar: View {
         }
         .padding(8)
         .background(
-            RoundedRectangle(cornerRadius: 30, style: .continuous)
+            RoundedRectangle(cornerRadius: 32, style: .continuous)
                 .fill(.ultraThinMaterial)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 30, style: .continuous)
-                        .stroke(Color.white.opacity(0.18), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 32, style: .continuous)
+                        .stroke(Color.white.opacity(0.16), lineWidth: 1)
                 )
         )
-        .shadow(color: .black.opacity(0.26), radius: 22, x: 0, y: 12)
-        .padding(.horizontal, 16)
-        .padding(.top, 10)
-        .padding(.bottom, 8)
+        .shadow(color: .black.opacity(0.24), radius: 20, x: 0, y: 10)
+        .padding(.horizontal, 14)
+        .padding(.top, 8)
+        .padding(.bottom, 10)
     }
 }
 
@@ -166,13 +166,13 @@ private struct TabContextStrip: View {
             Spacer()
         }
         .padding(.horizontal, 18)
-        .padding(.vertical, 10)
+        .padding(.vertical, 11)
         .background(
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
+            RoundedRectangle(cornerRadius: 22, style: .continuous)
                 .fill(Color.white.opacity(0.04))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 20, style: .continuous)
-                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: 22, style: .continuous)
+                        .stroke(Color.white.opacity(0.09), lineWidth: 1)
                 )
         )
         .padding(.horizontal, 16)

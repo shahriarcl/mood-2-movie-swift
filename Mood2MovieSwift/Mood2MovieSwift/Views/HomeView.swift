@@ -38,33 +38,61 @@ struct HomeView: View {
     }
 
     private var topBar: some View {
-        ViewThatFits(in: .horizontal) {
-            HStack(spacing: 14) {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .top, spacing: 14) {
                 brandHeader
                 Spacer(minLength: 12)
-                topBarActions
+                topBarBadge
             }
 
-            VStack(alignment: .leading, spacing: 14) {
-                brandHeader
-                topBarActions
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 10) {
+                    topBarActions
+                    Spacer(minLength: 12)
+                    Text("Mobile-first discovery")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                }
+
+                VStack(alignment: .leading, spacing: 10) {
+                    topBarActions
+                    Text("Mobile-first discovery")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                }
             }
         }
     }
 
     private var brandHeader: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             BrandMark()
 
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 3) {
                 Text("Mood2Movie")
-                    .font(.title3.weight(.black))
+                    .font(.title2.weight(.black))
                     .foregroundStyle(Color.white)
                 Text("Pick a movie by how you feel")
                     .font(.caption.weight(.medium))
                     .foregroundStyle(.secondary)
             }
         }
+    }
+
+    private var topBarBadge: some View {
+        Text("Phone mode")
+            .font(.caption.weight(.semibold))
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(
+                Capsule(style: .continuous)
+                    .fill(Color.white.opacity(0.08))
+                    .overlay(
+                        Capsule(style: .continuous)
+                            .stroke(Color.white.opacity(0.12), lineWidth: 1)
+                    )
+            )
+            .foregroundStyle(.secondary)
     }
 
     private var topBarActions: some View {

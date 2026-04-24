@@ -91,21 +91,12 @@ struct ResultsView: View {
             }
             .buttonStyle(PlainBackButtonStyle())
 
-            VStack(alignment: .leading, spacing: 6) {
-                Text("TONIGHT'S PICKS")
-                    .font(.caption2.weight(.bold))
-                    .tracking(3)
-                    .foregroundStyle(Color(hex: "F5A623"))
-                Text("Tonight's Picks")
-                    .font(.system(size: 32, weight: .black, design: .rounded))
-                Text(selectionSummary)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-
-            Divider()
-                .overlay(Color(hex: "F5A623").opacity(0.7))
+            ScreenHeader(
+                eyebrow: "Mood selection",
+                title: "Tonight's Picks",
+                subtitle: selectionSummary,
+                badge: "\(movies.count) matches"
+            )
         }
     }
 
@@ -118,7 +109,7 @@ struct ResultsView: View {
                             .font(.caption2.weight(.bold))
                             .tracking(3)
                             .foregroundStyle(Color(hex: "F5A623"))
-                        Text("iPhone stack")
+                        Text("Mobile stack")
                             .font(.caption.weight(.semibold))
                             .foregroundStyle(.secondary)
                         Spacer()
@@ -147,7 +138,7 @@ struct ResultsView: View {
                     HStack(spacing: 12) {
                         SelectionStat(label: "Matches", value: "\(movies.count)")
                         SelectionStat(label: "Page", value: "\(page)")
-                        SelectionStat(label: "Mood", value: selection.genre.label)
+                        SelectionStat(label: "Genre", value: selection.genre.label)
                     }
                 }
 

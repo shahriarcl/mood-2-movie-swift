@@ -67,21 +67,12 @@ struct MyMoviesView: View {
             }
             .buttonStyle(PlainBackButtonStyle())
 
-            VStack(alignment: .leading, spacing: 6) {
-                Text("YOUR LIBRARY")
-                    .font(.caption2.weight(.bold))
-                    .tracking(3)
-                    .foregroundStyle(Color(hex: "F5A623"))
-                Text("Saved movies")
-                    .font(.system(size: 34, weight: .black, design: .rounded))
-                Text("Watchlist and watched titles live here, and cloud sync keeps them with you.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-
-            Divider()
-                .overlay(Color(hex: "F5A623").opacity(0.7))
+            ScreenHeader(
+                eyebrow: "Your library",
+                title: "Saved movies",
+                subtitle: "Watchlist and watched titles live here, and cloud sync keeps them with you.",
+                badge: "\(store.movies.count) saved"
+            )
         }
     }
 

@@ -57,21 +57,12 @@ struct SettingsView: View {
             }
             .buttonStyle(PlainBackButtonStyle())
 
-            VStack(alignment: .leading, spacing: 6) {
-                Text("CONFIGURE")
-                    .font(.caption2.weight(.bold))
-                    .tracking(3)
-                    .foregroundStyle(Color(hex: "F5A623"))
-                Text("Settings")
-                    .font(.system(size: 34, weight: .black, design: .rounded))
-                Text("Tune the platforms and country used by the recommendation engine.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-
-            Divider()
-                .overlay(Color(hex: "F5A623").opacity(0.7))
+            ScreenHeader(
+                eyebrow: "Configure",
+                title: "Settings",
+                subtitle: "Tune the platforms and country used by the recommendation engine.",
+                badge: "\(configuredKeyCount) keys"
+            )
         }
     }
 

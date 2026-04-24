@@ -5,40 +5,53 @@ struct AppScreenBackground: View {
         ZStack {
             LinearGradient(
                 colors: [
-                    Color(hex: "060608"),
-                    Color(hex: "0B0B0E"),
-                    Color(hex: "121219")
+                    Color(hex: "050507"),
+                    Color(hex: "09090C"),
+                    Color(hex: "111118")
                 ],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
 
             RadialGradient(
-                colors: [Color(hex: "F5A623").opacity(0.18), .clear],
+                colors: [Color(hex: "F5A623").opacity(0.22), .clear],
                 center: .topTrailing,
                 startRadius: 24,
-                endRadius: 420
+                endRadius: 460
             )
 
             RadialGradient(
-                colors: [Color(hex: "6AA8FF").opacity(0.12), .clear],
+                colors: [Color(hex: "6AA8FF").opacity(0.16), .clear],
                 center: .bottomLeading,
                 startRadius: 32,
-                endRadius: 380
+                endRadius: 420
             )
 
             Circle()
-                .fill(Color.white.opacity(0.06))
-                .frame(width: 420, height: 420)
-                .blur(radius: 120)
-                .offset(x: 320, y: -280)
+                .fill(Color.white.opacity(0.07))
+                .frame(width: 460, height: 460)
+                .blur(radius: 130)
+                .offset(x: 340, y: -300)
+
+            Capsule(style: .continuous)
+                .fill(Color(hex: "F5A623").opacity(0.08))
+                .frame(width: 320, height: 54)
+                .blur(radius: 18)
+                .offset(x: -120, y: -230)
 
             RoundedRectangle(cornerRadius: 40, style: .continuous)
-                .stroke(Color.white.opacity(0.03), lineWidth: 1)
+                .stroke(Color.white.opacity(0.04), lineWidth: 1)
                 .frame(width: 420, height: 420)
                 .rotationEffect(.degrees(-12))
                 .blur(radius: 1.5)
                 .offset(x: -220, y: 420)
+
+            RoundedRectangle(cornerRadius: 28, style: .continuous)
+                .stroke(Color.white.opacity(0.03), lineWidth: 1)
+                .frame(width: 190, height: 190)
+                .rotationEffect(.degrees(18))
+                .blur(radius: 1.5)
+                .offset(x: 150, y: 480)
         }
         .ignoresSafeArea()
     }
@@ -53,28 +66,28 @@ struct GlassCard<Content: View>: View {
 
     var body: some View {
         content
-            .padding(18)
+            .padding(16)
             .background(
-                RoundedRectangle(cornerRadius: 30, style: .continuous)
+                RoundedRectangle(cornerRadius: 26, style: .continuous)
                     .fill(.ultraThinMaterial)
                     .overlay(
                         LinearGradient(
                             colors: [
-                                Color.white.opacity(0.09),
-                                Color.white.opacity(0.02),
-                                Color.black.opacity(0.04)
+                                Color.white.opacity(0.10),
+                                Color.white.opacity(0.03),
+                                Color.black.opacity(0.05)
                             ],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
-                        .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
+                        .clipShape(RoundedRectangle(cornerRadius: 26, style: .continuous))
                     )
                     .overlay(
-                        RoundedRectangle(cornerRadius: 30, style: .continuous)
-                            .stroke(Color.white.opacity(0.16), lineWidth: 1)
+                        RoundedRectangle(cornerRadius: 26, style: .continuous)
+                            .stroke(Color.white.opacity(0.14), lineWidth: 1)
                     )
             )
-            .shadow(color: .black.opacity(0.28), radius: 24, x: 0, y: 12)
+            .shadow(color: .black.opacity(0.24), radius: 20, x: 0, y: 10)
     }
 }
 
@@ -107,9 +120,58 @@ struct SectionHeader: View {
 
     var body: some View {
         Text(title.uppercased())
-            .font(.caption2.weight(.semibold))
-            .tracking(2.2)
+            .font(.caption2.weight(.bold))
+            .tracking(2.4)
             .foregroundStyle(.secondary)
+    }
+}
+
+struct ScreenHeader: View {
+    let eyebrow: String
+    let title: String
+    let subtitle: String
+    var badge: String?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .top, spacing: 12) {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text(eyebrow.uppercased())
+                        .font(.caption2.weight(.bold))
+                        .tracking(3)
+                        .foregroundStyle(Color(hex: "F5A623"))
+                    Text(title)
+                        .font(.system(size: 32, weight: .black, design: .rounded))
+                        .foregroundStyle(Color.white)
+                        .fixedSize(horizontal: false, vertical: true)
+                    Text(subtitle)
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+
+                Spacer(minLength: 12)
+
+                if let badge {
+                    Text(badge)
+                        .font(.caption.weight(.semibold))
+                        .padding(.horizontal, 10)
+                        .padding(.vertical, 6)
+                        .background(
+                            Capsule(style: .continuous)
+                                .fill(Color.white.opacity(0.08))
+                                .overlay(
+                                    Capsule(style: .continuous)
+                                        .stroke(Color.white.opacity(0.12), lineWidth: 1)
+                                )
+                        )
+                        .foregroundStyle(.secondary)
+                }
+            }
+
+            Divider()
+                .overlay(Color(hex: "F5A623").opacity(0.7))
+        }
     }
 }
 
@@ -367,8 +429,16 @@ struct PrimaryActionButtonStyle: ButtonStyle {
             .padding(.vertical, 14)
             .padding(.horizontal, 16)
             .background(
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .fill(isEnabled ? Color(hex: "F5A623") : Color.white.opacity(0.12))
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(
+                        isEnabled
+                        ? LinearGradient(
+                            colors: [Color(hex: "FFB84D"), Color(hex: "F5A623")],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                        : LinearGradient(colors: [Color.white.opacity(0.12)], startPoint: .top, endPoint: .bottom)
+                    )
             )
             .foregroundStyle(isEnabled ? Color(hex: "0D0D0F") : Color.secondary)
             .opacity(configuration.isPressed ? 0.85 : 1)
@@ -382,8 +452,12 @@ struct SecondaryActionButtonStyle: ButtonStyle {
             .padding(.vertical, 14)
             .padding(.horizontal, 16)
             .background(
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .stroke(Color.white.opacity(0.14), lineWidth: 1)
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(Color.white.opacity(0.04))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16, style: .continuous)
+                            .stroke(Color.white.opacity(0.14), lineWidth: 1)
+                    )
             )
             .foregroundStyle(.secondary)
             .opacity(configuration.isPressed ? 0.85 : 1)
@@ -394,13 +468,13 @@ struct FooterLinkButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.footnote.weight(.semibold))
-            .padding(.vertical, 12)
+            .padding(.vertical, 11)
             .padding(.horizontal, 14)
             .background(
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .fill(Color.white.opacity(0.06))
+                RoundedRectangle(cornerRadius: 15, style: .continuous)
+                    .fill(Color.white.opacity(0.05))
                     .overlay(
-                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        RoundedRectangle(cornerRadius: 15, style: .continuous)
                             .stroke(Color.white.opacity(0.10), lineWidth: 1)
                     )
             )
