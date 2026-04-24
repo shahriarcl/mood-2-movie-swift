@@ -23,7 +23,7 @@ struct HomeView: View {
             }
             .padding(.vertical, 24)
             .padding(.horizontal, 16)
-            .frame(maxWidth: 430, alignment: .leading)
+            .frame(maxWidth: 400, alignment: .leading)
         }
         .background(AppScreenBackground())
         .onAppear {
@@ -108,88 +108,7 @@ struct HomeView: View {
 
     private var heroShowcase: some View {
         GlassCard {
-            ViewThatFits(in: .horizontal) {
-                heroShowcaseWide
-                heroShowcaseStacked
-            }
-        }
-    }
-
-    private var heroShowcaseWide: some View {
-        HStack(alignment: .top, spacing: 22) {
-            VStack(alignment: .leading, spacing: 16) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("◆ MOOD-DRIVEN RECOMMENDATIONS")
-                        .font(.caption2.weight(.bold))
-                        .tracking(3.2)
-                        .foregroundStyle(Color(hex: "F5A623"))
-                        .textCase(.uppercase)
-
-                    Text("Mood picks for\nwhatever you feel like tonight.")
-                        .font(.system(size: 42, weight: .black, design: .rounded))
-                        .lineLimit(2)
-                        .minimumScaleFactor(0.75)
-                        .fixedSize(horizontal: false, vertical: true)
-
-                    Text("Search a title, or let the mood cards steer you toward a better match.")
-                        .font(.body)
-                        .foregroundStyle(.secondary)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-
-                HStack(spacing: 8) {
-                    HeroTag(text: "\(store.movies.count) saved")
-                    HeroTag(text: "\(store.favoriteGenres.count) favorite genres")
-                    HeroTag(text: "\(store.preferences.platforms.count) platforms")
-                }
-
-                HStack(spacing: 12) {
-                    Button {
-                        guard let selection = draft.resolved else { return }
-                        path.append(.results(selection))
-                    } label: {
-                        Label("Start the vibe", systemImage: "sparkles")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(PrimaryActionButtonStyle(isEnabled: draft.isComplete))
-                    .disabled(!draft.isComplete)
-
-                    Button {
-                        path.append(.settings)
-                    } label: {
-                        Label("Tune app", systemImage: "slider.horizontal.3")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(SecondaryActionButtonStyle())
-                }
-
-                HStack(spacing: 14) {
-                    MiniStat(label: "Saved", value: "\(store.movies.count)")
-                    MiniStat(label: "For you", value: "\(forYouMovies.count)")
-                    MiniStat(label: "Platforms", value: "\(store.preferences.platforms.count)")
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-
-            VStack(alignment: .leading, spacing: 14) {
-                if let spotlight = forYouMovies.first {
-                    SpotlightCard(movie: spotlight)
-                } else {
-                    EmptySpotlightCard()
-                }
-
-                HStack(spacing: 10) {
-                    Label(store.movies.isEmpty ? "Build your taste" : "Taste is active", systemImage: "heart.fill")
-                        .font(.caption.weight(.semibold))
-                        .foregroundStyle(Color(hex: "F5A623"))
-                    Spacer()
-                    Text(store.movies.isEmpty ? "Start saving movies to power better picks." : "Your library is already feeding the engine.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(2)
-                }
-            }
-            .frame(width: 320, alignment: .leading)
+            heroShowcaseStacked
         }
     }
 
@@ -203,9 +122,9 @@ struct HomeView: View {
                     .textCase(.uppercase)
 
                 Text("Mood picks for\nwhatever you feel like tonight.")
-                    .font(.system(size: 42, weight: .black, design: .rounded))
+                    .font(.system(size: 36, weight: .black, design: .rounded))
                     .lineLimit(2)
-                    .minimumScaleFactor(0.75)
+                    .minimumScaleFactor(0.82)
                     .fixedSize(horizontal: false, vertical: true)
 
                 Text("Search a title, or let the mood cards steer you toward a better match.")
@@ -240,7 +159,7 @@ struct HomeView: View {
                 .buttonStyle(SecondaryActionButtonStyle())
             }
 
-            HStack(spacing: 14) {
+            VStack(spacing: 14) {
                 MiniStat(label: "Saved", value: "\(store.movies.count)")
                 MiniStat(label: "For you", value: "\(forYouMovies.count)")
                 MiniStat(label: "Platforms", value: "\(store.preferences.platforms.count)")
@@ -269,7 +188,7 @@ struct HomeView: View {
     private var searchSection: some View {
         GlassCard {
             VStack(alignment: .leading, spacing: 14) {
-                HStack(alignment: .center) {
+                VStack(alignment: .leading, spacing: 10) {
                     VStack(alignment: .leading, spacing: 6) {
                         SectionHeader(title: "Search")
                         Text("Find a title fast")
@@ -278,7 +197,6 @@ struct HomeView: View {
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
-                    Spacer()
                     Text(searchText.isEmpty ? "Browse" : "Search mode")
                         .font(.caption.weight(.semibold))
                         .padding(.horizontal, 10)
@@ -335,14 +253,13 @@ struct HomeView: View {
     private var forYouSection: some View {
         GlassCard {
             VStack(alignment: .leading, spacing: 14) {
-                HStack {
+                VStack(alignment: .leading, spacing: 10) {
                     VStack(alignment: .leading, spacing: 4) {
                         SectionHeader(title: "For You")
                         Text("Built from your saved library and platform preferences.")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
-                    Spacer()
                     Text("\(forYouMovies.count) picks")
                         .font(.caption.weight(.semibold))
                         .padding(.horizontal, 10)
@@ -358,7 +275,7 @@ struct HomeView: View {
                         .foregroundStyle(.secondary)
                         .font(.footnote)
                 } else {
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 250), spacing: 12)], spacing: 12) {
+                    LazyVStack(spacing: 12) {
                         ForEach(forYouMovies.prefix(3)) { movie in
                             FeaturedMovieCard(movie: movie) {
                                 path.append(.movieDetail(movie))
@@ -373,14 +290,13 @@ struct HomeView: View {
     private var moodSection: some View {
         GlassCard {
             VStack(alignment: .leading, spacing: 16) {
-                HStack(alignment: .bottom) {
+                VStack(alignment: .leading, spacing: 10) {
                     VStack(alignment: .leading, spacing: 4) {
                         SectionHeader(title: "Build Your Mood")
                         Text("Choose the people, the vibe, and the genre lane.")
                             .font(.footnote)
                             .foregroundStyle(.secondary)
                     }
-                    Spacer()
                     Text(searchText.isEmpty ? "Ready" : "Search mode")
                         .font(.caption.weight(.semibold))
                         .padding(.horizontal, 10)
@@ -402,7 +318,7 @@ struct HomeView: View {
         GlassCard {
             VStack(alignment: .leading, spacing: 14) {
                 SectionHeader(title: "Action")
-                HStack(spacing: 12) {
+                VStack(spacing: 12) {
                     Button {
                         guard let selection = draft.resolved else { return }
                         path.append(.results(selection))
