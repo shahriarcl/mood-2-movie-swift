@@ -122,7 +122,7 @@ struct MovieDetailView: View {
                 eyebrow: "Movie details",
                 title: movie.title,
                 subtitle: "A closer look at the pick, the synopsis, and where to watch.",
-                badge: "\(movie.genre.label) • \(movie.year)"
+                badge: movie.primaryAvailability.platformName
             )
         }
     }
@@ -130,6 +130,21 @@ struct MovieDetailView: View {
     private var heroCard: some View {
         GlassCard {
             VStack(alignment: .leading, spacing: 18) {
+                HStack(alignment: .top, spacing: 12) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("NOW SHOWING")
+                            .font(.caption2.weight(.bold))
+                            .tracking(3)
+                            .foregroundStyle(Color(hex: "F5A623"))
+                        Text(movie.year.description)
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                    DetailChip(text: movie.genre.label)
+                    DetailChip(text: movie.primaryAvailability.type.label)
+                }
+
                 ViewThatFits(in: .horizontal) {
                     heroCardWide
                     heroCardStacked
@@ -155,7 +170,14 @@ struct MovieDetailView: View {
     private var heroCardWide: some View {
         HStack(alignment: .top, spacing: 18) {
             poster
-            detailCopy
+            VStack(alignment: .leading, spacing: 12) {
+                detailCopy
+                HStack(spacing: 8) {
+                    DetailChip(text: "Poster-led")
+                    DetailChip(text: "Mobile-first")
+                    DetailChip(text: "Premium view")
+                }
+            }
             Spacer(minLength: 0)
         }
     }
@@ -164,6 +186,11 @@ struct MovieDetailView: View {
         VStack(alignment: .leading, spacing: 16) {
             poster
             detailCopy
+            HStack(spacing: 8) {
+                DetailChip(text: "Poster-led")
+                DetailChip(text: "Mobile-first")
+                DetailChip(text: "Premium view")
+            }
         }
     }
 
@@ -204,7 +231,17 @@ struct MovieDetailView: View {
     }
 
     private var providerGrid: some View {
-        VStack(spacing: 12) {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Best matches")
+                    .font(.caption2.weight(.bold))
+                    .tracking(3)
+                    .foregroundStyle(Color(hex: "F5A623"))
+                Spacer()
+                Text("\(providers.count) options")
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
             ForEach(providers) { availability in
                 ProviderCard(availability: availability)
             }
@@ -214,7 +251,13 @@ struct MovieDetailView: View {
     private func section<Content: View>(title: String, @ViewBuilder content: () -> Content) -> some View {
         GlassCard {
             VStack(alignment: .leading, spacing: 10) {
-                SectionHeader(title: title)
+                HStack {
+                    SectionHeader(title: title)
+                    Spacer()
+                    Text(title == "Where to watch" ? "Watch options" : "Details")
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                }
                 content()
             }
         }
@@ -315,6 +358,11 @@ private struct ProviderCard: View {
             Text(availability.type == .subscription ? "Stream instantly" : "Alternative purchase option")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
+
+            HStack(spacing: 8) {
+                DetailChip(text: availability.platformName)
+                DetailChip(text: availability.type.label)
+            }
         }
         .frame(maxWidth: .infinity, minHeight: 92, alignment: .leading)
         .padding(14)
