@@ -12,46 +12,34 @@ struct AppScreenBackground: View {
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
-
             RadialGradient(
                 colors: [Color(hex: "F5A623").opacity(0.22), .clear],
                 center: .topTrailing,
                 startRadius: 24,
                 endRadius: 460
             )
-
             RadialGradient(
                 colors: [Color(hex: "6AA8FF").opacity(0.16), .clear],
                 center: .bottomLeading,
                 startRadius: 32,
                 endRadius: 420
             )
-
+        }
+        .overlay(alignment: .topTrailing) {
             Circle()
                 .fill(Color.white.opacity(0.07))
-                .frame(width: 460, height: 460)
-                .blur(radius: 130)
-                .offset(x: 340, y: -300)
-
+                .frame(width: 320, height: 320)
+                .blur(radius: 90)
+                .offset(x: 80, y: -120)
+                .allowsHitTesting(false)
+        }
+        .overlay(alignment: .topLeading) {
             Capsule(style: .continuous)
                 .fill(Color(hex: "F5A623").opacity(0.08))
-                .frame(width: 320, height: 54)
-                .blur(radius: 18)
-                .offset(x: -120, y: -230)
-
-            RoundedRectangle(cornerRadius: 40, style: .continuous)
-                .stroke(Color.white.opacity(0.04), lineWidth: 1)
-                .frame(width: 420, height: 420)
-                .rotationEffect(.degrees(-12))
-                .blur(radius: 1.5)
-                .offset(x: -220, y: 420)
-
-            RoundedRectangle(cornerRadius: 28, style: .continuous)
-                .stroke(Color.white.opacity(0.03), lineWidth: 1)
-                .frame(width: 190, height: 190)
-                .rotationEffect(.degrees(18))
-                .blur(radius: 1.5)
-                .offset(x: 150, y: 480)
+                .frame(width: 220, height: 44)
+                .blur(radius: 14)
+                .offset(x: -40, y: 80)
+                .allowsHitTesting(false)
         }
         .ignoresSafeArea()
     }
@@ -123,8 +111,8 @@ struct CinematicHeroArt: View {
                     LinearGradient(
                         colors: [
                             Color(hex: "050506"),
-                            Color(hex: "09090B"),
-                            Color(hex: "23130C")
+                            Color(hex: "120C0A"),
+                            Color(hex: "3A2312")
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -132,148 +120,78 @@ struct CinematicHeroArt: View {
                 )
                 .overlay(
                     RoundedRectangle(cornerRadius: 28, style: .continuous)
-                        .stroke(Color.white.opacity(0.09), lineWidth: 1)
+                        .stroke(Color.white.opacity(0.10), lineWidth: 1)
                 )
 
-            Circle()
-                .fill(Color(hex: "F5A623").opacity(0.18))
-                .frame(width: 92, height: 92)
-                .blur(radius: 26)
-                .offset(x: 52, y: 18)
+            RadialGradient(
+                colors: [Color(hex: "F5A623").opacity(0.28), .clear],
+                center: .trailing,
+                startRadius: 12,
+                endRadius: 110
+            )
 
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(Color.black.opacity(0.84))
-                .frame(width: 118, height: 78)
-                .offset(x: 48, y: -18)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .stroke(Color.white.opacity(0.06), lineWidth: 1)
-                )
-
-            RoundedRectangle(cornerRadius: 14, style: .continuous)
-                .fill(
-                    LinearGradient(
-                        colors: [
-                            Color(hex: "F08A24"),
-                            Color(hex: "5A3A20"),
-                            Color(hex: "101113")
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-                .frame(width: 110, height: 68)
-                .offset(x: 48, y: -18)
-                .mask(
-                    RoundedRectangle(cornerRadius: 14, style: .continuous)
-                        .frame(width: 110, height: 68)
-                        .offset(x: 48, y: -18)
-                )
+            RadialGradient(
+                colors: [Color(hex: "7A5132").opacity(0.52), .clear],
+                center: .bottomTrailing,
+                startRadius: 6,
+                endRadius: 140
+            )
 
             VStack(spacing: 0) {
                 Spacer(minLength: 0)
 
-                HStack(alignment: .bottom, spacing: 0) {
-                    Spacer(minLength: 0)
-                    Circle()
-                        .fill(Color(hex: "0D0D0F").opacity(0.98))
-                        .frame(width: 84, height: 84)
-                        .overlay(
-                            Circle()
-                                .stroke(Color.white.opacity(0.05), lineWidth: 1)
-                        )
-                        .offset(x: 12, y: 6)
+                HStack(alignment: .bottom, spacing: 3) {
+                    Capsule(style: .continuous)
+                        .fill(Color.white.opacity(0.10))
+                        .frame(width: 4, height: 18)
+                    Capsule(style: .continuous)
+                        .fill(Color.white.opacity(0.16))
+                        .frame(width: 4, height: 28)
+                    Capsule(style: .continuous)
+                        .fill(Color.white.opacity(0.08))
+                        .frame(width: 4, height: 22)
+                    Capsule(style: .continuous)
+                        .fill(Color.white.opacity(0.12))
+                        .frame(width: 4, height: 34)
+                    Capsule(style: .continuous)
+                        .fill(Color.white.opacity(0.08))
+                        .frame(width: 4, height: 16)
+                    Capsule(style: .continuous)
+                        .fill(Color.white.opacity(0.14))
+                        .frame(width: 4, height: 24)
                     Spacer(minLength: 0)
                 }
-                .padding(.trailing, 22)
+                .padding(.horizontal, 18)
+                .padding(.bottom, 20)
+            }
 
+            VStack(spacing: 0) {
                 HStack {
                     Spacer(minLength: 0)
                     RoundedRectangle(cornerRadius: 12, style: .continuous)
                         .fill(
                             LinearGradient(
                                 colors: [
-                                    Color(hex: "F5A623").opacity(0.92),
-                                    Color(hex: "B5661B").opacity(0.82)
+                                    Color(hex: "FFB24D").opacity(0.92),
+                                    Color(hex: "C06A22").opacity(0.72)
                                 ],
-                                startPoint: .top,
-                                endPoint: .bottom
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
                             )
                         )
-                        .frame(width: 86, height: 16)
-                        .blur(radius: 2)
-                        .offset(x: 20, y: -10)
-                }
-                .padding(.trailing, 18)
-                .padding(.bottom, 24)
-            }
-
-            VStack {
-                Spacer(minLength: 0)
-                HStack {
-                    Spacer(minLength: 0)
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        .fill(Color.black.opacity(0.74))
-                        .frame(width: 90, height: 34)
+                        .frame(width: 88, height: 20)
                         .overlay(
                             Text("Movie night")
                                 .font(.caption2.weight(.bold))
-                                .foregroundStyle(.white.opacity(0.90))
+                                .foregroundStyle(Color.black.opacity(0.82))
                         )
                         .padding(.trailing, 14)
-                        .padding(.bottom, 14)
+                        .padding(.top, 14)
                 }
-            }
-
-            VStack(spacing: 0) {
-                Spacer(minLength: 0)
-
-                RoundedRectangle(cornerRadius: 26, style: .continuous)
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color(hex: "FF9A3A").opacity(0.95),
-                                Color(hex: "B45D1D").opacity(0.72),
-                                Color(hex: "151517").opacity(0.62)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .frame(height: 122)
-                    .overlay(
-                        VStack(spacing: 0) {
-                            Spacer(minLength: 0)
-                            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                .fill(Color.black.opacity(0.88))
-                                .frame(width: 138, height: 58)
-                                .overlay(
-                                    Text("TV")
-                                        .font(.caption2.weight(.bold))
-                                        .tracking(4)
-                                        .foregroundStyle(Color.white.opacity(0.72))
-                                )
-                                .offset(y: -18)
-                            Spacer(minLength: 0)
-                        }
-                    )
-                    .padding(.horizontal, 16)
-
-                HStack {
-                    Spacer()
-                    Circle()
-                        .fill(Color.black.opacity(0.92))
-                        .frame(width: 16, height: 16)
-                        .overlay(Circle().stroke(Color.white.opacity(0.06), lineWidth: 1))
-                    Spacer(minLength: 0)
-                }
-                .offset(y: -18)
-
                 Spacer(minLength: 0)
             }
         }
-        .frame(height: 220)
-        .shadow(color: Color(hex: "F5A623").opacity(0.10), radius: 22, x: 0, y: 10)
+        .shadow(color: Color(hex: "F5A623").opacity(0.10), radius: 18, x: 0, y: 8)
     }
 }
 

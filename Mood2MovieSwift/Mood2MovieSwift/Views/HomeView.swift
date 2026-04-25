@@ -15,12 +15,15 @@ struct HomeView: View {
     private let topAnchor = "home-top"
 
     var body: some View {
+        scrollBody
+            .toolbar(.hidden, for: .navigationBar)
+    }
+
+    private var scrollBody: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                VStack(alignment: .leading, spacing: 18) {
-                    Color.clear
-                        .frame(height: 0)
-                        .id(topAnchor)
+                VStack(alignment: .leading, spacing: 16) {
+                    Color.clear.frame(height: 0).id(topAnchor)
                     motion(topBar, delay: 0.0)
                     motion(heroSection, delay: 0.05)
                     motion(searchSection, delay: 0.10)
@@ -31,68 +34,50 @@ struct HomeView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 12)
-                .padding(.bottom, 160)
+                .padding(.bottom, 16)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-            .background(AppScreenBackground())
             .scrollIndicators(.hidden)
             .onAppear {
                 didAppear = true
-                if focusSearch {
-                    searchFocused = true
-                }
-                DispatchQueue.main.async {
-                    proxy.scrollTo(topAnchor, anchor: .top)
-                }
+                if focusSearch { searchFocused = true }
+                DispatchQueue.main.async { proxy.scrollTo(topAnchor, anchor: .top) }
             }
             .onChange(of: focusSearch) { _, newValue in
                 if newValue {
                     searchFocused = true
-                    DispatchQueue.main.async {
-                        proxy.scrollTo(topAnchor, anchor: .top)
-                    }
+                    DispatchQueue.main.async { proxy.scrollTo(topAnchor, anchor: .top) }
                 }
             }
             .onChange(of: searchFocused) { _, newValue in
-                if !newValue && focusSearch {
-                    focusSearch = false
-                }
+                if !newValue && focusSearch { focusSearch = false }
             }
             .onChange(of: path) { _, _ in
                 if path.isEmpty {
-                    DispatchQueue.main.async {
-                        proxy.scrollTo(topAnchor, anchor: .top)
-                    }
+                    DispatchQueue.main.async { proxy.scrollTo(topAnchor, anchor: .top) }
                 }
             }
-            .task(id: store.favoriteGenres) {
-                await loadForYou()
-            }
-            .task(id: searchText) {
-                await runSearch()
-            }
+            .task(id: store.favoriteGenres) { await loadForYou() }
+            .task(id: searchText) { await runSearch() }
         }
     }
+
+    // MARK: - Top bar
 
     private var topBar: some View {
         HStack(alignment: .center, spacing: 12) {
             wordmark
             Spacer(minLength: 12)
-            Button {
-                path.append(.settings)
-            } label: {
+            Button { path.append(.settings) } label: {
                 Image(systemName: "gearshape")
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundStyle(Color(hex: "F5A623"))
                     .frame(width: 36, height: 36)
                     .background(
                         Circle()
-                            .fill(Color.white.opacity(0.04))
-                            .overlay(
-                                Circle()
-                                    .stroke(Color.white.opacity(0.08), lineWidth: 1)
-                            )
+                            .fill(Color.white.opacity(0.06))
+                            .overlay(Circle().stroke(Color.white.opacity(0.10), lineWidth: 1))
                     )
             }
             .buttonStyle(.plain)
@@ -100,216 +85,203 @@ struct HomeView: View {
     }
 
     private var wordmark: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: 6) {
             Text("MOOD")
-                .font(.system(size: 12, weight: .bold, design: .rounded))
-                .tracking(5.4)
+                .font(.system(size: 13, weight: .bold, design: .rounded))
+                .tracking(4.8)
             Text("2")
-                .font(.system(size: 28, weight: .black, design: .rounded))
+                .font(.system(size: 30, weight: .black, design: .rounded))
                 .foregroundStyle(Color(hex: "F5A623"))
             Text("MOVIE")
-                .font(.system(size: 12, weight: .bold, design: .rounded))
-                .tracking(5.4)
+                .font(.system(size: 13, weight: .bold, design: .rounded))
+                .tracking(4.8)
         }
         .foregroundStyle(.white)
     }
 
+    // MARK: - Hero
+
     private var heroSection: some View {
-        GlassCard {
-            ViewThatFits(in: .horizontal) {
-                HStack(alignment: .top, spacing: 16) {
-                    heroCopy
-                    CinematicHeroArt()
-                        .frame(width: 154)
-                }
+        VStack(alignment: .leading, spacing: 10) {
+            ZStack(alignment: .bottomLeading) {
+                CinematicHeroArt()
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-                VStack(alignment: .leading, spacing: 14) {
-                    heroCopy
-                    CinematicHeroArt()
-                }
-            }
-        }
-    }
+                LinearGradient(
+                    colors: [.clear, Color.black.opacity(0.80)],
+                    startPoint: .center,
+                    endPoint: .bottom
+                )
 
-    private var heroCopy: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            VStack(alignment: .leading, spacing: 8) {
                 heroTitle
-                Text("Search a title, or let the mood cards steer you toward a better match.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
+                    .font(.system(size: 22, weight: .black, design: .rounded))
+                    .lineLimit(3)
+                    .minimumScaleFactor(0.85)
+                    .shadow(color: .black.opacity(0.5), radius: 3, x: 0, y: 1)
+                    .padding(.horizontal, 14)
+                    .padding(.bottom, 14)
             }
-            .font(.system(size: 29, weight: .black, design: .rounded))
-            .lineLimit(3)
-            .minimumScaleFactor(0.82)
-            .fixedSize(horizontal: false, vertical: true)
+            .frame(maxWidth: .infinity)
+            .frame(height: 150)
+            .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+            .shadow(color: .black.opacity(0.30), radius: 16, x: 0, y: 8)
+
+            Text("Search a title or let the mood cards below steer you.")
+                .font(.subheadline)
+                .foregroundStyle(Color.white.opacity(0.55))
+                .fixedSize(horizontal: false, vertical: true)
         }
     }
 
     private var heroTitle: Text {
-        var copy = AttributedString("Mood picks for\nwhatever you feel\nlike tonight.")
+        var copy = AttributedString("Mood picks for\ntonight.")
+        copy.foregroundColor = .white
         if let range = copy.range(of: "Mood") {
             copy[range].foregroundColor = Color(hex: "F5A623")
         }
         return Text(copy)
     }
 
-    private var searchSection: some View {
-        GlassCard {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack(spacing: 10) {
-                    Image(systemName: "magnifyingglass")
-                        .foregroundStyle(.secondary)
-                    TextField("Search a movie", text: $searchText)
-                        .focused($searchFocused)
-                        .textFieldStyle(.plain)
-                    Button {
-                        searchFocused = true
-                    } label: {
-                        Image(systemName: "slider.horizontal.3")
-                            .font(.headline.weight(.semibold))
-                            .foregroundStyle(Color(hex: "F5A623"))
-                            .frame(width: 44, height: 44)
-                            .background(
-                                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                    .fill(Color(hex: "F5A623").opacity(0.12))
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                            .stroke(Color.white.opacity(0.08), lineWidth: 1)
-                                    )
-                            )
-                    }
-                    .buttonStyle(.plain)
-                }
-                .padding(.horizontal, 14)
-                .padding(.vertical, 12)
-                .background(
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .fill(Color.white.opacity(0.05))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                                .stroke(Color.white.opacity(0.09), lineWidth: 1)
-                        )
-                )
+    // MARK: - Search
 
-                if searching {
-                    HStack(spacing: 10) {
-                        ProgressView()
-                        Text("Searching...")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                    }
-                } else if !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                    if searchResults.isEmpty {
-                        Text("No local matches yet.")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                    } else {
+    private var searchSection: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 12) {
+                Image(systemName: "magnifyingglass")
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundStyle(Color.white.opacity(0.45))
+                TextField("Search a movie", text: $searchText)
+                    .focused($searchFocused)
+                    .textFieldStyle(.plain)
+                    .foregroundStyle(.white)
+                Button { searchFocused = true } label: {
+                    Image(systemName: "slider.horizontal.3")
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundStyle(Color(hex: "F5A623"))
+                        .frame(width: 34, height: 34)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                .fill(Color(hex: "F5A623").opacity(0.15))
+                        )
+                }
+                .buttonStyle(.plain)
+            }
+            .padding(.horizontal, 16)
+            .padding(.vertical, 13)
+            .background(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(Color.white.opacity(0.10))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                            .stroke(Color.white.opacity(0.18), lineWidth: 1)
+                    )
+            )
+
+            if searching {
+                HStack(spacing: 10) {
+                    ProgressView().tint(Color(hex: "F5A623"))
+                    Text("Searching…")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                }
+                .padding(.horizontal, 4)
+            } else if !searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                if searchResults.isEmpty {
+                    Text("No local matches.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, 4)
+                } else {
+                    VStack(spacing: 8) {
                         HStack {
                             Text("\(searchResults.count) matches")
                                 .font(.caption.weight(.semibold))
                                 .foregroundStyle(Color(hex: "F5A623"))
                             Spacer()
-                            Text("Tap a title to open details")
+                            Text("Tap to open")
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                         }
-                        VStack(spacing: 10) {
-                            ForEach(searchResults) { movie in
-                                SearchResultRow(movie: movie) {
-                                    path.append(.movieDetail(movie))
-                                }
-                            }
+                        ForEach(searchResults) { movie in
+                            SearchResultRow(movie: movie) { path.append(.movieDetail(movie)) }
                         }
-                    }
-                } else {
-                    HStack {
-                        Text("Search local titles")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Color(hex: "F5A623"))
-                        Spacer()
-                        Text("Find a title fast")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
                     }
                 }
             }
         }
     }
+
+    // MARK: - Stats
 
     private var statsSection: some View {
         HStack(spacing: 10) {
-            MetricCard(title: "Saved", value: "\(store.movies.count)", note: "in your library")
-            MetricCard(title: "For you", value: "\(forYouMovies.count)", note: "recommendations")
-            MetricCard(title: "Platforms", value: "\(store.preferences.platforms.count)", note: "connected")
+            MetricCard(icon: "bookmark.fill", title: "Saved", value: "\(store.movies.count)", note: "in your library")
+            MetricCard(icon: "sparkles", title: "For you", value: "\(forYouMovies.count)", note: "recommendations")
+            MetricCard(icon: "tv", title: "Platforms", value: "\(store.preferences.platforms.count)", note: "connected")
         }
     }
+
+    // MARK: - For you
 
     private var forYouSection: some View {
-        GlassCard {
-            VStack(alignment: .leading, spacing: 14) {
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        SectionHeader(title: "Top for you")
-                        Text("Built from your saved library and platform preferences.")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                    }
-                    Spacer()
-                    Button("See all") {
-                        path.append(.myMovies)
-                    }
-                    .buttonStyle(InlineActionButtonStyle(isActive: false))
-                }
-
-                if forYouMovies.isEmpty {
-                    EmptyStateView(message: "Save a few movies and the app will start shaping recommendations around your taste.")
-                } else if let spotlight = forYouMovies.first {
-                    SpotlightCard(movie: spotlight)
-                }
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .center) {
+                Text("Top for you")
+                    .font(.title3.weight(.bold))
+                    .foregroundStyle(.white)
+                Spacer()
+                Button("See all") { path.append(.myMovies) }
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(Color(hex: "F5A623"))
+            }
+            if forYouMovies.isEmpty {
+                Text("Save a few movies to start seeing personal recommendations here.")
+                    .font(.subheadline)
+                    .foregroundStyle(Color.white.opacity(0.45))
+                    .fixedSize(horizontal: false, vertical: true)
+            } else if let spotlight = forYouMovies.first {
+                SpotlightCard(movie: spotlight)
             }
         }
     }
+
+    // MARK: - Mood
 
     private var moodSection: some View {
-        GlassCard {
-            VStack(alignment: .leading, spacing: 14) {
-                HStack {
-                    VStack(alignment: .leading, spacing: 4) {
-                        SectionHeader(title: "How are you feeling?")
-                        Text("Choose the people, the vibe, and the genre lane.")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                    }
-                    Spacer()
-                    Button("Clear") {
-                        draft = MoodSelectionDraft()
-                    }
-                    .buttonStyle(PlainBackButtonStyle())
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .center) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("How are you feeling?")
+                        .font(.title3.weight(.bold))
+                        .foregroundStyle(.white)
+                    Text("Pick the vibe, the crowd, and the genre.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
                 }
-
-                MoodSelectorView(draft: $draft)
+                Spacer()
+                Button("Clear") { draft = MoodSelectionDraft() }
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(Color(hex: "F5A623"))
             }
+            MoodSelectorView(draft: $draft)
         }
     }
+
+    // MARK: - Action
 
     private var actionSection: some View {
-        GlassCard {
-            VStack(alignment: .leading, spacing: 14) {
-                SectionHeader(title: "Action")
-                Button {
-                    guard let selection = draft.resolved else { return }
-                    path.append(.results(selection))
-                } label: {
-                    Label("Get Recommendations", systemImage: "sparkles")
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(PrimaryActionButtonStyle(isEnabled: draft.isComplete))
-                .disabled(!draft.isComplete)
-            }
+        Button {
+            guard let selection = draft.resolved else { return }
+            path.append(.results(selection))
+        } label: {
+            Label("Get Recommendations", systemImage: "sparkles")
+                .frame(maxWidth: .infinity)
         }
+        .buttonStyle(PrimaryActionButtonStyle(isEnabled: draft.isComplete))
+        .disabled(!draft.isComplete)
     }
+
+    // MARK: - Helpers
 
     private func motion<Content: View>(_ content: Content, delay: Double) -> some View {
         content
@@ -332,7 +304,6 @@ struct HomeView: View {
             searching = false
             return
         }
-
         searching = true
         searchResults = await store.recommendationService.search(
             query: trimmed,
@@ -341,6 +312,8 @@ struct HomeView: View {
         searching = false
     }
 }
+
+// MARK: - Search result row
 
 private struct SearchResultRow: View {
     let movie: MovieResult
@@ -367,93 +340,92 @@ private struct SearchResultRow: View {
             .padding(12)
             .background(
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .fill(Color.white.opacity(0.04))
+                    .fill(Color.white.opacity(0.05))
             )
         }
         .buttonStyle(.plain)
     }
 }
 
+// MARK: - Metric card
+
 private struct MetricCard: View {
+    let icon: String
     let title: String
     let value: String
     let note: String
 
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text(title.uppercased())
-                .font(.caption2.weight(.semibold))
-                .tracking(2)
-                .foregroundStyle(.secondary)
+            Image(systemName: icon)
+                .font(.system(size: 15, weight: .semibold))
+                .foregroundStyle(Color(hex: "F5A623"))
             Text(value)
-                .font(.system(size: 30, weight: .black, design: .rounded))
-                .foregroundStyle(Color.white)
-            Text(note)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
+                .font(.system(size: 28, weight: .black, design: .rounded))
+                .foregroundStyle(.white)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.footnote.weight(.semibold))
+                    .foregroundStyle(.white.opacity(0.85))
+                Text(note)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
+        .padding(14)
         .background(
             RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(Color.white.opacity(0.04))
+                .fill(Color.white.opacity(0.05))
                 .overlay(
                     RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .stroke(Color.white.opacity(0.08), lineWidth: 1)
+                        .stroke(Color.white.opacity(0.10), lineWidth: 1)
                 )
         )
     }
 }
 
+// MARK: - Spotlight card
+
 private struct SpotlightCard: View {
     let movie: MovieResult
 
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
+        HStack(alignment: .top, spacing: 14) {
             PosterBadge(genre: movie.genre, title: movie.title, year: movie.year, size: .large)
 
             VStack(alignment: .leading, spacing: 8) {
-                HStack(alignment: .top, spacing: 8) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(movie.title)
-                            .font(.headline.weight(.semibold))
-                            .lineLimit(2)
-                        Text("\(movie.year) • \(movie.genre.label)")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                    Spacer()
-                    Image(systemName: "chevron.right")
-                        .font(.caption.weight(.semibold))
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(movie.title)
+                        .font(.title3.weight(.bold))
+                        .foregroundStyle(.white)
+                        .lineLimit(2)
+                    Text("\(movie.year) • \(movie.genre.label)")
+                        .font(.caption)
                         .foregroundStyle(.secondary)
                 }
 
                 Text(movie.reason)
                     .font(.footnote)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(4)
+                    .foregroundStyle(Color.white.opacity(0.65))
+                    .lineLimit(3)
                     .fixedSize(horizontal: false, vertical: true)
 
                 HStack(spacing: 8) {
                     SummaryPill(text: movie.primaryAvailability.platformName)
                     SummaryPill(text: movie.primaryAvailability.type.label)
-                    Spacer()
                 }
             }
         }
-        .padding(14)
+        .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(
-            RoundedRectangle(cornerRadius: 24, style: .continuous)
-                .fill(
-                    LinearGradient(
-                        colors: [Color.white.opacity(0.11), Color.white.opacity(0.04)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
+            RoundedRectangle(cornerRadius: 20, style: .continuous)
+                .fill(Color.white.opacity(0.06))
                 .overlay(
-                    RoundedRectangle(cornerRadius: 24, style: .continuous)
+                    RoundedRectangle(cornerRadius: 20, style: .continuous)
                         .stroke(Color.white.opacity(0.10), lineWidth: 1)
                 )
         )

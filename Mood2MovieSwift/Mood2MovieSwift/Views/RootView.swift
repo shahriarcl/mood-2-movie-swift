@@ -12,25 +12,24 @@ struct RootView: View {
     @State private var focusSearch = false
 
     var body: some View {
-        ZStack(alignment: .bottom) {
-            AppScreenBackground()
-
-            NavigationStack(path: $path) {
-                HomeView(path: $path, focusSearch: $focusSearch)
-                    .navigationDestination(for: AppRoute.self) { route in
-                        switch route {
-                        case .results(let selection):
-                            ResultsView(path: $path, selection: selection)
-                        case .settings:
-                            SettingsView(path: $path)
-                        case .myMovies:
-                            MyMoviesView(path: $path)
-                        case .movieDetail(let movie):
-                            MovieDetailView(movie: movie)
-                        }
+        NavigationStack(path: $path) {
+            HomeView(path: $path, focusSearch: $focusSearch)
+                .navigationDestination(for: AppRoute.self) { route in
+                    switch route {
+                    case .results(let selection):
+                        ResultsView(path: $path, selection: selection)
+                    case .settings:
+                        SettingsView(path: $path)
+                    case .myMovies:
+                        MyMoviesView(path: $path)
+                    case .movieDetail(let movie):
+                        MovieDetailView(movie: movie)
                     }
-            }
-
+                }
+        }
+        .background(AppScreenBackground())
+        .toolbar(.hidden, for: .navigationBar)
+        .safeAreaInset(edge: .bottom, spacing: 0) {
             PhoneTabBar(activeTab: activeTab) { tab in
                 switch tab {
                 case .home:
@@ -52,8 +51,6 @@ struct RootView: View {
                 }
             }
             .frame(maxWidth: .infinity)
-            .padding(.horizontal, 14)
-            .padding(.bottom, 24)
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
     }
@@ -99,7 +96,7 @@ private struct PhoneTabBar: View {
     let onSelect: (ShellTab) -> Void
 
     var body: some View {
-        HStack(spacing: 6) {
+        HStack(spacing: 0) {
             ForEach(ShellTab.allCases, id: \.self) { tab in
                 Button {
                     onSelect(tab)
@@ -107,31 +104,27 @@ private struct PhoneTabBar: View {
                     let isActive = activeTab == tab
                     VStack(spacing: 4) {
                         Image(systemName: tab.symbol)
-                            .font(.system(size: isActive ? 17 : 16, weight: .semibold))
+                            .font(.system(size: 22, weight: isActive ? .semibold : .regular))
                         Text(tab.title)
-                            .font(.caption2.weight(isActive ? .bold : .semibold))
+                            .font(.system(size: 10, weight: isActive ? .semibold : .regular, design: .rounded))
                     }
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 10)
-                    .foregroundStyle(isActive ? Color(hex: "F5A623") : Color.secondary)
-                    .background(
-                        RoundedRectangle(cornerRadius: 20, style: .continuous)
-                            .fill(isActive ? Color(hex: "F5A623").opacity(0.14) : Color.clear)
-                    )
+                    .padding(.top, 10)
+                    .padding(.bottom, 4)
+                    .foregroundStyle(isActive ? Color(hex: "F5A623") : Color(white: 0.42))
                 }
                 .buttonStyle(.plain)
             }
         }
-        .padding(.horizontal, 12)
-        .padding(.vertical, 10)
         .background(
-            RoundedRectangle(cornerRadius: 28, style: .continuous)
+            Rectangle()
                 .fill(.ultraThinMaterial)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 28, style: .continuous)
-                        .stroke(Color.white.opacity(0.12), lineWidth: 1)
-                )
+                .overlay(alignment: .top) {
+                    Rectangle()
+                        .fill(Color.white.opacity(0.10))
+                        .frame(height: 0.5)
+                }
+                .ignoresSafeArea()
         )
-        .shadow(color: .black.opacity(0.14), radius: 12, x: 0, y: 6)
     }
 }

@@ -19,7 +19,6 @@ struct SettingsView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 28) {
                 header
-                heroSummary
                 platformSection
                 countrySection
                 contentSection
@@ -226,37 +225,6 @@ struct SettingsView: View {
         supabaseAnonKey = configuration.values.supabaseAnonKey
     }
 
-    private var heroSummary: some View {
-        GlassCard {
-            VStack(alignment: .leading, spacing: 16) {
-                HStack(alignment: .top, spacing: 12) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("TUNE THE ENGINE")
-                            .font(.caption2.weight(.bold))
-                            .tracking(3.2)
-                            .foregroundStyle(Color(hex: "F5A623"))
-                        Text("Set up platforms, country, content filters, and your API keys in one place.")
-                            .font(.system(size: 28, weight: .black, design: .rounded))
-                            .fixedSize(horizontal: false, vertical: true)
-                        Text("Changes apply immediately after saving, so the app stays responsive while you refine it.")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-
-                    Spacer(minLength: 8)
-
-                    VStack(spacing: 8) {
-                        SettingsStat(label: "Platforms", value: "\(selectedPlatforms.count)")
-                        SettingsStat(label: "Keys", value: "\(configuredKeyCount)")
-                        SettingsStat(label: "Safe", value: familySafe ? "On" : "Off")
-                    }
-                    .frame(width: 116)
-                }
-            }
-        }
-    }
-
     private var configuredKeyCount: Int {
         [
             tmdbAPIKey,
@@ -264,22 +232,6 @@ struct SettingsView: View {
             supabaseURL,
             supabaseAnonKey
         ].filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }.count
-    }
-}
-
-private struct SettingsStat: View {
-    let label: String
-    let value: String
-
-    var body: some View {
-        VStack(alignment: .trailing, spacing: 2) {
-            Text(value)
-                .font(.system(size: 24, weight: .black, design: .rounded))
-            Text(label.uppercased())
-                .font(.caption2.weight(.bold))
-                .tracking(2)
-                .foregroundStyle(.secondary)
-        }
     }
 }
 

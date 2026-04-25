@@ -228,44 +228,31 @@ struct MyMoviesView: View {
     }
 
     private var heroSummary: some View {
-        GlassCard {
-            VStack(alignment: .leading, spacing: 16) {
-                HStack(alignment: .top, spacing: 12) {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("YOUR ARCHIVE")
-                            .font(.caption2.weight(.bold))
-                            .tracking(3.2)
-                            .foregroundStyle(Color(hex: "F5A623"))
-                        Text("\(store.movies.count) saved titles")
-                            .font(.system(size: 32, weight: .black, design: .rounded))
-                            .fixedSize(horizontal: false, vertical: true)
-                        Text("Watchlist and watched titles live here, and cloud sync keeps them with you.")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                            .fixedSize(horizontal: false, vertical: true)
-                    }
-
-                    Spacer(minLength: 10)
-
-                    VStack(spacing: 8) {
-                        LibraryStat(label: "Watchlist", value: "\(store.watchlist.count)")
-                        LibraryStat(label: "Watched", value: "\(store.watched.count)")
-                        LibraryStat(label: "Sync", value: cloud.isSignedIn ? "On" : "Off")
-                    }
-                    .frame(width: 124)
-                }
-
-                HStack(spacing: 8) {
-                    SummaryPill(text: cloud.isSignedIn ? "Cloud active" : "Offline")
-                    SummaryPill(text: "\(store.favoriteGenres.count) favorite genres")
-                    SummaryPill(text: "\(store.preferences.platforms.count) platforms")
-                }
-
-                Text(cloud.isSignedIn ? "Cloud sync is active." : "Sign in to move your library between devices.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("YOUR ARCHIVE")
+                    .font(.caption2.weight(.bold))
+                    .tracking(3.2)
+                    .foregroundStyle(Color(hex: "F5A623"))
+                Text("\(store.movies.count) saved")
+                    .font(.title3.weight(.black))
+                    .foregroundStyle(.white)
+            }
+            Spacer(minLength: 12)
+            HStack(spacing: 20) {
+                LibraryStat(label: "Watchlist", value: "\(store.watchlist.count)")
+                LibraryStat(label: "Watched", value: "\(store.watched.count)")
             }
         }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color.white.opacity(0.05))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .stroke(Color.white.opacity(0.10), lineWidth: 1)
+                )
+        )
     }
 
     private var emptyLibraryState: some View {

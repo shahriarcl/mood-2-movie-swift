@@ -1,4 +1,7 @@
 import SwiftUI
+#if canImport(UIKit)
+import UIKit
+#endif
 
 @MainActor
 @main
@@ -7,6 +10,17 @@ struct Mood2MovieSwiftApp: App {
     @State private var configuration = AppConfigurationStore.shared
     @State private var cloud = CloudSyncService()
     @State private var showSplash = true
+
+    init() {
+        #if canImport(UIKit)
+        let transparent = UINavigationBarAppearance()
+        transparent.configureWithTransparentBackground()
+        transparent.shadowColor = .clear
+        UINavigationBar.appearance().standardAppearance = transparent
+        UINavigationBar.appearance().compactAppearance = transparent
+        UINavigationBar.appearance().scrollEdgeAppearance = transparent
+        #endif
+    }
 
     var body: some Scene {
         WindowGroup {
@@ -36,6 +50,7 @@ struct Mood2MovieSwiftApp: App {
                     showSplash = false
                 }
             }
+            .preferredColorScheme(.dark)
         }
     }
 }

@@ -1,4 +1,13 @@
 .DS_Store
+
+# Claude Code
+.claude/settings.local.json
+.claude/todos/
+.claude/transcripts/
+.claude/cache/
+.claude/tmp/
+.claude/*.log
+.claude/history/
 /.build
 /Packages
 xcuserdata/

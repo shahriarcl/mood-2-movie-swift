@@ -112,58 +112,37 @@ struct ResultsView: View {
     }
 
     private var heroSummary: some View {
-        GlassCard {
-            VStack(alignment: .leading, spacing: 14) {
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("RESULTS")
-                        .font(.caption2.weight(.bold))
-                        .tracking(3)
-                        .foregroundStyle(Color(hex: "F5A623"))
-                    Text("One stack of movies tuned to this mood.")
-                        .font(.system(size: 28, weight: .black, design: .rounded))
-                        .fixedSize(horizontal: false, vertical: true)
-                    Text(selectionSummary)
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(3)
-                        .fixedSize(horizontal: false, vertical: true)
-                }
-
-                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-                    SelectionStat(label: "Matches", value: "\(movies.count)")
-                    SelectionStat(label: "Page", value: "\(page)")
-                    SelectionStat(label: "Genre", value: selection.genre.label)
-                    SelectionStat(label: "Mood", value: selection.vibe?.label ?? "Mixed")
-                }
-
-                HStack(spacing: 8) {
-                    SummaryChip(text: selection.audience.label)
-                    if let vibe = selection.vibe { SummaryChip(text: vibe.label) }
-                    SummaryChip(text: selection.genre.label)
-                    if let decade = selection.decade { SummaryChip(text: decade.label) }
-                }
-
-                Text("The engine is matching this mood to titles, providers, and watch status.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                Text("RESULTS")
+                    .font(.caption2.weight(.bold))
+                    .tracking(3)
+                    .foregroundStyle(Color(hex: "F5A623"))
+                Text(selectionSummary)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(.white)
+                    .fixedSize(horizontal: false, vertical: true)
             }
-        }
-    }
-
-    private struct SelectionStat: View {
-        let label: String
-        let value: String
-
-        var body: some View {
+            Spacer(minLength: 12)
             VStack(alignment: .trailing, spacing: 2) {
-                Text(value)
+                Text("\(movies.count)")
                     .font(.system(size: 24, weight: .black, design: .rounded))
-                Text(label.uppercased())
+                    .foregroundStyle(.white)
+                Text("MATCHES")
                     .font(.caption2.weight(.bold))
                     .tracking(2)
                     .foregroundStyle(.secondary)
             }
         }
+        .padding(16)
+        .background(
+            RoundedRectangle(cornerRadius: 16, style: .continuous)
+                .fill(Color.white.opacity(0.05))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                        .stroke(Color.white.opacity(0.10), lineWidth: 1)
+                )
+        )
     }
 
     private var selectionSummary: String {

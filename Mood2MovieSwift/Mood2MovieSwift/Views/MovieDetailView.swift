@@ -16,7 +16,6 @@ struct MovieDetailView: View {
                     LoadingStateView(text: "Loading movie details...")
                 } else {
                     heroCard
-                    statsRow
 
                     if !providers.isEmpty {
                         section(title: "Where to watch") {
@@ -88,19 +87,21 @@ struct MovieDetailView: View {
             case .success(let image):
                 image.resizable().scaledToFill()
             case .failure:
-                PosterBadge(genre: movie.genre, title: movie.title, year: movie.year, size: .large)
+                ZStack {
+                    Color.white.opacity(0.06)
+                    PosterBadge(genre: movie.genre, title: movie.title, year: movie.year, size: .large)
+                }
             case .empty:
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .fill(Color.white.opacity(0.08))
+                Color.white.opacity(0.06)
             @unknown default:
-                RoundedRectangle(cornerRadius: 14, style: .continuous)
-                    .fill(Color.white.opacity(0.08))
+                Color.white.opacity(0.06)
             }
         }
-        .frame(width: 160, height: 240)
-        .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+        .frame(maxWidth: .infinity)
+        .frame(height: 220)
+        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         .overlay(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
                 .stroke(Color.white.opacity(0.10), lineWidth: 1)
         )
     }
@@ -130,105 +131,32 @@ struct MovieDetailView: View {
 
     private var heroCard: some View {
         GlassCard {
-            VStack(alignment: .leading, spacing: 16) {
-                VStack(alignment: .leading, spacing: 6) {
+            VStack(alignment: .leading, spacing: 14) {
+                poster
+
+                VStack(alignment: .leading, spacing: 4) {
                     Text("NOW SHOWING")
                         .font(.caption2.weight(.bold))
                         .tracking(3)
                         .foregroundStyle(Color(hex: "F5A623"))
-                    Text("\(movie.year) • \(movie.genre.label)")
-                        .font(.caption.weight(.semibold))
+                    Text(summaryLine)
+                        .font(.footnote.weight(.medium))
                         .foregroundStyle(.secondary)
                 }
+
+                Text(movie.reason)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
 
                 HStack(spacing: 8) {
                     DetailChip(text: movie.primaryAvailability.type.label)
                     DetailChip(text: movie.primaryAvailability.platformName)
-                }
-
-                ViewThatFits(in: .horizontal) {
-                    heroCardWide
-                    heroCardStacked
-                }
-
-                if let detail {
-                    HStack(spacing: 8) {
-                        DetailChip(text: "\(detail.runtime ?? movie.year) min")
-                        DetailChip(text: String(format: "%.1f / 10", detail.voteAverage))
-                        DetailChip(text: movie.primaryAvailability.platformName)
-                    }
-                } else {
-                    HStack(spacing: 8) {
-                        DetailChip(text: movie.genre.label)
-                        DetailChip(text: movie.primaryAvailability.platformName)
-                        DetailChip(text: movie.primaryAvailability.type.label)
+                    if let detail {
+                        DetailChip(text: String(format: "%.1f★", detail.voteAverage))
                     }
                 }
             }
-        }
-    }
-
-    private var heroCardWide: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            HStack(alignment: .top, spacing: 16) {
-                poster
-                VStack(alignment: .leading, spacing: 12) {
-                    detailCopy
-                }
-                Spacer(minLength: 0)
-            }
-
-            HStack(spacing: 8) {
-                DetailChip(text: "Poster-led")
-                DetailChip(text: "Mobile-first")
-                DetailChip(text: "Premium view")
-            }
-        }
-    }
-
-    private var heroCardStacked: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            poster
-            detailCopy
-            HStack(spacing: 8) {
-                DetailChip(text: "Poster-led")
-                DetailChip(text: "Mobile-first")
-                DetailChip(text: "Premium view")
-            }
-        }
-    }
-
-    private var detailCopy: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            Text(summaryLine)
-                .font(.footnote.weight(.medium))
-                .foregroundStyle(.secondary)
-
-            HStack(spacing: 8) {
-                DetailChip(text: movie.genre.label)
-                DetailChip(text: movie.primaryAvailability.type.label)
-                DetailChip(text: movie.year.description)
-            }
-
-            Text(movie.reason)
-                .font(.callout)
-                .foregroundStyle(.secondary)
-                .fixedSize(horizontal: false, vertical: true)
-
-            Text(detail?.overview ?? "Fetching the full synopsis...")
-                .font(.body)
-                .foregroundStyle(.primary)
-                .fixedSize(horizontal: false, vertical: true)
-        }
-    }
-
-    private var statsRow: some View {
-        VStack(spacing: 12) {
-            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 12) {
-                StatCard(title: "Year", value: "\(movie.year)", note: movie.genre.label)
-                StatCard(title: "Primary", value: movie.primaryAvailability.platformName, note: movie.primaryAvailability.type.label)
-            }
-            StatCard(title: "Providers", value: "\(providers.count)", note: providers.isEmpty ? "loading matches" : "available matches")
         }
     }
 
@@ -302,39 +230,6 @@ private struct DetailRow: View {
             Spacer()
         }
         .padding(.top, 4)
-    }
-}
-
-private struct StatCard: View {
-    let title: String
-    let value: String
-    let note: String
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(title.uppercased())
-                .font(.caption2.weight(.bold))
-                .tracking(2)
-                .foregroundStyle(.secondary)
-            Text(value)
-                .font(.system(size: 22, weight: .black, design: .rounded))
-                .foregroundStyle(.primary)
-                .lineLimit(1)
-                .minimumScaleFactor(0.75)
-            Text(note)
-                .font(.footnote)
-                .foregroundStyle(.secondary)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
-        .background(
-            RoundedRectangle(cornerRadius: 18, style: .continuous)
-                .fill(Color.white.opacity(0.05))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .stroke(Color.white.opacity(0.09), lineWidth: 1)
-                )
-        )
     }
 }
 
