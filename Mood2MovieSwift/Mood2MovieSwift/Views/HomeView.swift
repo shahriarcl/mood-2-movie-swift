@@ -3,7 +3,6 @@ import SwiftUI
 struct HomeView: View {
     @Environment(AppStore.self) private var store
     @Binding var path: [AppRoute]
-    @Binding var focusSearch: Bool
 
     @State private var draft = MoodSelectionDraft()
     @State private var searchText = ""
@@ -22,7 +21,7 @@ struct HomeView: View {
     private var scrollBody: some View {
         ScrollViewReader { proxy in
             ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 12) {
                     Color.clear.frame(height: 0).id(topAnchor)
                     motion(topBar, delay: 0.0)
                     motion(heroSection, delay: 0.05)
@@ -33,7 +32,7 @@ struct HomeView: View {
                     motion(actionSection, delay: 0.34)
                 }
                 .padding(.horizontal, 16)
-                .padding(.top, 12)
+                .padding(.top, 8)
                 .padding(.bottom, 16)
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -41,17 +40,7 @@ struct HomeView: View {
             .scrollIndicators(.hidden)
             .onAppear {
                 didAppear = true
-                if focusSearch { searchFocused = true }
                 DispatchQueue.main.async { proxy.scrollTo(topAnchor, anchor: .top) }
-            }
-            .onChange(of: focusSearch) { _, newValue in
-                if newValue {
-                    searchFocused = true
-                    DispatchQueue.main.async { proxy.scrollTo(topAnchor, anchor: .top) }
-                }
-            }
-            .onChange(of: searchFocused) { _, newValue in
-                if !newValue && focusSearch { focusSearch = false }
             }
             .onChange(of: path) { _, _ in
                 if path.isEmpty {
@@ -122,7 +111,7 @@ struct HomeView: View {
                     .padding(.bottom, 14)
             }
             .frame(maxWidth: .infinity)
-            .frame(height: 150)
+            .frame(height: 120)
             .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
             .shadow(color: .black.opacity(0.30), radius: 16, x: 0, y: 8)
 
@@ -148,7 +137,7 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(spacing: 12) {
                 Image(systemName: "magnifyingglass")
-                    .font(.system(size: 16, weight: .medium))
+                    .font(.system(size: 14, weight: .medium))
                     .foregroundStyle(Color.white.opacity(0.45))
                 TextField("Search a movie", text: $searchText)
                     .focused($searchFocused)
@@ -156,7 +145,7 @@ struct HomeView: View {
                     .foregroundStyle(.white)
                 Button { searchFocused = true } label: {
                     Image(systemName: "slider.horizontal.3")
-                        .font(.system(size: 15, weight: .semibold))
+                        .font(.system(size: 13, weight: .semibold))
                         .foregroundStyle(Color(hex: "F5A623"))
                         .frame(width: 34, height: 34)
                         .background(
@@ -167,7 +156,7 @@ struct HomeView: View {
                 .buttonStyle(.plain)
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, 13)
+            .padding(.vertical, 9)
             .background(
                 RoundedRectangle(cornerRadius: 14, style: .continuous)
                     .fill(Color.white.opacity(0.10))
@@ -227,7 +216,7 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 14) {
             HStack(alignment: .center) {
                 Text("Top for you")
-                    .font(.title3.weight(.bold))
+                    .font(.headline.weight(.bold))
                     .foregroundStyle(.white)
                 Spacer()
                 Button("See all") { path.append(.myMovies) }
@@ -252,7 +241,7 @@ struct HomeView: View {
             HStack(alignment: .center) {
                 VStack(alignment: .leading, spacing: 3) {
                     Text("How are you feeling?")
-                        .font(.title3.weight(.bold))
+                        .font(.headline.weight(.bold))
                         .foregroundStyle(.white)
                     Text("Pick the vibe, the crowd, and the genre.")
                         .font(.footnote)
@@ -431,3 +420,4 @@ private struct SpotlightCard: View {
         )
     }
 }
+

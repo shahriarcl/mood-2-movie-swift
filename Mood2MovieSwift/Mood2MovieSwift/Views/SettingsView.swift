@@ -284,31 +284,50 @@ private struct PlatformTile: View {
 
     var body: some View {
         Button(action: action) {
-            VStack(alignment: .leading, spacing: 12) {
+            VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Image(systemName: platform.symbolName)
+                        .font(.system(size: 16, weight: .semibold))
                         .foregroundStyle(isSelected ? Color(hex: "0D0D0F") : Color(hex: "F5A623"))
                     Spacer()
                     Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                        .font(.system(size: 14, weight: .semibold))
                         .foregroundStyle(isSelected ? Color(hex: "0D0D0F") : Color.secondary)
                 }
                 VStack(alignment: .leading, spacing: 2) {
                     Text(platform.name)
-                        .font(.subheadline.weight(.semibold))
+                        .font(.callout.weight(.semibold))
                         .foregroundStyle(isSelected ? Color(hex: "0D0D0F") : Color.primary)
-                    Text("TMDB \(platform.tmdbId)")
-                        .font(.caption2)
-                        .foregroundStyle(isSelected ? Color(hex: "0D0D0F").opacity(0.75) : Color.secondary)
                 }
             }
-            .padding(14)
-            .frame(maxWidth: .infinity, minHeight: 92, alignment: .leading)
+            .padding(10)
+            .frame(maxWidth: .infinity, minHeight: 72, alignment: .leading)
             .background(
-                RoundedRectangle(cornerRadius: 18, style: .continuous)
-                    .fill(isSelected ? Color(hex: "F5A623") : Color.white.opacity(0.04))
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(
+                        isSelected
+                        ? LinearGradient(
+                            colors: [Color(hex: "FFB84D"), Color(hex: "F5A623")],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                        : LinearGradient(
+                            colors: [Color.white.opacity(0.06), Color.white.opacity(0.03)],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
                     .overlay(
-                        RoundedRectangle(cornerRadius: 18, style: .continuous)
-                            .stroke(isSelected ? Color(hex: "F5A623") : Color.white.opacity(0.08), lineWidth: 1)
+                        RoundedRectangle(cornerRadius: 14, style: .continuous)
+                            .stroke(isSelected ? Color(hex: "F5A623").opacity(0.85) : Color.white.opacity(0.10), lineWidth: 0.8)
+                    )
+                    .overlay(
+                        LinearGradient(
+                            colors: [Color.white.opacity(0.16), Color.clear],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                        .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
                     )
             )
         }

@@ -653,7 +653,7 @@ struct PrimaryActionButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .font(.headline.weight(.semibold))
-            .padding(.vertical, 14)
+            .padding(.vertical, 12)
             .padding(.horizontal, 16)
             .background(
                 RoundedRectangle(cornerRadius: 16, style: .continuous)
