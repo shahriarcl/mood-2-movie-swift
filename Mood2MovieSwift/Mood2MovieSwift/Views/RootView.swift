@@ -51,6 +51,7 @@ struct RootView: View {
                 }
             }
             .frame(maxWidth: .infinity)
+            .ignoresSafeArea(edges: .bottom)
         }
         .ignoresSafeArea(.keyboard, edges: .bottom)
     }
@@ -121,10 +122,10 @@ private struct PhoneTabBar: View {
                 .fill(.ultraThinMaterial)
                 .overlay(alignment: .top) {
                     Rectangle()
-                        .fill(Color.white.opacity(0.10))
+                        .fill(Color.white.opacity(0.12))
                         .frame(height: 0.5)
                 }
-                .ignoresSafeArea()
+                .ignoresSafeArea(edges: .bottom)
         )
     }
 }
